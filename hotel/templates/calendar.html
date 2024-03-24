@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobiscroll Calendar</title>
+    <!-- Include Mobiscroll CSS -->
+    <link href="{% static 'css/mobiscroll.javascript.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/mobiscroll.javascript.min.js' %}"></script>
+</head>
+<body>
+    <div id="demo-month-view"></div>
+
+    <script>
+        mobiscroll.setOptions({
+            theme: 'ios',
+            themeVariant: 'light'
+        });
+    
+        var reservationData = {{ reservation_data|safe }};
+        var resourceData = {{ resource_data|safe }};
+        
+        mobiscroll.eventcalendar('#demo-month-view', {
+            locale: mobiscroll.localeFa,
+            clickToCreate: true,
+            dragToCreate: true,
+            dragToMove: true,
+            dragToResize: true,
+            eventDelete: true,
+            view: {
+                timeline: {
+                    type: 'year',
+                },
+            },
+            data: reservationData,
+            resources: resourceData,
+            onEventClick: function (event) {
+                // Display more information about the clicked event in a popup
+                var popupContent = '<div>Title: ' + event.event.title + '</div>' +
+                                   '<div>Start: ' + event.event.start + '</div>' +
+                                   '<div>End: ' + event.event.end + '</div>' +
+                                   '<div>Resource: ' + event.event.resource + '</div>';
+                mobiscroll.alert({
+                    title: 'جزییات رزرو',
+                    message: popupContent,
+                    buttons: [{
+                        text: 'متوجه شدم',
+                        handler: 'close'
+                    }]
+                });
+            }
+        });
+    </script>
+</body>
+</html>
