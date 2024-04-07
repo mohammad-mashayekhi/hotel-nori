@@ -1,0 +1,77 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block vendors-css %}
+{% endblock %}
+
+{% block page-css %}
+<link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}"
+    />
+
+{% endblock %}
+
+{% block contant %}
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="fw-bold py-3 mb-4">
+    <span class="text-muted fw-light">صورتحساب /</span> لیست
+  </h4>
+
+  <!-- Invoice List Table -->
+  <div class="card">
+    <div class="card-datatable table-responsive">
+      <table class="invoice-list-table table">
+        <thead class="table-light">
+          <tr>
+            <th></th>
+            <th></th>
+            <th>#شناسه</th>
+            <th><i class="mdi mdi-trending-up"></i></th>
+            <th>کاربر</th>
+            <th>جمع</th>
+            <th class="text-truncate">تاریخ صدرو</th>
+            <th>مبلغ</th>
+            <th></th>
+            <th class="cell-fit"></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block vondors-js %}
+<script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+{% endblock %}
+
+{% block page-js %}
+<script src="{% static 'js/app-invoice-list.js' %}"></script>
+
+{% endblock %}

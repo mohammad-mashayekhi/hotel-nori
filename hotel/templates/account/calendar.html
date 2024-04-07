@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/select2/select2.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/quill/editor.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css' %}" />
+<link href="{% static 'css/mobiscroll.javascript.min.css' %}" rel="stylesheet" />
+<script src="{% static 'js/mobiscroll.javascript.min.js' %}"></script>
 {% endblock %}
 
 {% block page-css %}
@@ -29,62 +31,87 @@
             <button class="btn btn-primary btn-toggle-sidebar" data-bs-toggle="offcanvas"
               data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
               <i class="mdi mdi-plus me-1"></i>
-              <span class="align-middle">Add Event</span>
+              <span class="align-middle">افزودن رزرو</span>
             </button>
           </div>
         </div>
-        <div class="p-4">
-          <!-- inline calendar (flatpicker) -->
-          <div class="inline-calendar"></div>
-
-          <hr class="container-m-nx my-4">
-
-          <!-- Filter -->
-          <div class="mb-4">
-            <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-          </div>
-
-          <div class="form-check form-check-secondary mb-3">
-            <input class="form-check-input select-all" type="checkbox" id="selectAll" data-value="all" checked>
-            <label class="form-check-label" for="selectAll">View All</label>
-          </div>
-
-          <div class="app-calendar-events-filter">
-            <div class="form-check form-check-danger mb-3">
-              <input class="form-check-input input-filter" type="checkbox" id="select-personal" data-value="personal"
-                checked>
-              <label class="form-check-label" for="select-personal">Personal</label>
-            </div>
-            <div class="form-check mb-3">
-              <input class="form-check-input input-filter" type="checkbox" id="select-business" data-value="business"
-                checked>
-              <label class="form-check-label" for="select-business">Business</label>
-            </div>
-            <div class="form-check form-check-warning mb-3">
-              <input class="form-check-input input-filter" type="checkbox" id="select-family" data-value="family"
-                checked>
-              <label class="form-check-label" for="select-family">Family</label>
-            </div>
-            <div class="form-check form-check-success mb-3">
-              <input class="form-check-input input-filter" type="checkbox" id="select-holiday" data-value="holiday"
-                checked>
-              <label class="form-check-label" for="select-holiday">Holiday</label>
-            </div>
-            <div class="form-check form-check-info">
-              <input class="form-check-input input-filter" type="checkbox" id="select-etc" data-value="etc" checked>
-              <label class="form-check-label" for="select-etc">ETC</label>
-            </div>
-          </div>
-        </div>
+        
       </div>
       <!-- /Calendar Sidebar -->
-
       <!-- Calendar & Modal -->
-      <div class="col app-calendar-content">
+      <div id="demo-add-delete-event"></div>
+
+      <div style="display: none">
+      <div id="demo-add-popup">
+          <div class="mbsc-form-group">
+              <label>
+                  عنوان
+                  <input mbsc-input id="event-title">
+              </label>
+              <label>
+                  توضیحات
+                  <textarea mbsc-textarea id="event-desc"></textarea>
+              </label>
+          </div>
+          <div class="mbsc-form-group">
+
+              <label>
+                  زمان شروع
+                  <input mbsc-input id="start-input" />
+              </label>
+              <label>
+                  زمان پایان
+                  <input mbsc-input id="end-input" />
+              </label>
+
+              <div class="mbsc-button-group">
+                  <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">Delete event</button>
+              </div>
+          </div>
+      </div>
+      
+      <div id="demo-event-color">
+          <div class="crud-color-row">
+              <div class="crud-color-c" data-value="#ffeb3c">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#ffeb3c"></div>
+              </div>
+              <div class="crud-color-c" data-value="#ff9900">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#ff9900"></div>
+              </div>
+              <div class="crud-color-c" data-value="#f44437">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#f44437"></div>
+              </div>
+              <div class="crud-color-c" data-value="#ea1e63">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#ea1e63"></div>
+              </div>
+              <div class="crud-color-c" data-value="#9c26b0">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#9c26b0"></div>
+              </div>
+          </div>
+          <div class="crud-color-row">
+              <div class="crud-color-c" data-value="#3f51b5">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#3f51b5"></div>
+              </div>
+              <div class="crud-color-c" data-value="">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check"></div>
+              </div>
+              <div class="crud-color-c" data-value="#009788">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#009788"></div>
+              </div>
+              <div class="crud-color-c" data-value="#4baf4f">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#4baf4f"></div>
+              </div>
+              <div class="crud-color-c" data-value="#7e5d4e">
+                  <div class="crud-color mbsc-icon mbsc-font-icon mbsc-icon-material-check" style="background:#7e5d4e"></div>
+              </div>
+          </div>
+      </div>
+      </div>
+              <div class="col app-calendar-content">
         <div class="card shadow-none border-0 ">
           <div class="card-body pb-0">
             <!-- FullCalendar -->
-            <div id="calendar"></div>
+            <!-- <div id="calendar"></div> -->
           </div>
         </div>
         <div class="app-overlay"></div>
@@ -92,16 +119,17 @@
         <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar"
           aria-labelledby="addEventSidebarLabel">
           <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title" id="addEventSidebarLabel">Add Event</h5>
+            <h5 class="offcanvas-title" id="addEventSidebarLabel">افزودن رزرو</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body">
-            <form class="event-form pt-0" id="eventForm" onsubmit="return false">
-              <div class="form-floating form-floating-outline mb-4">
+            <form method="POST" class="event-form pt-0" id="eventForm" onsubmit="convertDates()">
+              {% csrf_token %}
+              <!-- <div class="form-floating form-floating-outline mb-4">
                 <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Event Title" />
                 <label for="eventTitle">Title</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-4">
+              </div> -->
+              <!-- <div class="form-floating form-floating-outline mb-4">
                 <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
                   <option data-label="primary" value="Business" selected>Business</option>
                   <option data-label="danger" value="Personal">Personal</option>
@@ -110,32 +138,20 @@
                   <option data-label="info" value="ETC">ETC</option>
                 </select>
                 <label for="eventLabel">Label</label>
+              </div> -->
+              <div class="form-floating form-floating-outline mb-4">
+                <input type="text" class="form-control" id="id_start_first" name="id_start_first"
+                  placeholder="تاریخ ورود" />
+                <label for="id_start_first">تاریخ ورود</label>
               </div>
               <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="eventStartDate" name="eventStartDate"
-                  placeholder="Start Date" />
-                <label for="eventStartDate">Start Date</label>
+                <input type="text" class="form-control" id="id_end_first" name="id_end_first" placeholder="تاریخ خروج" />
+                <label for="id_end_first">تاریخ خروج</label>
+                
+                {{ form }}
               </div>
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="End Date" />
-                <label for="eventEndDate">End Date</label>
-              </div>
-              <div class="mb-3">
-                <label class="switch">
-                  <input type="checkbox" class="switch-input allDay-switch" />
-                  <span class="switch-toggle-slider">
-                    <span class="switch-on"></span>
-                    <span class="switch-off"></span>
-                  </span>
-                  <span class="switch-label">All Day</span>
-                </label>
-              </div>
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="url" class="form-control" id="eventURL" name="eventURL"
-                  placeholder="https://www.google.com" />
-                <label for="eventURL">Event URL</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-4 select2-primary">
+         
+              <!-- <div class="form-floating form-floating-outline mb-4 select2-primary">
                 <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests" multiple>
                   <option data-avatar="1.png" value="Jane Foster">Jane Foster</option>
                   <option data-avatar="3.png" value="Donna Frank">Donna Frank</option>
@@ -155,12 +171,12 @@
                 <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
                 <label for="eventDescription">Description</label>
               </div>
-              <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4 gap-2">
-                <div class="d-flex">
-                  <button type="submit" class="btn btn-primary btn-add-event me-sm-2 me-1">Add</button>
+              <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4 gap-2"> -->
+                <!-- <div class="d-flex">
                   <button type="reset" class="btn btn-outline-secondary btn-cancel me-sm-0 me-1"
-                    data-bs-dismiss="offcanvas">Cancel</button>
-                </div>
+                    data-bs-dismiss="offcanvas">انصراف</button>
+                </div> -->
+                <button type="submit" class="btn btn-primary btn-add-event me-sm-2 me-1">افزودن رزرو</button>
                 <button class="btn btn-outline-danger btn-delete-event d-none">Delete</button>
               </div>
             </form>
@@ -172,6 +188,191 @@
   </div>
 
 </div>
+<script>
+mobiscroll.setOptions({
+  theme: 'ios',
+  themeVariant: 'light'
+});
+var reservationData = {{ reservation_data|safe }};
+var resourceData = {{ resource_data|safe }};
+var popup;
+var oldEvent;
+var tempEvent = {};
+var deleteEvent;
+
+calendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
+  locale: mobiscroll.localeFa,
+  clickToCreate: false,
+  dragToCreate: false,
+  dragToMove: false,
+  dragToResize: false,
+  dragToResize: false,
+  view: {
+    timeline: { type: 'year' },
+  },
+  data: reservationData,
+  resources: resourceData,
+  onEventClick: function (args) {
+    tempEvent = args.event;    
+    if (!popup.isVisible()) {
+      createEditPopup(args);
+    }
+  },
+  onEventCreated: function (args) {
+    var resourceId = args.event.resourceId;
+    console.log(event)
+    popup.close();
+    tempEvent = args.event;
+    createAddPopup(args.target, resourceId);
+  },
+});
+
+// function createAddPopup(elm,resourceId) {
+//   $('#event-title').val('');
+//   $('#start-input').val('');
+//   $('#end-input').val('');
+//   popup.open();
+//     popup.setOptions({
+//         headerText: 'افزودن رزرو',
+//         buttons: [
+//             'cancel',
+//             {
+//                 text: 'ذخیره',
+//                 keyCode: 'enter',
+//                 handler: function () {
+//                     // ارسال درخواست AJAX برای اضافه کردن رزرو
+//                     $.ajax({
+//                         url: 'account/add_reservation/',
+//                         method: 'POST',
+//                         data: {
+//                             csrfmiddlewaretoken: '{{ csrf_token }}',
+//                             title: $('#event-title').val(),
+//                             start: $('#start-input').val(),
+//                             end: $('#end-input').val(),
+//                             resourceId: resourceId // اضافه کردن شناسه منبع به داده‌های ارسالی
+
+//                         },
+//                         success: function(response) {
+//                             if (response.success) {
+//                                 // رزرو با موفقیت اضافه شد، می‌توانید هر عملیاتی که نیاز دارید را انجام دهید
+//                                 alert('رزرو با موفقیت اضافه شد!');
+//                                 // به روز رسانی کلندر یا هر عملیات دیگر
+//                                 calendar.refresh();
+//                             } else {
+//                                 alert('خطا در اضافه کردن رزرو!');
+//                             }
+//                         },
+//                         error: function() {
+//                             alert('خطا در ارسال درخواست!');
+//                         }
+//                     });
+//                     popup.close();
+//                 },
+//                 cssClass: 'mbsc-popup-button-primary',
+//             },
+//         ],
+//         anchor: elm,
+//         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' },
+//         onClose: function () {
+//             // حذف ایونت موقتی از کلندر
+//             if (tempEvent) {
+//                 calendar.removeEvent(tempEvent.id);
+//             }
+//         }
+//     });
+
+//     // فراخوانی متد open برای نمایش پاپ‌آپ
+//     popup.open();
+// }
+
+function createEditPopup(args,resourceId) {
+  var ev = args.event;
+  popup.setOptions({
+    headerText: 'ویرایش رزرو',
+    buttons: [
+      'cancel',
+      {
+        text: 'ویرایش',
+        keyCode: 'enter',
+        handler: function () {
+          popup.close();
+        },
+        cssClass: 'mbsc-popup-button-primary',
+      },
+    ],
+    anchor: args.domEvent.currentTarget, // تنظیم موقعیت پاپ‌آپ بر اساس مختصات ایونت
+    position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' } // حذف محدودیت موقعیت
+  });
+  var eventIdParts = ev.id.split('_'); 
+  var eventIdNumber = eventIdParts[eventIdParts.length - 1];
+  // فراخوانی ایجکس برای دریافت اطلاعات رزرو از سمت سرور
+  $.ajax({
+    url: 'account/get_reservation_info/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
+    method: 'GET',
+    data: { reservation_id: eventIdNumber }, // ارسال شناسه رزرو به سمت سرور
+    success: function (data) {
+      // پر کردن پاپ آپ با اطلاعات دریافت شده
+      fillPopupWithData(data);
+      // نمایش پاپ آپ
+      popup.open();
+    },
+    error: function () {
+      alert('خطا در دریافت اطلاعات رزرو');
+    }
+  });
+}
+
+// تابعی برای پر کردن پاپ آپ با اطلاعات دریافت شده از سمت سرور
+function fillPopupWithData(data) {
+  // مثال: تنظیم عنوان و متن رزرو در پاپ آپ
+  $('#event-title').val(data.title);
+  $('#start-input').val(data.start);
+  $('#end-input').val(data.end);
+  // می‌توانید دیگر اطلاعات مربوط به رزرو را هم در اینجا پر کنید
+}
+
+popup = mobiscroll.popup('#demo-add-popup', {
+  display: 'bottom',
+  contentPadding: false,
+  fullScreen: true,
+  responsive: {
+    medium: {
+      display: 'anchored',
+      width: 400,
+      fullScreen: false,
+      touchUi: false,
+    },
+  },
+});
+
+mobiscroll.datepicker('#id_start_first', {
+    calendarSystem: mobiscroll.jalaliCalendar,
+    locale: mobiscroll.localeFa,
+    controls: ['date'],
+    touchUi: true,
+    onClose: function (event, inst) {
+        var selectedDate = inst.getVal(); // تاریخ انتخاب شده
+        // تبدیل تاریخ شمسی به میلادی
+        var gregorianDate = jalaliToGregorian(selectedDate);
+        // قرار دادن تاریخ میلادی در فیلد مخفی
+        $('#id_start').val(gregorianDate);
+    }
+});
+mobiscroll.datepicker('#id_end_first', {
+    calendarSystem: mobiscroll.jalaliCalendar,
+    locale: mobiscroll.localeFa,
+    controls: ['date'],
+    touchUi: true,
+    onClose: function (event, inst) {
+        var selectedDate = inst.getVal(); // تاریخ انتخاب شده
+        // تبدیل تاریخ شمسی به میلادی
+        var gregorianDate = jalaliToGregorian(selectedDate);
+        // قرار دادن تاریخ میلادی در فیلد مخفی
+        $('#id_end').val(gregorianDate);
+    }
+});
+</script>
+
 <!-- / Content -->
 
 {% endblock %}
