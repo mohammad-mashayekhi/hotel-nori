@@ -112,31 +112,31 @@
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">ادمین</span>
           </li>
-          <li class="menu-item active">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:dashboard' %} active {% endif %}">
             <a href="{% url 'account:dashboard' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-view-grid-outline"></i>
-              <div>داشبورد</div>
+              <div>حساب کاربری</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
             <a href="{% url 'account:bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:users' %} active {% endif %}">
             <a href="{% url 'account:users' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-account-outline"></i>
               <div>کاربران</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:calendar' %} active {% endif %}">
             <a href="{% url 'account:calendar' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-calendar-blank-outline"></i>
               <div>جدول رزرو</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
             <a href="{% url 'account:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
@@ -145,19 +145,19 @@
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">کاربر</span>
           </li>
-          <li class="menu-item active">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:dashboard' %} active {% endif %}">
             <a href="{% url 'account:dashboard' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-view-grid-outline"></i>
-              <div>داشبورد</div>
+              <div>حساب کاربری</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item{% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
             <a href="{% url 'account:user_bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
           </li>
-          <li class="menu-item ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
             <a href="{% url 'account:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
@@ -407,7 +407,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                   <li>
-                    <a class="dropdown-item waves-effect" href="pages-account-settings-account.html">
+                    <a class="dropdown-item waves-effect" href="{% url 'account:dashboard'%}">
                       <div class="d-flex">
                         <div class="flex-shrink-0 me-3">
                           <div class="avatar avatar-online">
@@ -415,7 +415,7 @@
                           </div>
                         </div>
                         <div class="flex-grow-1">
-                          <span class="fw-semibold d-block">جان دو</span>
+                          <span class="fw-semibold d-block">محمد مشایخی</span>
                           <small class="text-muted">مدیر</small>
                         </div>
                       </div>
