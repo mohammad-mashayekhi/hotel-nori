@@ -678,13 +678,13 @@ progress {
 .container-lg,
 .container-md,
 .container-sm {
-  --bs-gutter-x: 1.5rem;
+  --bs-gutter-x: 0rem;
   --bs-gutter-y: 0;
   width: 100%;
   padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  /* padding-left: calc(var(--bs-gutter-x) * 0.5); */
   margin-right: auto;
-  margin-left: auto;
+  /* margin-left: auto; */
 }
 
 @media (min-width: 576px) {
@@ -709,7 +709,7 @@ progress {
 }
 @media (min-width: 1400px) {
   .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1440px;
+    max-width: 1600px;
   }
 }
 :root {
@@ -20899,7 +20899,7 @@ html:not([dir=rtl]) .menu-toggle::after {
 .menu-vertical,
 .menu-vertical .menu-block,
 .menu-vertical .menu-inner > .menu-item {
-  width: 16.25rem;
+  width: 12.25rem;
 }
 .menu-vertical .menu-inner {
   flex-direction: column;
@@ -21996,7 +21996,7 @@ html:not([dir=rtl]) .layout-menu-toggle {
     padding-left: 0;
   }
   [dir=rtl].layout-menu-fixed:not(.layout-menu-collapsed) .layout-page, [dir=rtl].layout-menu-fixed-offcanvas:not(.layout-menu-collapsed) .layout-page {
-    padding-right: 16.25rem;
+    padding-right: 3.25rem;
     padding-left: 0;
   }
   [dir=rtl].layout-menu-fixed:not(.layout-menu-collapsed).layout-menu-flipped .layout-page, [dir=rtl].layout-menu-fixed-offcanvas:not(.layout-menu-collapsed).layout-menu-flipped .layout-page {

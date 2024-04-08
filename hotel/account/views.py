@@ -36,18 +36,20 @@ def calendar(request):
     
     reservation_data = []
     for reservation in reservations:
+        start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
+        end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time()) + timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
         if reservation.status == 'confirmed':
-            color = '#228B22'  # رنگ سبز برای رزروهای تایید شده
+            color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
         elif reservation.status == 'pending_payment':
-            color = '#FFFF00'  # رنگ زرد برای رزروهای در انتظار پرداخت
+            color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
         elif reservation.status == 'expired' or reservation.status == 'canceled':
             color = '#808080'  # رنگ خاکستری برای رزروهای منقضی شده یا کنسل شده
         else:
             color = '#000000'  # رنگ پیش‌فرض برای حالت‌های دیگر
-
-        
-        start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
-        end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time()) + timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+        if reservation.bufferAfter:
+            buffer = "میخواهد"
+            end_datetime += timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+                
         reservation_data.append({
             'reserve_id' : reservation.reserve_id,
             'start': start_datetime.strftime('%Y-%m-%dT%H:%M:%S'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
@@ -55,12 +57,15 @@ def calendar(request):
             'title': reservation.title,
             'resource': reservation.resource_id,
             'color':color,
+            'bufferAfter': buffer if reservation.bufferAfter else '',  # استفاده از مقدار buffer فقط اگر bufferAfter برابر با True باشد
+            'user': reservation.user.username,  # نام کاربر
         })
     resource_data = []
     for resource in resources:
         resource_data.append({
             'id': resource.id,
             'name': resource.name,
+            'cssClass': resource.css,
         })
 
 
@@ -97,15 +102,20 @@ def get_reservation_info(request):
             
             start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
             end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time()) + timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
-        
+            if reservation.bufferAfter:
+                buffer = "میخواهد"
+                end_datetime += timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+            
             start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
             end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
-            
+
             reservation_data = {
                 'title': reservation.title,
                'start': start_jdatetime.strftime("%Y-%m-%d %H:%M:%S"),  
                 'end': end_jdatetime.strftime("%Y-%m-%d %H:%M:%S"),
                 'status':reservation.get_status_display(),
+                'bufferAfter': buffer if reservation.bufferAfter else '',  # استفاده از مقدار buffer فقط اگر bufferAfter برابر با True باشد
+                'user': reservation.user.username,  # نام کاربر
             }
             return JsonResponse(reservation_data)
         except Reservation.DoesNotExist:

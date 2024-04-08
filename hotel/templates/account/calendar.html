@@ -12,101 +12,77 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css' %}" />
 <link href="{% static 'css/mobiscroll.javascript.min.css' %}" rel="stylesheet" />
 <script src="{% static 'js/mobiscroll.javascript.min.js' %}"></script>
-
-<style>
-   .event-color-c {
-     display: flex;
-     margin: 16px;
-     align-items: center;
-     cursor: pointer;
- }
-
- .event-color-label {
-     flex: 1 0 auto;
- }
-
- .event-color {
-     width: 30px;
-     height: 30px;
-     border-radius: 15px;
-     margin-right: 10px;
-     margin-left: 240px;
-    background: #5ac8fa;
- }
-
- .crud-color-row {
-     display: flex;
-     justify-content: center;
-     margin: 5px;
- }
-
- .crud-color-c {
-     padding: 3px;
-     margin: 2px;
- }
-
- .crud-color {
-     position: relative;
-     min-width: 46px;
-     min-height: 46px;
-     margin: 2px;
-     cursor: pointer;
-     border-radius: 23px;
-    background: #5ac8fa;
- }
-
- .crud-color-c.selected,
- .crud-color-c:hover {
-     box-shadow: inset 0 0 0 3px #007bff;
-     border-radius: 48px;
- }
-
- .crud-color:before {
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     margin-top: -10px;
-     margin-left: -10px;
-     color: #f7f7f7;
-     font-size: 20px;
-     text-shadow: 0 0 3px #000;
-     display: none;
- }
-
- .crud-color-c.selected .crud-color:before {
-     display: block;
- }
-  
-</style>
 {% endblock %}
 
 {% block page-css %}
 <link rel="stylesheet" href="{% static 'vendor/css/pages/app-calendar.css' %}" />
+
+<style>
+.room1{
+ border-bottom: 3px solid #003C43 !important;
+ min-height: 52px !important;
+}
+.room2{
+ border-bottom: 3px solid #135D66 !important;
+ min-height: 52px !important;
+}
+.room3{
+ border-bottom: 3px solid #77B0AA !important;
+ min-height: 52px !important;
+}
+.room4{
+ border-bottom: 3px solid #58A399 !important;
+ min-height: 52px !important;
+}
+.room5{
+ border-bottom: 3px solid #ADBC9F !important;
+ min-height: 52px !important;
+}
+.room6{
+ border-bottom: 3px solid #A8CD9F !important;
+ min-height: 52px !important;
+}
+.room7{
+ border-bottom: 3px solid #C6EBC5 !important;
+ min-height: 52px !important;
+}
+.room8{
+ border-bottom: 3px solid #F9E897 !important;
+ min-height: 52px !important;
+}
+.room9{
+ border-bottom: 3px solid #F2C18D !important;
+ min-height: 52px !important;
+}
+.room10{
+ border-bottom: 3px solid #A3333D !important;
+ min-height: 52px !important;
+}
+.room11{
+ border-bottom: 3px solid #870F19 !important;
+ min-height: 52px !important;
+}
+.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
+ width: 80px;
+}
+.container-xxl .flex-grow-1 .container-p-y{
+ padding-right:0px;
+}
+.mbsc-timeline-column, .mbsc-timeline-header-column{
+ width: 48px;
+}
+.mbsc-timeline-event-listing .mbsc-schedule-event-all-day{
+  height: 50px !important;
+}
+</style>
 {% endblock %}
 
 {% block contant %}
 <div class="container-xxl flex-grow-1 container-p-y">
-
-
   <div class="card app-calendar-wrapper">
     <div class="row g-0">
-      <!-- Calendar Sidebar -->
-      <div class="col app-calendar-sidebar border-end" id="app-calendar-sidebar">
-        <div class="p-3 pb-2 my-sm-0 mb-3">
-          <div class="d-grid">
-            <button class="btn btn-primary btn-toggle-sidebar" data-bs-toggle="offcanvas"
-              data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
-              <i class="mdi mdi-plus me-1"></i>
-              <span class="align-middle">افزودن رزرو</span>
-            </button>
-          </div>
-        </div>
-        
-      </div>
-      <!-- /Calendar Sidebar -->
       <!-- Calendar & Modal -->
-      <div id="demo-add-delete-event"></div>
-
+      <div id="demo-add-delete-event" class="md-date-header-template"></div>
       <div style="display: none">
       <div id="demo-add-popup">
           <div class="mbsc-form-group">
@@ -118,6 +94,14 @@
                   وضعیت
                   <input mbsc-input id="event-status">
               </label>
+              <label>
+                کاربر
+                <input mbsc-input id="event-user">
+            </label>
+            <label>
+              نظافت
+              <input mbsc-input id="event-buffer">
+          </label>
           </div>
           <div class="mbsc-form-group">
               <label>
@@ -171,78 +155,9 @@
           </div>
       </div>
       </div>
-              <div class="col app-calendar-content">
-        <div class="card shadow-none border-0 ">
-          <div class="card-body pb-0">
-            <!-- FullCalendar -->
-            <!-- <div id="calendar"></div> -->
-          </div>
-        </div>
-        <div class="app-overlay"></div>
-        <!-- FullCalendar Offcanvas -->
-        <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar"
-          aria-labelledby="addEventSidebarLabel">
-          <div class="offcanvas-header border-bottom">
-            <h5 class="offcanvas-title" id="addEventSidebarLabel">افزودن رزرو</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <form method="POST" class="event-form pt-0" id="eventForm" onsubmit="convertDates()">
-              {% csrf_token %}
-              <!-- <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Event Title" />
-                <label for="eventTitle">Title</label>
-              </div> -->
-              <!-- <div class="form-floating form-floating-outline mb-4">
-                <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                  <option data-label="primary" value="Business" selected>Business</option>
-                  <option data-label="danger" value="Personal">Personal</option>
-                  <option data-label="warning" value="Family">Family</option>
-                  <option data-label="success" value="Holiday">Holiday</option>
-                  <option data-label="info" value="ETC">ETC</option>
-                </select>
-                <label for="eventLabel">Label</label>
-              </div> -->
-              <div class="form-floating form-floating-outline mb-4">
-                {{ form }}
-              </div>
-         
-              <!-- <div class="form-floating form-floating-outline mb-4 select2-primary">
-                <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests" multiple>
-                  <option data-avatar="1.png" value="Jane Foster">Jane Foster</option>
-                  <option data-avatar="3.png" value="Donna Frank">Donna Frank</option>
-                  <option data-avatar="5.png" value="Gabrielle Robertson">Gabrielle Robertson</option>
-                  <option data-avatar="7.png" value="Lori Spears">Lori Spears</option>
-                  <option data-avatar="9.png" value="Sandy Vega">Sandy Vega</option>
-                  <option data-avatar="11.png" value="Cheryl May">Cheryl May</option>
-                </select>
-                <label for="eventGuests">Add Guests</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-4">
-                <input type="text" class="form-control" id="eventLocation" name="eventLocation"
-                  placeholder="Enter Location" />
-                <label for="eventLocation">Location</label>
-              </div>
-              <div class="form-floating form-floating-outline mb-4">
-                <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
-                <label for="eventDescription">Description</label>
-              </div>
-              <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4 gap-2"> -->
-                <!-- <div class="d-flex">
-                  <button type="reset" class="btn btn-outline-secondary btn-cancel me-sm-0 me-1"
-                    data-bs-dismiss="offcanvas">انصراف</button>
-                </div> -->
-                <button type="submit" class="btn btn-primary btn-add-event me-sm-2 me-1">افزودن رزرو</button>
-                <button class="btn btn-outline-danger btn-delete-event d-none">Delete</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
       <!-- /Calendar & Modal -->
     </div>
   </div>
-
 </div>
 <script>
 mobiscroll.setOptions({
@@ -251,13 +166,11 @@ mobiscroll.setOptions({
 });
 var reservationData = {{ reservation_data|safe }};
 var resourceData = {{ resource_data|safe }};
-console.log(reservationData)
 var popup;
 var oldEvent;
 var tempEvent = {};
 var deleteEvent;
 var deleteButton = document.getElementById('event-delete');
-
 function createEditPopup(args,resourceId) {
   deleteButton.style.display = 'block';
   
@@ -307,6 +220,8 @@ restoreEvent = false;
 
 $('#event-title').val('');
 $('#event-status').val('');
+$('#event-user').val('');
+$('#event-buffer').val('');
 $('#start-input').val('');
 $('#end-input').val('');
 popup.open();
@@ -360,22 +275,128 @@ function fillPopupWithData(data) {
   // مثال: تنظیم عنوان و متن رزرو در پاپ آپ
   $('#event-title').val(data.title);
   $('#event-status').val(data.status);
+  $('#event-buffer').val(data.bufferAfter);
+  console.log(data.user)
+  $('#event-user').val(data.user);
   $('#start-input').val(data.start);
   $('#end-input').val(data.end);
   // می‌توانید دیگر اطلاعات مربوط به رزرو را هم در اینجا پر کنید
 }
-
-calendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
+var formatDate = mobiscroll.formatDate;
+var startDate;
+var endDate;
+var end;
+var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
   locale: mobiscroll.localeFa,
   clickToCreate: 'double',
   dragToCreate: true,
   dragToMove: true,
   dragToResize: true,
+  rtl: true,
   view: {
-    timeline: { type: 'year' },
+    timeline: {
+      type: 'year',      
+      },
   },
   data: reservationData,
   resources: resourceData,
+  colors: [
+    {
+      background: '#F5F8F2',
+      slot: 1,
+      recurring: {
+        repeat: 'weekly',
+        weekDays: 'FR',
+      },
+    },
+  ],
+//   invalid: [
+//   {
+//     // Date objects
+//     allDay: true,
+//     start: new Date(2021, 2, 7),
+//     end: new Date(2024, 3, 9),
+//     title: 'عدم نمایش',
+//   },  
+// ],
+  // renderScheduleEvent: function (data) {
+  //   var ev = data.original;
+  //   var color = data.color;
+
+  //   return (
+  //     '<div class="md-timeline-template-event" style="border-color:' +
+  //     color +
+  //     ';background:' +
+  //     color +
+  //     '">' +
+  //     '<div class="md-timeline-template-event-cont">' +
+  //     '<span class="mbsc-icon mbsc-font-icon mbsc-icon-' +
+  //     ev.taskType +
+  //     '" style="background:' +
+  //     color +
+  //     '"></span>' +
+  //     '<span class="md-timeline-template-time" style="color:' +
+  //     color +
+  //     ';">' +
+  //     data.start +
+  //     '</span>' +
+  //     '<span class="md-timeline-template-title">' +
+  //     ev.title +
+  //     '</span></div></div>'
+  //   );
+  // },
+  // renderBufferAfter: function (args) {
+  //   var event = args.original;
+  //   var color = event.color;
+
+  //   return (
+  //     '<div class="md-buffer md-after-buffer" style="background: ' +
+  //     color +
+  //     '">Inspection' +
+  //     '<span class="md-buffer-time">' +
+  //     event.bufferAfter +
+  //     ' min</span>' +
+  //     '<div class="md-buffer-tail" style="background: ' +
+  //     color +
+  //     '"></div></div>'
+  //   );
+  // },
+  // renderBufferBefore: function (args) {
+  //   var event = args.original;
+  //   var color = event.color;
+
+  //   return (
+  //     '<div class="md-buffer md-before-buffer" style="background: ' +
+  //     color +
+  //     '">Prep' +
+  //     '<span class="md-buffer-time">' +
+  //     event.bufferBefore +
+  //     ' min</span>' +
+  //     '<div class="md-buffer-tail" style="background: ' +
+  //     color +
+  //     '"></div></div>'
+  //   );
+  // },
+  renderHeader: function () {
+    return (
+      '<div id="custom-date-range"><button mbsc-button data-variant="flat" class="mbsc-calendar-button">' +
+      '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">Button' +
+      '</span></button></div>' +
+      '<div class="md-custom-range-view-controls">' +
+      '<div mbsc-calendar-today></div>' +
+      '</div>'
+    );
+  },
+  onPageLoaded: function (args) {
+    startDate = args.firstDay;
+    end = args.lastDay;
+    endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 1, 0);
+    // set button text
+    // rangeButton.innerText = getFormattedRange(startDate, endDate);
+    rangeButton.innerText = 'انتخاب تاریخ ورود و خروج';
+    // set range value
+    myRange.setVal([startDate, endDate]);
+  },
   onEventClick: function (args) {
     tempEvent = args.event;    
     if (!popup.isVisible()) {
@@ -412,7 +433,6 @@ popup = mobiscroll.popup('#demo-add-popup', {
   },
 });
 
-
 deleteButton.addEventListener('click', function () {
   var deletedEvent = tempEvent;
   calendar.removeEvent(tempEvent);
@@ -431,36 +451,57 @@ deleteButton.addEventListener('click', function () {
       alert('خطا در دریافت اطلاعات رزرو');
     }
   });
-  console.log('kjwbg wyhvrfyw vefbweubf uwbeufb wuebfu')
-  // save a local reference to the deleted event
 });
 
-mobiscroll.datepicker('#id_start_first', {
-    calendarSystem: mobiscroll.jalaliCalendar,
-    locale: mobiscroll.localeFa,
-    controls: ['date'],
-    touchUi: true,
-    onClose: function (event, inst) {
-        var selectedDate = inst.getVal(); // تاریخ انتخاب شده
-        // تبدیل تاریخ شمسی به میلادی
-        var gregorianDate = jalaliToGregorian(selectedDate);
-        // قرار دادن تاریخ میلادی در فیلد مخفی
-        $('#id_start').val(gregorianDate);
+var myRange = mobiscroll.datepicker('#custom-date-range', {
+  select: 'range',
+  display: 'anchored',
+  showOverlay: false,
+  locale: mobiscroll.localeFa,
+  touchUi: true,
+  rtl: true,
+  buttons: [],
+  onClose: function (args, inst) {
+    var date = inst.getVal();
+    if (date[0] && date[1]) {
+      if (date[0].getTime() !== startDate.getTime()) {
+        // navigate the calendar
+        myCalendar.navigate(date[0]);
+      }
+      startDate = date[0];
+      endDate = date[1];
+      // set calendar view
+      myCalendar.setOptions({
+        refDate: startDate,
+        view: {
+          timeline: {
+            type: 'day',
+            size: getNrDays(startDate, endDate),
+            eventList: true,
+          },
+        },
+      });
+    } else {
+      myRange.setVal([startDate, endDate]);
     }
+  },
 });
-mobiscroll.datepicker('#id_end_first', {
-    calendarSystem: mobiscroll.jalaliCalendar,
-    locale: mobiscroll.localeFa,
-    controls: ['date'],
-    touchUi: true,
-    onClose: function (event, inst) {
-        var selectedDate = inst.getVal(); // تاریخ انتخاب شده
-        // تبدیل تاریخ شمسی به میلادی
-        var gregorianDate = jalaliToGregorian(selectedDate);
-        // قرار دادن تاریخ میلادی در فیلد مخفی
-        $('#id_end').val(gregorianDate);
-    }
-});
+
+var rangeButton = document.getElementById('custom-date-range-text');
+
+// returns the formatted date
+function getFormattedRange(start, end) {
+  return (
+    formatDate('MMM D, YYYY', new Date(start)) +
+    (end && getNrDays(start, end) > 1 ? ' - ' + formatDate('MMM D, YYYY', new Date(end)) : '')
+  );
+}
+
+// returns the number of days between two dates
+function getNrDays(start, end) {
+  return Math.round(Math.abs((end.setHours(0) - start.setHours(0)) / (24 * 60 * 60 * 1000))) + 1;
+}
+
 </script>
 
 <!-- / Content -->
