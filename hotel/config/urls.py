@@ -1,10 +1,18 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import room_calendar_view
+from .views import home , terms
+from django.conf.urls.static import static
+from django.conf import settings 
 
+app_name='config'
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', room_calendar_view, name='room_calendar_view'),
+    path('', home, name='home'),
     path('reserve/', include('reserve.urls')),
     path('account/', include('account.urls')),
+    path('pages/terms', terms , name='terms'),
 ]
+urlpatterns += static(settings.MEDIA_URL,
+                      document_root=settings.MEDIA_ROOT)  # media
+urlpatterns += static(settings.STATIC_URL,
+                      document_root=settings.STATIC_ROOT)  # static

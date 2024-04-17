@@ -1,4 +1,7 @@
 from django.shortcuts import render
 
-def room_calendar_view(request):
-    return render(request, 'home.html')
+def home(request):
+    return render(request, 'main/home.html')
+
+def terms(request):
+    return render(request, 'pages/terms.html')

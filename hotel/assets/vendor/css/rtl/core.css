@@ -22080,12 +22080,12 @@ html:not(.layout-footer-fixed) .content-wrapper {
     padding-top: 5.25rem !important;
   }
   [dir=rtl].layout-navbar-fixed:not(.layout-menu-collapsed) .layout-content-navbar:not(.layout-without-menu) .layout-navbar, [dir=rtl].layout-menu-fixed.layout-navbar-fixed:not(.layout-menu-collapsed) .layout-content-navbar:not(.layout-without-menu) .layout-navbar, [dir=rtl].layout-menu-fixed-offcanvas.layout-navbar-fixed:not(.layout-menu-collapsed) .layout-content-navbar:not(.layout-without-menu) .layout-navbar {
-    right: 16.25rem;
-    left: 0;
+    /* right: 10rem; */
+    /* left: 10rem; */
   }
   [dir=rtl].layout-navbar-fixed:not(.layout-menu-collapsed).layout-menu-flipped .layout-content-navbar:not(.layout-without-menu) .layout-navbar, [dir=rtl].layout-menu-fixed.layout-navbar-fixed:not(.layout-menu-collapsed).layout-menu-flipped .layout-content-navbar:not(.layout-without-menu) .layout-navbar, [dir=rtl].layout-menu-fixed-offcanvas.layout-navbar-fixed:not(.layout-menu-collapsed).layout-menu-flipped .layout-content-navbar:not(.layout-without-menu) .layout-navbar {
-    right: 0;
-    left: 16.25rem;
+    /* right: 10rem; */
+    /* left: 10rem; */
   }
   .layout-navbar-fixed.layout-menu-collapsed:not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-content-navbar .layout-navbar,
   .layout-menu-fixed.layout-navbar-fixed.layout-menu-collapsed .layout-content-navbar .layout-navbar {
@@ -22097,12 +22097,12 @@ html:not(.layout-footer-fixed) .content-wrapper {
     left: 0;
   }
   [dir=rtl].layout-navbar-fixed.layout-menu-collapsed:not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-content-navbar .layout-navbar, [dir=rtl].layout-menu-fixed.layout-navbar-fixed.layout-menu-collapsed .layout-content-navbar .layout-navbar {
-    right: 5rem;
-    left: 0;
+    /* right: 5rem; */
+    /* left: 0; */
   }
   [dir=rtl].layout-navbar-fixed.layout-menu-collapsed:not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas).layout-menu-flipped .layout-content-navbar .layout-navbar, [dir=rtl].layout-menu-fixed.layout-navbar-fixed.layout-menu-collapsed.layout-menu-flipped .layout-content-navbar .layout-navbar {
-    right: 0;
-    left: 5rem;
+    /* right: 0; */
+    /* left: 5rem; */
   }
 }
 .content-footer {
@@ -27439,4 +27439,7 @@ a.bg-vimeo:hover, a.bg-vimeo:focus {
 }
 .homecaed h5{
   color: #000;
+}
+.card-customize{
+  height: 200px;
 }

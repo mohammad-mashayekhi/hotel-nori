@@ -19,48 +19,52 @@
 
 <style>
 .room1{
- border-bottom: 3px solid #003C43 !important;
+ border-bottom: 4px solid #003C43 !important;
  min-height: 52px !important;
 }
 .room2{
- border-bottom: 3px solid #135D66 !important;
+ border-bottom: 4px solid #135D66 !important;
  min-height: 52px !important;
 }
 .room3{
- border-bottom: 3px solid #77B0AA !important;
+ border-bottom: 4px solid #77B0AA !important;
  min-height: 52px !important;
 }
 .room4{
- border-bottom: 3px solid #58A399 !important;
+ border-bottom: 4px solid #58A399 !important;
  min-height: 52px !important;
 }
 .room5{
- border-bottom: 3px solid #ADBC9F !important;
+ border-bottom: 4px solid #ADBC9F !important;
  min-height: 52px !important;
 }
 .room6{
- border-bottom: 3px solid #A8CD9F !important;
+ border-bottom: 4px solid #A8CD9F !important;
  min-height: 52px !important;
 }
 .room7{
- border-bottom: 3px solid #C6EBC5 !important;
+ border-bottom: 4px solid #C6EBC5 !important;
  min-height: 52px !important;
 }
 .room8{
- border-bottom: 3px solid #F9E897 !important;
+ border-bottom: 4px solid #F9E897 !important;
  min-height: 52px !important;
 }
 .room9{
- border-bottom: 3px solid #F2C18D !important;
+ border-bottom: 4px solid #F2C18D !important;
  min-height: 52px !important;
 }
 .room10{
- border-bottom: 3px solid #A3333D !important;
+ border-bottom: 4px solid #A3333D !important;
  min-height: 52px !important;
 }
 .room11{
- border-bottom: 3px solid #870F19 !important;
+ border-bottom: 4px solid #870F19 !important;
  min-height: 52px !important;
+}
+.room12{
+  border-bottom: 4px solid #590531 !important;
+  min-height: 52px !important;
 }
 .mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
  width: 80px;
@@ -71,8 +75,12 @@
 .mbsc-timeline-column, .mbsc-timeline-header-column{
  width: 48px;
 }
-.mbsc-timeline-event-listing .mbsc-schedule-event-all-day{
-  height: 50px !important;
+.mbsc-timeline-event-background{
+  height: 36px !important;
+}
+.mbsc-timeline-resource-title{
+  font-size: 1em;
+  text-align: center;
 }
 </style>
 {% endblock %}
@@ -295,7 +303,9 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
   rtl: true,
   view: {
     timeline: {
-      type: 'year',      
+      type: 'year', 
+      size: 60,
+      eventList: true,     
       },
   },
   data: reservationData,

@@ -16,176 +16,101 @@
 {% endblock %}
 
 {% block contant %}
-<div class="container-xxl flex-grow-1 container-p-y">          
-  <h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">تنظیمات حساب/</span> حساب
-  </h4>  
+<div class="container-xxl flex-grow-1 container-p-y">            
   <div class="row">
     <div class="col-md-12">
       <div class="card mb-4">
-        <h4 class="card-header">جزئیات پروفایل</h4>
+        <h4 class="card-header">جزئیات پروفایل/ ویرایش حساب کاربری</h4>
         <!-- Account -->
-        <div class="card-body">
-          <div class="d-flex align-items-start align-items-sm-center gap-4">
-            <img src="../../assets/img/avatars/1.png" alt="user-avatar" class="d-block w-px-120 h-px-120 rounded" id="uploadedAvatar" />
-            <div class="button-wrapper">
-              <label for="upload" class="btn btn-primary me-2 mb-3" tabindex="0">
-                <span class="d-none d-sm-block">ارسال تصویر جدید</span>
-                <i class="mdi mdi-tray-arrow-up d-block d-sm-none"></i>
-                <input type="file" id="upload" class="account-file-input" hidden accept="image/png, image/jpeg" />
-              </label>
-              <button type="button" class="btn btn-outline-secondary account-image-reset mb-3">
-                <i class="mdi mdi-reload d-block d-sm-none"></i>
-                <span class="d-none d-sm-block">بازنشانی</span>
-              </button>
-  
-              <div class="text-muted small">فایل‌های JPG، GIF یا PNG مجاز هستند. حداکثر اندازه فایل 800KB.</div>
-            </div>
-          </div>
-        </div>
         <div class="card-body pt-2 mt-1">
-          <form id="formAccountSettings" method="POST" onsubmit="return false">
-            <div class="row mt-2 gy-4">
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input class="form-control" type="text" id="firstName" name="firstName" value="مهدی" autofocus />
-                  <label for="firstName">نام</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input class="form-control" type="text" name="lastName" id="lastName" value="مفتاح" />
-                  <label for="lastName">نام خانوادگی</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input class="form-control" type="text" id="email" name="email" value="Mahdi@example.com" placeholder="MahdiMH@example.com" />
-                  <label for="email">ایمیل</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input type="text" class="form-control" id="organization" name="organization" value="تیک تاک" />
-                  <label for="organization">سازمان</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="input-group input-group-merge">
-                  <div class="form-floating form-floating-outline">
-                    <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="202 555 0111" />
-                    <label for="phoneNumber">شماره تلفن</label>
+          <form id="editProfileForm" method="POST">
+              {% csrf_token %}
+              <div class="row mt-2 gy-4">
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.first_name}}
+                          <label for="firstName">نام</label>
+                          {% if form.first_name.errors %}
+                              {% for error in form.first_name.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
                   </div>
-                  <span class="input-group-text">IR (+98)</span>
-                </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.last_name}}
+                          <label for="lastName">نام خانوادگی</label>
+                          {% if form.last_name.errors %}
+                              {% for error in form.last_name.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating form-floating-outline">
+                      {{form.email}}
+                        <label for="mobileNumber">ایمیل</label>
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>                  
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.card_number}}
+                        <label for="cardNumber">شماره کارت</label>
+                          {% if form.card_number.errors %}
+                              {% for error in form.card_number.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.national_code}}
+                        <label for="nationalCode">کد ملی</label>
+                          {% if form.national_code.errors %}
+                              {% for error in form.national_code.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.gender}}
+                          <label for="gender">جنسیت</label>
+                          {% if form.gender.errors %}
+                              {% for error in form.gender.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.birth_date}}
+                          <label for="birthDate">تاریخ تولد</label>
+                          {% if form.birth_date.errors %}
+                              {% for error in form.birth_date.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input type="text" class="form-control" id="address" name="address" placeholder="آدرس" />
-                  <label for="address">آدرس</label>
-                </div>
+              <div class="mt-4">
+                  <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
+                  <button type="reset" class="btn btn-outline-secondary">انصراف</button>
               </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input class="form-control" type="text" id="state" name="state" placeholder="یزد" />
-                  <label for="state">استان</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="231465" maxlength="6" />
-                  <label for="zipCode">کد پستی</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <select id="country" class="select2 form-select">
-                    <option value="">انتخاب</option>
-                    <option value="استرالیا">استرالیا</option>
-                     <option value="بنگلادش">بنگلادش</option>
-                                <option value="بلاروس">بلاروس</option>
-                                <option value="برزیل">برزیل</option>
-                                <option value="کانادا">کانادا</option>
-                                <option value="چین">چین</option>
-                                <option value="فرانسه">فرانسه</option>
-                                <option value="آلمان">آلمان</option>
-                                <option value="هند">هندوستان</option>
-                                <option value="اندونزی">اندونزی</option>
-                                <option value="Iran">ایران</option>
-                                <option value="ایتالیا">ایتالیا</option>
-                                <option value="ژاپن">ژاپن</option>
-                                <option value="Korea">کره جنوبی</option>
-                                <option value="مکزیک">مکزیک</option>
-                                <option value="فیلیپین">فیلیپین</option>
-                                <option value="Russia">روسیه</option>
-                                <option value="آفریقای جنوبی">آفریقای جنوبی</option>
-                                <option value="تایلند">تایلند</option>
-                                <option value="ترکیه">ترکیه</option>
-                                <option value="اوکراین">اوکراین</option>
-                                <option value="امارات">امارات</option>
-                                <option value="انگلستان">انگلستان</option>
-                                <option value="ایالات متحده">ایالات متحده</option>
-                  </select>
-                  <label for="country">کشور</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <select id="language" class="select2 form-select">
-                    <option value="">زبان</option>
-                    <option value="en">انگلیسی</option>
-                    <option value="fr">فرانسوی</option>
-                    <option value="de">آلمانی</option>
-                    <option value="pt">پرتقالی</option>
-                  </select>
-                  <label for="language">زبان</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <select id="timeZones" class="select2 form-select">
-                    <option value="">ناحیه زمانی</option>
-                    <option value="-12">(GMT-12:00) (GMT-12:00) خط زمانی بین المللی غربی</option>
-                                <option value="-11">(GMT-11:00) جزیره میدوی</option>
-                                <option value="-10">(GMT-10:00) هاوایی</option>
-                                <option value="-9">(GMT-09:00) آلاسکا</option>
-                                <option value="-8">(GMT-08:00) آمریکا و کانادا</option>
-                                <option value="-8">(GMT-08:00) کالیفرنیا</option>
-                                <option value="-7">(GMT-07:00) آریزونا</option>
-                                <option value="-7">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</option>
-                                <option value="-7">(GMT-07:00) اقیانوسیه</option>
-                                <option value="-6">لورم ایپسوم متن ساختگی با تولید</option>
-                                <option value="-6">(GMT-06:00) استرالیا</option>
-                                <option value="-6">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از</option>
-                                <option value="-6">لورم ایپسوم متن ساختگی با</option>
-                                <option value="-5">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم</option>
-                                <option value="-5">(GMT-05:00) اروپا</option>
-                                <option value="-5">(GMT-05:00) خاورمیانه</option>
-                                <option value="-4">لورم ایپسوم متن ساختگی با تولید سادگی</option>
-                                <option value="-4">لورم ایپسوم متن ساختگی با تولید</option>
-                  </select>
-                  <label for="timeZones">ناحیه زمانی</label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating form-floating-outline">
-                  <select id="currency" class="select2 form-select">
-                    <option value="">واحد پول</option>
-                    <option value="usd">دلار</option>
-                                <option value="euro">یورو</option>
-                                <option value="pound">پوند</option>
-                                <option value="bitcoin">بیت کوین</option>
-                  </select>
-                  <label for="currency">واحد پول</label>
-                </div>
-              </div>
-            </div>
-            <div class="mt-4">
-              <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
-              <button type="reset" class="btn btn-outline-secondary">انصراف</button>
-            </div>
           </form>
-        </div>
+      </div>
+      
         <!-- /Account -->
       </div>
     </div>

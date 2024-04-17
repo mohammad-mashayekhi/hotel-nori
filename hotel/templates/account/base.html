@@ -399,6 +399,7 @@
               </li>
               <!--/ Notification -->
               <!-- User -->
+              {% if user.is_authenticated %}
               <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                   <div class="avatar avatar-online">
@@ -432,6 +433,15 @@
                   </li>
                 </ul>
               </li>
+              {% else %}
+              <li>
+                <a href="{% url 'account:login' %}" class="btn btn-primary" target="_blank">
+                  <span class="d-none d-sm-block farsi-font">ورود و ثبت‌نام</span>
+                  <span class="tf-icons bx bx-user ms-sm-2"></span>
+                </a>
+              </li>
+              {% endif %}
+        
               <!--/ User -->
             </ul>
           </div>

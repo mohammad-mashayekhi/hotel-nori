@@ -5,35 +5,67 @@ from django.http import JsonResponse
 from jdatetime import datetime as jdatetime
 from datetime import datetime, timedelta
 from reserve.forms import ReservationForm  # ایمپورت کردن فرم
-from account.models import UserProfile
 from django.views.decorators.http import require_POST
+from django.contrib.auth import get_user_model
+from django.shortcuts import render ,redirect
+from .decorators import verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
+from account.forms import *
+from account.models import Userprofile
 
-def dashboaard(request):
-    return render(request, 'account/dashboard.html')
+def account(request):
+    if request.method == 'POST':
+        form = UserProfileEditFormUser(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('account:dashboard')
+        # اضافه کردن کد برای نمایش ارورها در صورتی که فرم نامعتبر باشد
+        else:
+            errors = form.errors.values()
+            # انجام هر عملیات مربوط به نمایش ارورها، مانند چاپ آنها در کنسول یا ارسال به تمپلیت برای نمایش به کاربر
+            for error_list in errors:
+                for error in error_list:
+                    print('jashdajsdhahsdhiuashdoi')
+                    print(error)
+    else:
+        form = UserProfileEditFormUser(instance=request.user)
+    print('rbgshkfgkdfhlisdkf')
+    return render(request, 'account/dashboard.html', {'form': form})
+
+def edit_user(request, user_id):
+    user = Userprofile.objects.get(id=user_id)
+    if request.method == 'POST':
+        form = UserProfileEditForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            all_users = get_user_model().objects.all()
+            return render(request, 'account/user-list.html', {'users': all_users})
+        else:
+            return render(request, 'account/edit-user.html', {'form': form})
+    else:
+        form = UserProfileEditForm(instance=user)
+    
+    return render(request, 'account/edit-user.html', {'form': form})
 
 def bill(request):
     return render(request, 'account/bill/app-invoice-list.html')
 
 
 def users(request):
-    # خواندن تمام کاربران از پایگاه داده
-    all_users = UserProfile.objects.all()
-    # ارسال اطلاعات به قالب HTML
-    return render(request, 'account/app-user-list.html', {'users': all_users})
+    all_users = get_user_model().objects.all()
+    return render(request, 'account/user-list.html', {'users': all_users})
 
 
 def rooms(request):
-    return render(request, 'account/rooms.html')
+    resources = Resource.objects.all()
+    return render(request, 'account/room-list.html',{'resources': resources})
 
 def user_bill(request):
     return render(request, 'account/bill/app-invoice-list.html')
 
 
 def calendar(request):
-
     reservations = Reservation.objects.all()
     resources = Resource.objects.all()
-    
     reservation_data = []
     for reservation in reservations:
         start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
@@ -162,3 +194,11 @@ def cancel_reservation(request):
     except Exception as e:
         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+def login(request):
+    print('rbgshkfgkdfhlisdkf')
+    return render(request, 'account/login.html')
+
+def register(request):
+    return render(request, 'account/register.html')

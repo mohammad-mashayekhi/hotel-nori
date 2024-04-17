@@ -1,0 +1,150 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block vendors-css %}
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/apex-charts/apex-charts.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/swiper/swiper.css' %}" />
+{% endblock %}
+
+{% block page-css %}
+<link rel="stylesheet" href="{% static 'vendor/css/pages/cards-statistics.css' %}" />
+{% endblock %}
+
+{% block contant %}
+<div class="container-xxl flex-grow-1 container-p-y">            
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-4">
+        <h4 class="card-header">ویرایش حساب کاربر</h4>
+        <!-- Account -->
+        <div class="card-body pt-2 mt-1">
+          <form id="editProfileForm" method="POST">
+              {% csrf_token %}
+              <div class="row mt-2 gy-4">
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.first_name}}
+                          <label for="firstName">نام</label>
+                          {% if form.first_name.errors %}
+                              {% for error in form.first_name.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.last_name}}
+                          <label for="lastName">نام خانوادگی</label>
+                          {% if form.last_name.errors %}
+                              {% for error in form.last_name.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating form-floating-outline">
+                      {{form.email}}
+                        <label for="mobileNumber">ایمیل</label>
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.mobile_number}}
+                          <label for="mobileNumber">شماره تلفن همراه</label>
+                          {% if form.mobile_number.errors %}
+                              {% for error in form.mobile_number.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.card_number}}
+                        <label for="cardNumber">شماره کارت</label>
+                          {% if form.card_number.errors %}
+                              {% for error in form.card_number.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.national_code}}
+                        <label for="nationalCode">کد ملی</label>
+                          {% if form.national_code.errors %}
+                              {% for error in form.national_code.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.gender}}
+                          <label for="gender">جنسیت</label>
+                          {% if form.gender.errors %}
+                              {% for error in form.gender.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="form-floating form-floating-outline">
+                        {{form.birth_date}}
+                          <label for="birthDate">تاریخ تولد</label>
+                          {% if form.birth_date.errors %}
+                              {% for error in form.birth_date.errors %}
+                                  <div class="text-danger">{{ error }}</div>
+                              {% endfor %}
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating form-floating-outline">
+                      {{form.user_status}}
+                        <label for="userStatus">وضعیت کاربر</label>
+                        {% if form.user_status.errors %}
+                            {% for error in form.user_status.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+              </div>
+              <div class="mt-4">
+                  <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
+                  <button type="reset" class="btn btn-outline-secondary">انصراف</button>
+              </div>
+          </form>
+      </div>
+      
+        <!-- /Account -->
+      </div>
+    </div>
+  </div>            
+</div>
+{% endblock %}
+
+{% block vondors-js %}
+<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<script src="{% static 'vendor/libs/apex-charts/apexcharts.js' %}"></script>
+<script src="{% static 'vendor/libs/swiper/swiper.js' %}"></script>
+{% endblock %}
+
+{% block page-js %}
+<script src="{% static 'js/dashboards-ecommerce.js' %}"></script>
+{% endblock %}

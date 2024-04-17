@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings 
 from shortuuid.django_fields import ShortUUIDField
 
 class Reservation(models.Model):
@@ -13,8 +13,8 @@ class Reservation(models.Model):
     start = models.DateField()
     end = models.DateField()
     title = models.CharField(max_length=100)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_reservations')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='booked_reservations')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_reservations')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='booked_reservations')
     paid = models.BooleanField(default=False)  # وضعیت پرداخت
     payment_id = models.CharField(max_length=100, blank=True, null=True)  # شناسه پرداخت
     resource = models.ForeignKey('Resource', on_delete=models.CASCADE)
@@ -30,5 +30,6 @@ class Resource(models.Model):
     price_per_person = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     status = models.BooleanField(default=True)  # True for active, False for inactive
     capacity = models.PositiveIntegerField(blank=True, null=True)
+    img = models.ImageField(upload_to='image_room/' , null=True, blank=True)
     def __str__(self):
         return self.name
