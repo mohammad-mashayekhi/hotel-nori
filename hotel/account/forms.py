@@ -1,6 +1,7 @@
 from django import forms
 from .models import Userprofile
 from django.forms.widgets import Select, DateInput
+from django.contrib.auth.forms import AuthenticationForm
 
 class UserProfileEditForm(forms.ModelForm):
     class Meta:
@@ -32,3 +33,13 @@ class UserProfileEditFormUser(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs.update({'class': 'form-control'})
             field.widget.attrs.pop('autofocus', None)
+
+
+from django.contrib.auth.forms import UserCreationForm
+
+class CustomUserCreationForm(UserCreationForm):
+    terms = forms.BooleanField()
+
+    class Meta(UserCreationForm.Meta):
+        model = Userprofile
+        fields = UserCreationForm.Meta.fields + ('terms',)

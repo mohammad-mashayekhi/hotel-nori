@@ -53,7 +53,7 @@
 
       <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <div class="app-brand demo">
-          <a href="index.html" class="app-brand-link">
+          <a href="{% url 'home'%}" class="app-brand-link">
             <span class="app-brand-logo demo">
               <span style="color: var(--bs-primary)">
                 <svg width="268" height="150" viewBox="0 0 38 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -426,7 +426,7 @@
                     <div class="dropdown-divider"></div>
                   </li>
                   <li>
-                    <a class="dropdown-item waves-effect" href="auth-login-cover.html" target="_blank">
+                    <a class="dropdown-item waves-effect" href="{% url 'account:logout' %}" target="_blank">
                       <i class="mdi mdi-logout me-2"></i>
                       <span class="align-middle">خروج</span>
                     </a>

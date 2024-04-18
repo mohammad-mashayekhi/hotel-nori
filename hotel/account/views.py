@@ -6,11 +6,13 @@ from jdatetime import datetime as jdatetime
 from datetime import datetime, timedelta
 from reserve.forms import ReservationForm  # ایمپورت کردن فرم
 from django.views.decorators.http import require_POST
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model ,logout ,authenticate
 from django.shortcuts import render ,redirect
-from .decorators import verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
+from .decorators import login_required,verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
 from account.forms import *
 from account.models import Userprofile
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as auth_login
 
 def account(request):
     if request.method == 'POST':
@@ -197,8 +199,43 @@ def cancel_reservation(request):
 
 
 def login(request):
-    print('rbgshkfgkdfhlisdkf')
-    return render(request, 'account/login.html')
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+               # Redirect to a success page.
+                return redirect('account:dashboard')  # Change 'success_page' to your desired success page
+            else:
+                # Return an 'invalid login' error message.
+                form.add_error(None, 'نام کاربری یا رمز عبور اشتباه است')
+    else:
+        form = AuthenticationForm(request)
+    return render(request, 'account/login.html', {'form': form})
+
 
 def register(request):
-    return render(request, 'account/register.html')
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = form.cleaned_data['username']
+            user.user_status = 'normal'  # تنظیم وضعیت به عادی
+            user.save()  
+            # اعتبارسنجی تایید شرایط و قوانین
+            if form.cleaned_data['terms']:
+                # کاربر را وارد سیستم می‌کنیم
+                auth_login(request, user)
+                return redirect('success_page_register')  # Change 'success_page' to your desired success page
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'account/register.html', {'form': form})
+
+
+@login_required(login_url='account:login')
+def logoutUser(request):
+    logout(request)
+    return redirect('home')

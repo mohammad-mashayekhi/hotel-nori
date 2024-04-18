@@ -2,6 +2,7 @@ from functools import wraps
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
+from django.contrib.auth import REDIRECT_FIELD_NAME
 
 def is_verified_user(user):
     return user.is_authenticated and user.user_status == 'verified'
@@ -53,3 +54,21 @@ def user_authenticated_and_verified_required(view_func):
             messages.error(request, "برای دسترسی به این صفحه باید وارد حساب کاربری خود شوید.")
             return render(request,'account/dashboard.html')
     return wrapper
+
+
+def login_required(
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
+):
+    """
+    Decorator for views that checks that the user is logged in, redirecting
+    to the log-in page if necessary.
+    """
+    actual_decorator = user_passes_test(
+        lambda u: u.is_authenticated,
+        login_url=login_url,
+        redirect_field_name=redirect_field_name,
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+

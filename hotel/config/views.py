@@ -5,3 +5,7 @@ def home(request):
 
 def terms(request):
     return render(request, 'pages/terms.html')
+
+def success_page_register(request):
+    return render(request, 'pages/success_page_register.html')
+
