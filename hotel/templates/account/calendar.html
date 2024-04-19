@@ -179,45 +179,6 @@ var oldEvent;
 var tempEvent = {};
 var deleteEvent;
 var deleteButton = document.getElementById('event-delete');
-function createEditPopup(args,resourceId) {
-  deleteButton.style.display = 'block';
-  
-  deleteEvent = false;
-  restoreEvent = true;
-
-  var ev = args.event;
-
-  popup.setOptions({
-    headerText: 'مشخصات رزرو',
-    buttons: [
-      'cancel',
-      {
-        text: 'ویرایش',
-        keyCode: 'enter',
-        handler: function () {
-        popup.close();
-        },
-        cssClass: 'mbsc-popup-button-primary',
-      },
-    ],
-    anchor: args.domEvent.currentTarget, // تنظیم موقعیت پاپ‌آپ بر اساس مختصات ایونت
-    position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' } // حذف محدودیت موقعیت
-  });
-
-  // فراخوانی ایجکس برای دریافت اطلاعات رزرو از سمت سرور
-  $.ajax({
-    url: 'account/get_reservation_info/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
-    method: 'GET',
-    data: { reservation_id: ev.reserve_id }, // ارسال شناسه رزرو به سمت سرور
-    success: function (data) {
-      fillPopupWithData(data);
-      popup.open();
-    },
-    error: function () {
-      alert('خطا در دریافت اطلاعات رزرو');
-    }
-  });
-}
 
 function createAddPopup(elm,resourceId) {
 
@@ -276,6 +237,48 @@ popup.open();
       anchor: elm,
       position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' },
 
+  });
+}
+
+function createEditPopup(args,resourceId) {
+  var ev = args.event;
+  tempEvent = args.event;
+
+  deleteButton.style.display = 'block';
+  
+  deleteEvent = false;
+  restoreEvent = true;
+
+
+  popup.setOptions({
+    headerText: 'مشخصات رزرو',
+    buttons: [
+      'cancel',
+      {
+        text: 'ویرایش',
+        keyCode: 'enter',
+        handler: function () {
+        popup.close();
+        },
+        cssClass: 'mbsc-popup-button-primary',
+      },
+    ],
+    anchor: args.domEvent.currentTarget, // تنظیم موقعیت پاپ‌آپ بر اساس مختصات ایونت
+    position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' } // حذف محدودیت موقعیت
+  });
+
+  // فراخوانی ایجکس برای دریافت اطلاعات رزرو از سمت سرور
+  $.ajax({
+    url: 'account/get_reservation_info/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
+    method: 'GET',
+    data: { reservation_id: ev.reserve_id }, // ارسال شناسه رزرو به سمت سرور
+    success: function (data) {
+      fillPopupWithData(data);
+      popup.open();
+    },
+    error: function () {
+      alert('خطا در دریافت اطلاعات رزرو');
+    }
   });
 }
 
@@ -408,7 +411,8 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     myRange.setVal([startDate, endDate]);
   },
   onEventClick: function (args) {
-    tempEvent = args.event;    
+    tempEvent = args.event;  
+    console.log(tempEvent)  
     if (!popup.isVisible()) {
       createEditPopup(args);
     }
@@ -419,7 +423,17 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     tempEvent = args.event;
     createAddPopup(args.target, resourceId);
   },
-
+  onEventDeleted: function (args) {
+    mobiscroll.snackbar({
+      button: {
+        action: function () {
+          calendar.addEvent(args.event);
+        },
+        text: 'Undo',
+      },
+      message: 'Event deleted',
+    });
+  },
 });
 
 popup = mobiscroll.popup('#demo-add-popup', {
@@ -445,7 +459,8 @@ popup = mobiscroll.popup('#demo-add-popup', {
 
 deleteButton.addEventListener('click', function () {
   var deletedEvent = tempEvent;
-  calendar.removeEvent(tempEvent);
+  console.log(tempEvent);
+  myCalendar.removeEvent(tempEvent);
   $.ajax({
     url: 'account/remove_reservation/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
     method: 'POST',
