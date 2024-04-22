@@ -132,22 +132,19 @@ def get_reservation_info(request):
         reservation_id = request.GET.get('reservation_id')
         try:
             reservation = Reservation.objects.get(reserve_id=reservation_id)
-            
-            start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
-            end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time()) + timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+            buffer = False
             if reservation.bufferAfter:
-                buffer = "میخواهد"
-                end_datetime += timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+                buffer = True
             
-            start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
-            end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
+            # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
+            # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
 
             reservation_data = {
                 'title': reservation.title,
-               'start': start_jdatetime.strftime("%Y-%m-%d %H:%M:%S"),  
-                'end': end_jdatetime.strftime("%Y-%m-%d %H:%M:%S"),
-                'status':reservation.get_status_display(),
-                'bufferAfter': buffer if reservation.bufferAfter else '',  # استفاده از مقدار buffer فقط اگر bufferAfter برابر با True باشد
+                'start': reservation.start.strftime("%Y-%m-%d %H:%M:%S"),  
+                'end': reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
+                'status':reservation.status,
+                'bufferAfter': buffer,
                 'user': reservation.user.username,  # نام کاربر
             }
             return JsonResponse(reservation_data)
@@ -156,28 +153,55 @@ def get_reservation_info(request):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
+from django.contrib.auth import get_user_model
+from account.models import Userprofile
+from dateutil.parser import parse
 
 def add_reservation(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        # start = request.POST.get('start')
-        # end = request.POST.get('end')
-        start = datetime.now()  # یا هر مقدار دلخواه دیگری که بخواهید
-        end = start + timedelta(hours=1)  # یا هر مقدار دلخواه دیگری که بخواهید
-        resource_id = request.POST.get('resourceId')  # شناسه منبع موردنظر را از فرم دریافت کنید
+        start = request.POST.get('start')
+        end = request.POST.get('end')
+        resource_id = request.POST.get('resourceId')
+        author = request.user
+        status = request.POST.get('status')
+        user_username = request.POST.get('user')
+        # print(start)
+        # start = datetime.now()  # یا هر مقدار دلخواه دیگری که بخواهید
+        # end = start + timedelta(hours=1) 
+        start = parse(start, fuzzy=True)
+        end = parse(end, fuzzy=True)
 
-      
-        # استخراج Userprofile مربوط به کاربر فعلی
-        user = request.user
-        print(user.id)
-        # اگر اطلاعات منبع موردنظر درخواست‌دهنده موجود نباشد، یک پاسخ خطایی ارسال کنید
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
 
-        # ایجاد رزرو با اطلاعات جدید و Userprofile مربوط به کاربر فعلی
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=user , user=user)
+        # بررسی وجود کاربر با نام کاربری درخواست‌دهنده
+        User = get_user_model()
+        try:
+            user = User.objects.get(username=user_username)
+        except User.DoesNotExist:
+            # اگر کاربر موجود نبود، یک کاربر جدید ایجاد کنید
+            user = User.objects.create_user(username=user_username, password='your_password_here')  # رمز عبور به دلخواه خود تنظیم کنید
+
+        # بررسی زمان رزرو
+     
+        # فیلتر رزروهایی که بازه زمانی همپوشانی دارند
+        # فیلتر رزروهایی که بازه زمانی همپوشانی دارند
+        overlapping_reservations = Reservation.objects.filter(
+            resource=resource,
+            status__in=['pending_payment', 'confirmed'],  # فقط رزروهای در انتظار پرداخت یا تایید شده
+        ).exclude(
+            Q(end__lte=start) | Q(start__gte=end)  # حذف رزروهایی که با رزرو جدید هیچ همپوشانی ندارند
+        )
+
+        # اگر هیچ رزروی با همپوشانی کامل یا جزئی وجود نداشته باشد، اجازه ثبت رزرو جدید داده می‌شود
+        if overlapping_reservations.exists():
+            return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
+        
+        # ایجاد رزرو با اطلاعات جدید
+        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user , status = status)
 
         # ارسال پاسخ موفقیت‌آمیز
         return JsonResponse({'success': True})
