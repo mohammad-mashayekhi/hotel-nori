@@ -44,16 +44,16 @@ href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
                 {% endif %}
                 <div class="row">
                   <div class="col-4">
-                      <i class="fas fa-users mdi mdi-human"></i> <!-- آیکون مورد نظر -->
+                      <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
                       <span>ظرفیت</span> <!-- متن مورد نظر -->
                   </div>
                   <div class="col-4">
-                      <i class="fas fa-cog mdi mdi-calendar-check"></i> <!-- آیکون مورد نظر -->
-                      <span>امکان رزرو</span> <!-- متن مورد نظر -->
+                      <i class="fas fa-cog"></i> <!-- آیکون مورد نظر -->
+                      <span>متراژ</span> <!-- متن مورد نظر -->
                   </div>
                   <div class="col-4">
                       <i class="fas fa-cog "></i> <!-- آیکون مورد نظر -->
-                      <span></span> <!-- متن مورد نظر -->
+                      <span>{{r.number_bed}} تخت</span> <!-- متن مورد نظر -->
                   </div>
               </div>
                 <div class="row">
@@ -62,17 +62,13 @@ href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
                         <span>{{r.capacity}} نفر</span> <!-- متن مورد نظر -->
                     </div>
                     <div class="col-4">
-                        <i class="fas fa-cog"></i> <!-- آیکون مورد نظر -->
-                        {% if r.status %}
-                        <span>وجود دارد</span> <!-- متن مورد نظر -->
-                        {% else %}
-                        <span>وجود دارد</span> <!-- متن مورد نظر -->
-                        {% endif %}
+                      <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                        <span>{{r.number_area}} متر</span> <!-- متن مورد نظر -->
                     </div>
                     <div class="col-4">
-                        <i class="fas fa-cog "></i> <!-- آیکون مورد نظر -->
-                        <span>ویژگی ۲</span> <!-- متن مورد نظر -->
-                    </div>
+                        <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                          <span>{{r.number_pad}} تشک</span> <!-- متن مورد نظر -->
+                      </div>
                 </div>
               </a>
             </div>

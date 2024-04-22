@@ -13,6 +13,7 @@ from account.forms import *
 from account.models import Userprofile
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
+from django.db.models import Q
 
 def account(request):
     if request.method == 'POST':
@@ -58,7 +59,7 @@ def users(request):
 
 
 def rooms(request):
-    resources = Resource.objects.all()
+    resources = Resource.objects.filter(status = True)
     return render(request, 'account/room-list.html',{'resources': resources})
 
 def user_bill(request):
@@ -66,7 +67,7 @@ def user_bill(request):
 
 
 def calendar(request):
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment'))
     resources = Resource.objects.all()
     reservation_data = []
     for reservation in reservations:
@@ -76,8 +77,6 @@ def calendar(request):
             color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
         elif reservation.status == 'pending_payment':
             color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
-        elif reservation.status == 'expired' or reservation.status == 'canceled':
-            color = '#808080'  # رنگ خاکستری برای رزروهای منقضی شده یا کنسل شده
         else:
             color = '#000000'  # رنگ پیش‌فرض برای حالت‌های دیگر
         if reservation.bufferAfter:
@@ -157,6 +156,7 @@ def get_reservation_info(request):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
 def add_reservation(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -164,15 +164,24 @@ def add_reservation(request):
         # end = request.POST.get('end')
         start = datetime.now()  # یا هر مقدار دلخواه دیگری که بخواهید
         end = start + timedelta(hours=1)  # یا هر مقدار دلخواه دیگری که بخواهید
-        resource_id = request.POST.get('resource_id')  # شناسه منبع موردنظر را از فرم دریافت کنید
-        print(resource_id)
+        resource_id = request.POST.get('resourceId')  # شناسه منبع موردنظر را از فرم دریافت کنید
+
+      
+        # استخراج Userprofile مربوط به کاربر فعلی
+        user = request.user
+        print(user.id)
+        # اگر اطلاعات منبع موردنظر درخواست‌دهنده موجود نباشد، یک پاسخ خطایی ارسال کنید
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
 
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource)
+        # ایجاد رزرو با اطلاعات جدید و Userprofile مربوط به کاربر فعلی
+        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=user , user=user)
+
+        # ارسال پاسخ موفقیت‌آمیز
         return JsonResponse({'success': True})
+    # ارسال پاسخ خطایی اگر درخواست POST نباشد
     return JsonResponse({'success': False})
 
 

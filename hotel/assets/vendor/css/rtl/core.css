@@ -7,7 +7,7 @@
 :root,
 [data-bs-theme=light] {
   --bs-blue: #26c6f9;
-  --bs-indigo: #666cff;
+  --bs-indigo: #464be4;
   --bs-purple: #6f42c1;
   --bs-pink: #e83e8c;
   --bs-red: #ff4d49;
@@ -27442,4 +27442,12 @@ a.bg-vimeo:hover, a.bg-vimeo:focus {
 }
 .card-customize{
   height: 200px;
+}
+
+.logincard{
+  margin: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  color:black;
 }

@@ -20,7 +20,7 @@
       <div class="content-wrapper">
         <!-- Content -->
         <div class="container-xxl flex-grow-1 container-p-y">
-          <div class="card" style="background-size:cover; background-image: url('{% static 'img/pages/back_home.jpg'%}')">
+          <div class="card" style="background-size:cover; background-image: url('{% static 'img/pages/back-home.png'%}')">
             <!-- Help Center Header -->
             <div class="help-center-header d-flex flex-column justify-content-center align-items-center mg-3">
               <!-- <h3 class="text-center text-primary fw-semibold" style="margin-top:30px">بسم الله الرحمن الرحیم</h3> -->
@@ -34,27 +34,27 @@
                       <div class="col-md-4 mb-md-0 mb-4">
                         <div class="card border shadow-none homecaed">
                           <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'svg/icons/rocket.svg' %}" height="60" alt="Help center landing">
-                            <h5>رزرو اتاق</h5>
-                            <a class="btn btn-outline-primary" href="pages-help-center-article.html">مشاهده بیشتر</a>
+                            <img class="mb-3" src="{% static 'img/home/account-100.png' %}" height="60" alt="Help center landing">
+                            <h5>ورود به حساب کاربری</h5>
+                            <a class="btn btn-outline-primary" href="{% url 'account:login'%}">مشاهده بیشتر</a>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 mb-md-0 mb-4 ">
                         <div class="card border shadow-none homecaed">
                           <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'svg/icons/gift.svg' %}" height="60" alt="Help center landing">
-                            <h5>مشاهده اتاق‌ها</h5>
-                            <a class="btn btn-outline-primary" href="pages-help-center-article.html">مشاهده بیشتر</a>
+                            <img class="mb-3" src="{% static 'img/home/reserve-80.png' %}" height="60" alt="Help center landing">
+                            <h5>رزرو اتاق</h5>
+                            <a class="btn btn-outline-primary" href="{% url 'account:calendar'%}">مشاهده بیشتر</a>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="card border shadow-none homecaed">
                           <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'svg/icons/keyboard.svg' %}" height="60" alt="Help center landing">
+                            <img class="mb-3" src="{% static 'img/home/cancel-80.png' %}" height="60" alt="Help center landing">
                             <h5>کنسلی رزرو</h5>
-                            <a class="btn btn-outline-primary" href="pages-help-center-article.html">مشاهده بیشتر</a>
+                            <a class="btn btn-outline-primary" href="{% url 'account:bill'%}">مشاهده بیشتر</a>
                           </div>
                         </div>
                       </div>
@@ -69,18 +69,18 @@
                       <div class="col-md-4 mb-md-0 mb-4">
                         <div class="card border shadow-none homecaed">
                           <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'svg/icons/rocket.svg' %}" height="60" alt="Help center landing">
-                            <h5>ورود به پنل کاربری</h5>
-                            <a class="btn btn-outline-primary" href="pages-help-center-article.html">مشاهده بیشتر</a>
+                            <img class="mb-3" src="{% static 'img/home/room-100.png' %}" height="60" alt="Help center landing">
+                            <h5>مشاهده اتاق‌ها</h5>
+                            <a class="btn btn-outline-primary" href="{% url 'account:rooms'%}">مشاهده بیشتر</a>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-4 mb-md-0 mb-4 card-special">
                         <div class="card border shadow-none homecaed">
                           <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'svg/icons/gift.svg' %}" height="60" alt="Help center landing">
+                            <img class="mb-3" src="{% static 'img/home/contact-us-80.png' %}" height="60" alt="Help center landing">
                             <h5>ارتباط با مدیریت</h5>
-                            <a class="btn btn-outline-primary" href="pages-help-center-article.html">مشاهده بیشتر</a>
+                            <a class="btn btn-outline-primary" href="{% url 'terms' %}">مشاهده بیشتر</a>
                           </div>
                         </div>
                       </div>

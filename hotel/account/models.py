@@ -8,8 +8,8 @@ from django_jalali.db import models as jmodels
 USER_STATUS_CHOICES = [
     ('normal', 'کاربر عادی'),
     ('verified', 'کاربر تایید شده'),
-    ('admin_level_1', 'کاربر ادمین سطح یک'),
-    ('admin_level_2', 'کاربر ادمین سطح دو')
+    ('admin_level_a', 'کاربر ادمین سطح b'),
+    ('admin_level_b', 'کاربر ادمین سطح a')
   ]
 
 class Userprofile(AbstractUser):
@@ -31,7 +31,7 @@ class Userprofile(AbstractUser):
         status_mapping = {
             'normal': 'کاربر عادی',
             'verified': 'کاربر تایید شده',
-            'admin_level_1': 'کاربر ادمین سطح یک',
-            'admin_level_2': 'کاربر ادمین سطح دو',
+            'admin_level_a': 'کاربر ادمین سطح a',
+            'admin_level_b': 'کاربر ادمین سطح b',
         }
         return status_mapping.get(self.user_status, 'وضعیت نامعلوم')
