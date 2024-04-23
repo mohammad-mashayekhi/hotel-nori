@@ -172,6 +172,10 @@ def add_reservation(request):
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
 
+          # کاهش ۳ روز از زمان شروع و پایان
+        start -= timedelta(days=3)
+        end -= timedelta(days=4)
+
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
