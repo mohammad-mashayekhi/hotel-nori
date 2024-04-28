@@ -10,8 +10,8 @@ class Reservation(models.Model):
         ('expired', 'منقضی شده'),                  # منقضی شده
     ]
     reserve_id = ShortUUIDField(unique=True , length=5 , max_length=9 , alphabet="abcdefgh12345")
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = models.DateField()
+    end = models.DateField()
     title = models.CharField(max_length=100)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_reservations')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='booked_reservations')

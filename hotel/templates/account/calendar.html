@@ -23,87 +23,89 @@
  min-height: 52px !important;
 }
 .room1.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room2{
  border-bottom: 4px solid #135D66 !important;
  min-height: 52px !important;
 }
 .room2.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room3{
  border-bottom: 4px solid #77B0AA !important;
  min-height: 52px !important;
 }
 .room3.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room4{
  border-bottom: 4px solid #58A399 !important;
  min-height: 52px !important;
 }
 .room4.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room5{
  border-bottom: 4px solid #ADBC9F !important;
  min-height: 52px !important;
 }
 .room5.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room6{
  border-bottom: 4px solid #A8CD9F !important;
  min-height: 52px !important;
 }
 .room6.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room7{
  border-bottom: 4px solid #C6EBC5 !important;
  min-height: 52px !important;
 }
 .room7.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room8{
  border-bottom: 4px solid #F9E897 !important;
  min-height: 52px !important;
 }
 .room8.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background: rgba(246, 231, 203, 0.7);
 }
 .room9{
  border-bottom: 4px solid #F2C18D !important;
  min-height: 52px !important;
 }
 .room9.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background: rgba(246, 231, 203, 0.7);
 }
 .room10{
  border-bottom: 4px solid #A3333D !important;
  min-height: 52px !important;
 }
 .room10.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room11{
- border-bottom: 4px solid #870F19 !important;
+ border-bottom: 4px solid #e3c3c6 !important;
  min-height: 52px !important;
 }
 .room11.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background:  rgba(246, 231, 203, 0.7);
 }
 .room12{
   border-bottom: 4px solid #590531 !important;
   min-height: 52px !important;
 }
 .room12.mbsc-timeline-resource {
-  background: rgba(243, 223, 186, 0.7);
+  background: rgba(246, 231, 203, 0.7);
 }
 .mbsc-timeline-header .mbsc-flex .mbsc-ios .mbsc-rtl{
-  background: rgba(243, 223, 186, 0.7) !important;
+  background: rgba(246, 231, 203, 0.7) !important;
+  font-weight: bold;
+  
 }
 .mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
  width: 80px;
@@ -122,15 +124,20 @@
   text-align: center;
 }
 .mbsc-timeline-day-border{
-  border-left: 3px solid rgb(0, 0, 0) !important; 
+  border-left: 3px solid rgb(198, 192, 192) !important; 
 }
 .md-lunch-break-class.mbsc-schedule-invalid {
     text-align: center;
     align-items: center;
     font-weight: bold;
     /* background: repeating-linear-gradient(-45deg, #f3f3f3, #f3f3f3 6px, #e5e5e5 11px, #e5e5e5 22px); */
-    background-color: #E5E4E4 !important;
+    background-color: #780a0a !important;
 }
+.mbsc-button-mycalendar{
+  background-color: #ddeeff !important;
+  border-radius: 15px;
+  font-weight: bold;
+} 
 </style>
 {% endblock %}
 
@@ -164,7 +171,8 @@
                 </div>
             </div>
               <div class="mbsc-button-group">
-                <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">Delete event</button>
+                <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
+                <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button>
             </div>
           </div>
       </div> 
@@ -182,6 +190,7 @@
     themeVariant: 'light'         // More info about themeVariant: https://mobiscroll.com/docs/javascript/datepicker/api#opt-themeVariant
   });
   var reservationData = {{ reservation_data|safe }};
+  console.log(reservationData)
   var resourceData = {{ resource_data|safe }};
   var popup;
   var oldEvent;
@@ -190,9 +199,10 @@
   var startcalendar = '2024-04-20';
   var endcalendar = '2025-04-20';
   var deleteButton = document.getElementById('event-delete');
+  var addremindersmsButton = document.getElementById('event-reminder');
 
   datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
-    controls: ['calendar', 'timegrid'],
+    controls: ['calendar'],
     display: 'inline',            // Specify display mode like: display: 'bottom' or omit setting to use default
     rangeSelectMode: 'wizard',
     select: 'range',              // More info about select: https://mobiscroll.com/docs/javascript/datepicker/api#opt-select
@@ -323,7 +333,6 @@
 
     firstday = data.start;
     lastday = data.end;
-
     datepickerreserve.setVal([firstday, lastday]);
   }
   var formatDate = mobiscroll.formatDate;
@@ -331,7 +340,6 @@
   var endDate;
   var end;
   var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
-    locale: mobiscroll.localeFa,
     clickToCreate: 'double',
     dragToCreate: true,
     dragToMove: false,
@@ -340,7 +348,7 @@
     view: {
       timeline: {
         type: 'year', 
-        size: 60,
+        size: 30,
         },
     },
     data: reservationData,
@@ -357,13 +365,13 @@
     // ],
     renderHeader: function () {
       return (
-        '<div id="custom-date-range"><button mbsc-button data-variant="flat" class="mbsc-calendar-button">' +
-        '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">Button' +
-        '</span></button></div>' +
-        '<div class="md-custom-range-view-controls">' +
+        '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
         '<div mbsc-calendar-today></div>' +
-        '</div>'
-      );
+        '</div>'+
+        '<div id="custom-date-range"><button mbsc-button data-variant="flat" class="m-1 p-1 mbsc-button-mycalendar mbsc-calendar-button">' +
+        '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">Button' +
+        '</span></button></div>'
+        );
     },
     onPageLoaded: function (args) {
       startDate = args.firstDay;
@@ -384,7 +392,6 @@
     },
     onEventCreated: function (args) {
       resourceId = args.event.resource;
-      console.log(resourceId)
       popup.close();
       tempEvent = args.event;
       createAddPopup(args.target, resourceId);
@@ -425,7 +432,6 @@
 
   deleteButton.addEventListener('click', function () {
     var deletedEvent = tempEvent;
-    console.log(tempEvent);
     myCalendar.removeEvent(tempEvent);
     $.ajax({
       url: 'account/remove_reservation/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
@@ -511,6 +517,26 @@
   function getNrDays(start, end) {
     return Math.round(Math.abs((end.setHours(0) - start.setHours(0)) / (24 * 60 * 60 * 1000))) + 1;
   }
+
+  addremindersmsButton.addEventListener('click', function () {
+    console.log(tempEvent);
+    $.ajax({
+      url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
+      method: 'POST',
+      data: { 
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        reservation_id: tempEvent.reserve_id 
+      }, // ارسال شناسه رزرو به سمت سرور
+      success: function (data) {
+        popup.close();
+      },
+      error: function () {
+        alert('خطا در دریافت اطلاعات رزرو');
+      }
+    });
+  });
+
+
 </script>
 
 {% endblock %}

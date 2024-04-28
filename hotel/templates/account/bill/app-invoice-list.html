@@ -39,27 +39,45 @@
 {% block contant %}
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">صورتحساب /</span> لیست
+    <span class="text-muted fw-light">لیست /</span> رزروها
   </h4>
 
   <!-- Invoice List Table -->
   <div class="card">
     <div class="card-datatable table-responsive">
-      <table class="invoice-list-table table">
+      <table class="datatables-users table">
         <thead class="table-light">
           <tr>
             <th></th>
             <th></th>
-            <th>#شناسه</th>
-            <th><i class="mdi mdi-trending-up"></i></th>
+            <th>نام</th>
+            <th>ایدی</th>
+            <th>شروع</th>
+            <th>پایان</th>
             <th>کاربر</th>
-            <th>جمع</th>
-            <th class="text-truncate">تاریخ صدرو</th>
-            <th>مبلغ</th>
-            <th></th>
-            <th class="cell-fit"></th>
+            <th>ایجاد کننده</th>
+            <th>اتاق</th>
+            <th>وضعیت</th>
+            <th>ویرایش</th>
           </tr>
         </thead>
+        <tbody id="table-body">
+          {% for r in reserve %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td>{{ r.title }}</td>
+            <td>{{ r.reserve_id }}</td>
+            <td>{{ r.start }}</td>
+            <td>{{ r.end }}</td>          
+            <td>{{ r.user }}</td>
+            <td>{{ r.author }}</td>
+            <td>{{ r.resource }}</td>
+            <td>{{ r.status }}</td>
+            <td><a href="">ویرایش</a></td>
+          </tr>
+          {% endfor %}        
+        </tbody>
       </table>
     </div>
   </div>
@@ -68,10 +86,10 @@
 
 {% block vondors-js %}
 <script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
-<script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+<!-- <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script> -->
 {% endblock %}
 
 {% block page-js %}
-<script src="{% static 'js/app-invoice-list.js' %}"></script>
+<!-- <script src="{% static 'js/app-invoice-list.js' %}"></script> -->
 
 {% endblock %}

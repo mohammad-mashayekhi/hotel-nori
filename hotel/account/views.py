@@ -14,6 +14,8 @@ from account.models import Userprofile
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.db.models import Q
+from kavenegar import *
+import random
 
 def account(request):
     if request.method == 'POST':
@@ -50,7 +52,8 @@ def edit_user(request, user_id):
     return render(request, 'account/edit-user.html', {'form': form})
 
 def bill(request):
-    return render(request, 'account/bill/app-invoice-list.html')
+    reservations = Reservation.objects.all()
+    return render(request, 'account/bill/app-invoice-list.html',{'reserve': reservations})
 
 
 def users(request):
@@ -65,28 +68,38 @@ def rooms(request):
 def user_bill(request):
     return render(request, 'account/bill/app-invoice-list.html')
 
+from datetime import datetime, timedelta
+
+from datetime import datetime, timedelta
 
 def calendar(request):
     reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment'))
     resources = Resource.objects.all()
     reservation_data = []
     for reservation in reservations:
+        # Create start datetime with time set to 12:00
         start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
-        end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time()) + timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+        # Create end datetime with time set to 14:00
+        end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time())
+
+        start_datetime = start_datetime - timedelta(days=2)
+        end_datetime = end_datetime - timedelta(days=2)
+
         if reservation.status == 'confirmed':
             color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
         elif reservation.status == 'pending_payment':
             color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
         else:
             color = '#000000'  # رنگ پیش‌فرض برای حالت‌های دیگر
+
         if reservation.bufferAfter:
             buffer = "میخواهد"
             end_datetime += timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
-                
+
         reservation_data.append({
             'reserve_id' : reservation.reserve_id,
-            'start': start_datetime.strftime('%Y-%m-%dT%H:%M:%S'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-            'end': end_datetime.strftime('%Y-%m-%dT%H:%M:%S'),
+            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+            'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
             'title': reservation.title,
             'resource': reservation.resource_id,
             'color':color,
@@ -101,12 +114,13 @@ def calendar(request):
             'cssClass': resource.css,
         })
 
-
     if request.method == 'POST':
         form = ReservationForm(request.POST)
         if form.is_valid():
             reservation = form.save(commit=False)
             reservation.author = request.user  # تنظیم نویسنده رزرو
+            reservation.start = datetime.now().date()
+            reservation.end = datetime.now().date()
             reservation.save()
             form = ReservationForm()
             context = {
@@ -119,13 +133,15 @@ def calendar(request):
             print(form.errors)  # چاپ کردن خطا در ترمینال
     else:
         form = ReservationForm()
+
     context = {
             'reservation_data': json.dumps(reservation_data),
             'resource_data': json.dumps(resource_data),
             'form': form,
         }
-   
+
     return render(request, 'account/calendar.html', context)
+
 
 def get_reservation_info(request):
     if request.method == 'GET' and 'reservation_id' in request.GET:
@@ -166,15 +182,12 @@ def add_reservation(request):
         author = request.user
         status = request.POST.get('status')
         user_username = request.POST.get('user')
-        # print(start)
         # start = datetime.now()  # یا هر مقدار دلخواه دیگری که بخواهید
         # end = start + timedelta(hours=1) 
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
 
-          # کاهش ۳ روز از زمان شروع و پایان
-        start -= timedelta(days=3)
-        end -= timedelta(days=4)
+       
 
         try:
             resource = Resource.objects.get(id=resource_id)
@@ -276,3 +289,52 @@ def register(request):
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
+
+def add_reminder_sms(request):
+    # reservation_id = request.POST.get('reservation_id')
+    # print(reservation_id)
+    try:
+        # یافتن رزرو مربوطه از پایگاه داده
+        # reservation = Reservation.objects.get(reserve_id=reservation_id)
+        send_message_reminde('09106961316',123)
+        # تغییر حالت رزرو به کنسل شده
+        # reservation.status = 'canceled'
+        # reservation.save()
+
+        return JsonResponse({'success': True})
+    except Reservation.DoesNotExist:
+        # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+        return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+    except Exception as e:
+        # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+
+def generate_otp_code():
+    return str(random.randint(100000, 999999))
+
+def send_message_reminde(phone_number,otp_code):
+    API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
+    TEMPLATE = 'reserve-room-test'
+    RECEPTOR = phone_number
+    TOKEN = otp_code
+    TOKEN2 = "۱۱ تا ۱۳ فروردین"
+    TYPE = 'sms'
+    try:
+        api = KavenegarAPI(API)
+        params = {
+        'receptor': RECEPTOR,
+        'template': TEMPLATE,
+        'token': TOKEN,
+        'token2': TOKEN2,
+        'type': TYPE ,#sms vs call
+    }
+        response = api.verify_lookup(params)
+        # print(response)
+    except APIException as e:
+        print(e)
+    except HTTPException as e:
+        print(e)
+
+

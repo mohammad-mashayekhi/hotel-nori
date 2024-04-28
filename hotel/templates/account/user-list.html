@@ -134,7 +134,7 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
   <!-- Users List Table -->
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">فیلتر جستجو</h5>
+      <!-- <h5 class="card-title">فیلتر جستجو</h5> -->
       <div
         class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">
         <div class="col-md-4 user_role"></div>
@@ -158,23 +158,22 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
             <th>ویرایش</th>
           </tr>
         </thead>
-      </thead>
-      <tbody id="table-body">
-        {% for u in users %}
-        <tr>
-          <td></td>
-          <td></td>
-          <td>{{ u.first_name }}</td>
-          <td>{{ u.last_name }}</td>
-          <td>{{ u.get_user_status_display_persian }}</td>          
-          <td>{{ u.mobile_number }}</td>
-          <td>{{ u.national_code }}</td>
-          <td>{{ u.birth_date }}</td>
-          <td>{{ u.gender }}</td>
-          <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
-        </tr>
-        {% endfor %}        
-      </tbody>
+        <tbody id="table-body">
+          {% for u in users %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td>{{ u.first_name }}</td>
+            <td>{{ u.last_name }}</td>
+            <td>{{ u.get_user_status_display_persian }}</td>          
+            <td>{{ u.mobile_number }}</td>
+            <td>{{ u.national_code }}</td>
+            <td>{{ u.birth_date }}</td>
+            <td>{{ u.gender }}</td>
+            <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
+          </tr>
+          {% endfor %}        
+        </tbody>
       </table>
     </div>
     <!-- Offcanvas to add new user -->
