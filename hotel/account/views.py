@@ -2,7 +2,7 @@ from django.shortcuts import render
 from reserve.models import Reservation, Resource
 import json
 from django.http import JsonResponse
-from jdatetime import datetime as jdatetime
+import jdatetime
 from datetime import datetime, timedelta
 from reserve.forms import ReservationForm  # ایمپورت کردن فرم
 from django.views.decorators.http import require_POST
@@ -52,7 +52,7 @@ def edit_user(request, user_id):
     return render(request, 'account/edit-user.html', {'form': form})
 
 def bill(request):
-    reservations = Reservation.objects.all()
+    reservations = Reservation.objects.all().order_by('-id')
     return render(request, 'account/bill/app-invoice-list.html',{'reserve': reservations})
 
 
@@ -73,7 +73,7 @@ from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 
 def calendar(request):
-    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment'))
+    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning'))
     resources = Resource.objects.all()
     reservation_data = []
     for reservation in reservations:
@@ -82,19 +82,22 @@ def calendar(request):
         # Create end datetime with time set to 14:00
         end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time())
 
-        start_datetime = start_datetime - timedelta(days=2)
-        end_datetime = end_datetime - timedelta(days=2)
+        # start_datetime = start_datetime - timedelta(days=3)
+        # end_datetime = end_datetime - timedelta(days=3)
 
         if reservation.status == 'confirmed':
             color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
         elif reservation.status == 'pending_payment':
             color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
+        elif reservation.status == 'cleaning':
+            color = '#DD5746'  # رنگ زرد برای رزروهای نظافت
         else:
             color = '#000000'  # رنگ پیش‌فرض برای حالت‌های دیگر
 
-        if reservation.bufferAfter:
-            buffer = "میخواهد"
-            end_datetime += timedelta(days=1)  # اضافه کردن یک روز به زمان پایان
+        # if reservation.cleaning : 
+        #     bufferAfter = 1440
+        # else :
+        #     bufferAfter = 0 
 
         reservation_data.append({
             'reserve_id' : reservation.reserve_id,
@@ -103,8 +106,9 @@ def calendar(request):
             'title': reservation.title,
             'resource': reservation.resource_id,
             'color':color,
-            'bufferAfter': buffer if reservation.bufferAfter else '',  # استفاده از مقدار buffer فقط اگر bufferAfter برابر با True باشد
+            'cleaning': reservation.cleaning , 
             'user': reservation.user.username,  # نام کاربر
+            # 'bufferAfter': bufferAfter,
         })
     resource_data = []
     for resource in resources:
@@ -112,6 +116,9 @@ def calendar(request):
             'id': resource.id,
             'name': resource.name,
             'cssClass': resource.css,
+            'capacity': resource.capacity,
+            'price' : resource.price,
+            'price_per_person':resource.price_per_person
         })
 
     if request.method == 'POST':
@@ -127,6 +134,7 @@ def calendar(request):
                 'reservation_data': json.dumps(reservation_data),
                 'resource_data': json.dumps(resource_data),
                 'form': form,
+                'resources:':resources,
             }
             return render(request, 'account/calendar.html', context)  # بازگرداندن کاربر به صفحه کلندر
         else:
@@ -138,6 +146,7 @@ def calendar(request):
             'reservation_data': json.dumps(reservation_data),
             'resource_data': json.dumps(resource_data),
             'form': form,
+            'resources':resources,
         }
 
     return render(request, 'account/calendar.html', context)
@@ -148,9 +157,7 @@ def get_reservation_info(request):
         reservation_id = request.GET.get('reservation_id')
         try:
             reservation = Reservation.objects.get(reserve_id=reservation_id)
-            buffer = False
-            if reservation.bufferAfter:
-                buffer = True
+           
             
             # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
             # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
@@ -160,8 +167,14 @@ def get_reservation_info(request):
                 'start': reservation.start.strftime("%Y-%m-%d %H:%M:%S"),  
                 'end': reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
                 'status':reservation.status,
-                'bufferAfter': buffer,
+                'cleaning': reservation.cleaning,
+                'resources':reservation.resource.id,
                 'user': reservation.user.username,  # نام کاربر
+                'capacity':reservation.resource.capacity,
+                'morecapacity':reservation.more_capacity,
+                'paid':reservation.paid,
+                'price':reservation.resource.price,
+                'price_per_person':reservation.resource.price_per_person,
             }
             return JsonResponse(reservation_data)
         except Reservation.DoesNotExist:
@@ -182,47 +195,71 @@ def add_reservation(request):
         author = request.user
         status = request.POST.get('status')
         user_username = request.POST.get('user')
-        # start = datetime.now()  # یا هر مقدار دلخواه دیگری که بخواهید
-        # end = start + timedelta(hours=1) 
+        cleaning = request.POST.get('cleaning')
+        more_capacity = request.POST.get('more_capacity')
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
+        paid = request.POST.get('paid')
 
-       
+        if paid == 'true':
+            paid = True
+        else:
+            paid = False
+
+        if cleaning == 'true':
+            cleaning = True
+            end += timedelta(days=1)  # Add one day to end time if cleaning is true
+        else:
+            cleaning = False
 
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
 
-        # بررسی وجود کاربر با نام کاربری درخواست‌دهنده
         User = get_user_model()
         try:
             user = User.objects.get(username=user_username)
         except User.DoesNotExist:
-            # اگر کاربر موجود نبود، یک کاربر جدید ایجاد کنید
-            user = User.objects.create_user(username=user_username, password='your_password_here')  # رمز عبور به دلخواه خود تنظیم کنید
+            user = User.objects.create_user(username=user_username, password=user_username)
 
-        # بررسی زمان رزرو
-     
-        # فیلتر رزروهایی که بازه زمانی همپوشانی دارند
-        # فیلتر رزروهایی که بازه زمانی همپوشانی دارند
         overlapping_reservations = Reservation.objects.filter(
             resource=resource,
-            status__in=['pending_payment', 'confirmed'],  # فقط رزروهای در انتظار پرداخت یا تایید شده
+            status__in=['pending_payment', 'confirmed'],
         ).exclude(
-            Q(end__lte=start) | Q(start__gte=end)  # حذف رزروهایی که با رزرو جدید هیچ همپوشانی ندارند
+            Q(end__lte=start) | Q(start__gte=end)
         )
 
-        # اگر هیچ رزروی با همپوشانی کامل یا جزئی وجود نداشته باشد، اجازه ثبت رزرو جدید داده می‌شود
+        # Check for overlapping reservations
         if overlapping_reservations.exists():
             return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
-        
-        # ایجاد رزرو با اطلاعات جدید
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user , status = status)
 
-        # ارسال پاسخ موفقیت‌آمیز
-        return JsonResponse({'success': True})
-    # ارسال پاسخ خطایی اگر درخواست POST نباشد
+        if cleaning == True:
+            end -= timedelta(days=1) 
+            new_reservation = Reservation.objects.create(title='نظافت', start=end, end=end + timedelta(days=1) , resource=resource, author=author, user=user, status='cleaning', cleaning=cleaning, more_capacity = more_capacity,paid = paid)
+
+        # Create reservation if there are no overlaps
+        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity,paid = paid)
+        try:
+            # Convert Gregorian date to Jalali date
+            jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
+            jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
+            # Format the Jalali dates as needed
+            formatted_start = jalali_start.strftime('%Y/%m/%d')
+            formatted_end = jalali_end.strftime('%Y/%m/%d')
+            if paid:
+                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+            else : 
+                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-test')
+            return JsonResponse({'success': True})
+        except Reservation.DoesNotExist:
+            # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+            return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+        except Exception as e:
+            print(e)
+            # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
     return JsonResponse({'success': False})
 
 
@@ -291,35 +328,43 @@ def logoutUser(request):
     return redirect('home')
 
 
-def add_reminder_sms(request):
-    # reservation_id = request.POST.get('reservation_id')
-    # print(reservation_id)
-    try:
-        # یافتن رزرو مربوطه از پایگاه داده
-        # reservation = Reservation.objects.get(reserve_id=reservation_id)
-        send_message_reminde('09106961316',123)
-        # تغییر حالت رزرو به کنسل شده
-        # reservation.status = 'canceled'
-        # reservation.save()
+# def add_reminder_sms(request):
+#     reservation_id = request.POST.get('reservation_id')
 
-        return JsonResponse({'success': True})
-    except Reservation.DoesNotExist:
-        # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-        return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
-    except Exception as e:
-        # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+#     print(reservation_id)
+#     try:
+#         # یافتن رزرو مربوطه از پایگاه داده
+#         reservation = Reservation.objects.get(reserve_id=reservation_id)
+
+#         # Convert Gregorian date to Jalali date
+#         jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+#         jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+        
+#         # Format the Jalali dates as needed
+#         formatted_start = jalali_start.strftime('%Y/%m/%d')
+#         formatted_end = jalali_end.strftime('%Y/%m/%d')
+        
+#         send_message_accept_reserve('09106961316',reservation.resource,formatted_start,formatted_end,message='')
+#         return JsonResponse({'success': True})
+#     except Reservation.DoesNotExist:
+#         # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+#     except Exception as e:
+#         print(e)
+#         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
 def generate_otp_code():
     return str(random.randint(100000, 999999))
 
-def send_message_reminde(phone_number,otp_code):
+def send_message_accept_reserve(phone_number,room_id,enter_date,exit_date,message):
     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
-    TEMPLATE = 'reserve-room-test'
+    TEMPLATE = message
     RECEPTOR = phone_number
-    TOKEN = otp_code
-    TOKEN2 = "۱۱ تا ۱۳ فروردین"
+    TOKEN = room_id
+    TOKEN2 = enter_date
+    TOKEN3 = exit_date
     TYPE = 'sms'
     try:
         api = KavenegarAPI(API)
@@ -328,10 +373,11 @@ def send_message_reminde(phone_number,otp_code):
         'template': TEMPLATE,
         'token': TOKEN,
         'token2': TOKEN2,
-        'type': TYPE ,#sms vs call
+        'token3': TOKEN3,
+        'type': TYPE ,
     }
         response = api.verify_lookup(params)
-        # print(response)
+        print(response)
     except APIException as e:
         print(e)
     except HTTPException as e:

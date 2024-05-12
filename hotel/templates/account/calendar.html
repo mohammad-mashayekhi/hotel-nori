@@ -109,7 +109,7 @@
 }
 .mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
  width: 80px;
-}
+} 
 .container-xxl .flex-grow-1 .container-p-y{
  padding-right:0px;
 }
@@ -123,21 +123,21 @@
   font-size: 1em;
   text-align: center;
 }
-.mbsc-timeline-day-border{
+/* .mbsc-timeline-day-border{
   border-left: 3px solid rgb(198, 192, 192) !important; 
-}
+}  */
 .md-lunch-break-class.mbsc-schedule-invalid {
     text-align: center;
     align-items: center;
     font-weight: bold;
-    /* background: repeating-linear-gradient(-45deg, #f3f3f3, #f3f3f3 6px, #e5e5e5 11px, #e5e5e5 22px); */
-    background-color: #780a0a !important;
+    background: repeating-linear-gradient(-45deg, #f3f3f3, #f3f3f3 6px, #e5e5e5 11px, #e5e5e5 22px);
+    background-color: #a9a9a99c !important;
 }
 .mbsc-button-mycalendar{
   background-color: #ddeeff !important;
   border-radius: 15px;
   font-weight: bold;
-} 
+}
 </style>
 {% endblock %}
 
@@ -160,9 +160,73 @@
               <option value="confirmed">تایید شده</option>
               <option value="canceled">کنسل شده</option>
               <option value="expired">منقضی شده</option>
-            </select><br>
-            <label for="event-buffer">نظافت:</label>
-            <input type="checkbox"  id="event-buffer" name="event-buffer">
+              <option value="cleaning">نظافت</option>
+            </select>
+            <label for="event-resource" >اتاق:</label>
+            <select class="form-control" id="event-resource" name="event-resource" required>
+              {% for resources in resources %}
+              <option value="{{resources.id}}">{{resources.name}}</option>
+              {% endfor %}
+            </select>
+            <div class="container" style="text-align: -webkit-center">
+              <div class="display:flex">
+                  <div class="col-md-8">
+                      <table class="table">
+                          <tbody>
+                              <tr>
+                                  <td class="align-middle">
+                                      <label for="event-capacity">ظرفیت مجاز</label>
+                                  </td>
+                                  <td class="align-middle">
+                                      <span id="event-capacity" name="event-capacity"></span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="align-middle">
+                                      <label for="event-more-capacity">ظرفیت بیشتر</label>
+                                  </td>
+                                  <td class="align-middle">
+                                    <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <tr>
+                                    <td class="align-middle">
+                                        <label for="event-price-per-person">قیمت هر نفر</label>
+                                    </td>
+                                    <td class="align-middle">
+                                      <span class="form-control" id="event-price-per-person" name="event-price-per-person"></span>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                  <td class="align-middle">
+                                      <label for="event-price">قیمت هر شب</label>
+                                  </td>
+                                  <td class="align-middle">
+                                    <span class="form-control" id="event-price" name="event-price"></span>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="align-middle">
+                                    <label for="event-cleaning">نظافت:</label>
+                                  </td>
+                                  <td class="align-middle">
+                                    <input type="checkbox"  id="event-cleaning" name="event-cleaning">
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="align-middle">
+                                    <label for="event-paid">پرداخت:</label>
+                                  </td>
+                                  <td class="align-middle">
+                                    <input type="checkbox"  id="event-paid" name="event-paid">
+                                  </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>          
           </div>
           <div class="mbsc-form-group">
               <div mbsc-page class="demo-range-select">
@@ -172,7 +236,8 @@
             </div>
               <div class="mbsc-button-group">
                 <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
-                <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button>
+                <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">مبلغ نهایی</button>
+                <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
             </div>
           </div>
       </div> 
@@ -190,7 +255,6 @@
     themeVariant: 'light'         // More info about themeVariant: https://mobiscroll.com/docs/javascript/datepicker/api#opt-themeVariant
   });
   var reservationData = {{ reservation_data|safe }};
-  console.log(reservationData)
   var resourceData = {{ resource_data|safe }};
   var popup;
   var oldEvent;
@@ -199,7 +263,7 @@
   var startcalendar = '2024-04-20';
   var endcalendar = '2025-04-20';
   var deleteButton = document.getElementById('event-delete');
-  var addremindersmsButton = document.getElementById('event-reminder');
+  // var addremindersmsButton = document.getElementById('event-reminder');
 
   datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
     controls: ['calendar'],
@@ -209,7 +273,7 @@
     showRangeLabels: true
   });
   
-  function createAddPopup(elm,resourceId) {
+  function createAddPopup(elm,resourceId,tempEvent) {
     deleteButton.style.display = 'none';
 
     deleteEvent = true;
@@ -221,6 +285,39 @@
     $('#event-buffer').val('');
     $('#start-input').val('');
     $('#end-input').val('');
+    $('#event-resource').val(resourceId);
+    var matchingResource = resourceData.find(function (resource) {
+        return resource.id === resourceId;
+    });
+    $('#event-capacity').text(matchingResource.capacity + ' نفر');
+    $('#event-price').text(matchingResource.price);
+    // $('#event-cleaning').val('checked');
+    $('#event-more-capacity').val(0);
+    // $('#event-paid').val('checked');
+    $('#event-price').text(),
+    $('#event-price-per-person').text(matchingResource.price_per_person),
+    
+    firstday = tempEvent.start;
+    lastday = tempEvent.end;
+    datepickerreserve.setVal([firstday, lastday]);
+
+    // Calculate the difference in days
+    var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+    var differenceInDays = 0
+    differenceInDays = Math.round((lastday - firstday) / oneDay);
+
+    // Add one day to the difference
+    differenceInDays += 1;
+
+    // Get the resource price (replace this with your logic to get the actual price)
+    console.log(matchingResource.price)
+    console.log(differenceInDays)
+    reserve_price = matchingResource.price
+    // Calculate the total cost
+    var totalCost = differenceInDays * reserve_price;
+
+    // Set the value of the event-pay button
+    $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان');
 
     popup.open();
       popup.setOptions({
@@ -242,11 +339,14 @@
                           data: {
                               csrfmiddlewaretoken: '{{ csrf_token }}',
                               title: $('#event-title').val(),
+                              user: $('#event-user').val(),
                               start: startreserve,
                               end: endreserve,
-                              resourceId: resourceId, // اضافه کردن شناسه منبع به داده‌های ارسالی
+                              resourceId: $('#event-resource').val(), // اضافه کردن شناسه منبع به داده‌های ارسالی
                               status: $('#event-status').val(),
-                              user: $('#event-user').val(),
+                              cleaning : $('#event-cleaning').prop('checked'),
+                              more_capacity :  $('#event-more-capacity').val(),
+                              paid: $('#event-paid').prop('checked'),
                           },
                           success: function(response) {
                               if (response.success) {
@@ -316,6 +416,8 @@
   
   function fillPopupWithData(data) {
     // مثال: تنظیم عنوان و متن رزرو در پاپ آپ
+
+    console.log(data.morecapacity)
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
@@ -330,6 +432,13 @@
     $('#event-user').val(data.user);
     $('#start-input').val(data.start);
     $('#end-input').val(data.end);
+    $('#event-resource').val(data.resources);
+    $('#event-cleaning').prop('checked', data.cleaning);
+    $('#event-capacity').text(data.capacity + ' نفر');
+    $('#event-more-capacity').val(data.morecapacity);
+    $('#event-paid').prop('checked', data.paid);
+    $('#event-price').text(data.price),
+    $('#event-price-per-person').text(data.price_per_person),
 
     firstday = data.start;
     lastday = data.end;
@@ -340,6 +449,7 @@
   var endDate;
   var end;
   var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
+    locale: mobiscroll.localeFa,
     clickToCreate: 'double',
     dragToCreate: true,
     dragToMove: false,
@@ -394,7 +504,7 @@
       resourceId = args.event.resource;
       popup.close();
       tempEvent = args.event;
-      createAddPopup(args.target, resourceId);
+      createAddPopup(args.target, resourceId,tempEvent);
     },
     onEventDeleted: function (args) {
       mobiscroll.snackbar({
@@ -518,24 +628,71 @@
     return Math.round(Math.abs((end.setHours(0) - start.setHours(0)) / (24 * 60 * 60 * 1000))) + 1;
   }
 
-  addremindersmsButton.addEventListener('click', function () {
-    console.log(tempEvent);
-    $.ajax({
-      url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
-      method: 'POST',
-      data: { 
-        csrfmiddlewaretoken: '{{ csrf_token }}',
-        reservation_id: tempEvent.reserve_id 
-      }, // ارسال شناسه رزرو به سمت سرور
-      success: function (data) {
-        popup.close();
-      },
-      error: function () {
-        alert('خطا در دریافت اطلاعات رزرو');
-      }
-    });
+  // addremindersmsButton.addEventListener('click', function () {
+  //   console.log(tempEvent);
+  //   $.ajax({
+  //     url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
+  //     method: 'POST',
+  //     data: { 
+  //       csrfmiddlewaretoken: '{{ csrf_token }}',
+  //       reservation_id: tempEvent.reserve_id 
+  //     }, // ارسال شناسه رزرو به سمت سرور
+  //     success: function (data) {
+  //       popup.close();
+  //     },
+  //     error: function () {
+  //       alert('خطا در دریافت اطلاعات رزرو');
+  //     }
+  //   });
+  // });
+
+
+  $(document).ready(function () {
+    $('#id_price_currency').select2();
   });
 
+ 
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('event-resource').addEventListener('change', function() {
+      var selectedResourceId = parseInt($(this).val(), 10); // Convert to integer
+      var matchingResource = resourceData.find(function(resource) {
+        return resource.id === selectedResourceId;
+      });
+      if (matchingResource) {
+        $('#event-capacity').text(matchingResource.capacity + ' نفر');
+      } else {
+          // Handle the case when no matching resource is found
+        $('#event-capacity').text('نفری یافت نشد');
+      }
+      console.log("Matching Resource:", matchingResource);
+
+    });
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.getElementById('demo-range-selection').addEventListener('change', function() {
+    // Get the new value of datepickerreserve
+    var reservtime = datepickerreserve.getVal();
+    var startreserve = new Date(reservtime[0]);
+    var endreserve = new Date(reservtime[1]);
+
+    // Calculate the difference in days
+    var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+    var differenceInDays = Math.round((endreserve - startreserve) / oneDay)
+
+    // Get the resource price (replace this with your logic to get the actual price)
+    var resourcePrice = $('#event-price').val()
+  
+    // Calculate the total cost
+    var totalCost = differenceInDays * resourcePrice;
+
+    // Set the value of the event-pay button
+    $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان');
+  });
+});
 
 </script>
 
