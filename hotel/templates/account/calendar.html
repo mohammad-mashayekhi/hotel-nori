@@ -123,6 +123,9 @@
   font-size: 1em;
   text-align: center;
 }
+.mbsc-calendar-controls{
+  justify-content: center !important;
+}
 /* .mbsc-timeline-day-border{
   border-left: 3px solid rgb(198, 192, 192) !important; 
 }  */
@@ -134,8 +137,9 @@
     background-color: #a9a9a99c !important;
 }
 .mbsc-button-mycalendar{
-  background-color: #ddeeff !important;
-  border-radius: 15px;
+  background-color: #FFFFFF !important;
+  /* border-radius: 15px; */
+  margin: 20px;
   font-weight: bold;
 }
 </style>
@@ -146,108 +150,78 @@
   <div class="card app-calendar-wrapper">
     <div class="row g-0">
       <!-- Calendar & Modal -->
-      <div id="demo-add-delete-event" class="md-date-header-template"></div>
+      <div id="demo-add-delete-event" class="md-date-header-template mbsc-cloak md-pages">
+      </div>
       <div style="display: none">
-      <div id="demo-add-popup">
+        <div id="demo-add-popup">
           <div class="mbsc-form-group" style="margin: 20px;">
-            <label for="event-title" >نام:</label>
-            <input type="text" class="form-control input" id="event-title" name="event-title" required>
-            <label for="event-user">شماره تلفن:</label>
-            <input type="tel" class="form-control input" id="event-user" name="event-user" required>
-            <label for="event-status">وضعیت:</label>
-            <select class="form-control" id="event-status" name="event-status" required>
-              <option value="pending_payment">در انتظار پرداخت</option>
-              <option value="confirmed">تایید شده</option>
-              <option value="canceled">کنسل شده</option>
-              <option value="expired">منقضی شده</option>
-              <option value="cleaning">نظافت</option>
-            </select>
-            <label for="event-resource" >اتاق:</label>
-            <select class="form-control" id="event-resource" name="event-resource" required>
-              {% for resources in resources %}
-              <option value="{{resources.id}}">{{resources.name}}</option>
-              {% endfor %}
-            </select>
+            <div class="row">
+              <!-- First Column -->
+              <div class="col-md-6">
+                <label for="event-title">نام</label>
+                <input type="text" class="form-control input" id="event-title" name="event-title" required>
+                <label for="event-status">وضعیت</label>
+                <select class="form-control" id="event-status" name="event-status" required>
+                  <option value="pending_payment">در انتظار پرداخت</option>
+                  <option value="confirmed">تایید شده</option>
+                  <option value="canceled">کنسل شده</option>
+                </select>
+                <span id="event-capacity" name="event-capacity"></span><br>
+                <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity"><br>
+                <label for="event-cleaning">نظافت:</label>
+                <input type="checkbox" id="event-cleaning" name="event-cleaning">
+                <span>  /  </span>
+                <label for="event-paid">پرداخت:</label>
+                <input type="checkbox" id="event-paid" name="event-paid">
+              </div>
+              <!-- Second Column -->
+              <div class="col-md-6">
+                <label for="event-user">شماره تلفن</label>
+                <input type="tel" class="form-control input" id="event-user" name="event-user" required>
+                <label for="event-resource">اتاق</label>
+                <select class="form-control" id="event-resource" name="event-resource" required>
+                  {% for resources in resources %}
+                  <option value="{{resources.id}}">{{resources.name}}</option>
+                  {% endfor %}
+                </select>
+                
+                <label for="event-price-per-person">قیمت هر نفر</label>
+                <span class="form-control" id="event-price-per-person" name="event-price-per-person"></span>
+                <label for="event-price">قیمت هر شب</label>
+                <span class="form-control" id="event-price" name="event-price"></span>
+               
+              </div>
+            </div>
             <div class="container" style="text-align: -webkit-center">
               <div class="display:flex">
-                  <div class="col-md-8">
-                      <table class="table">
-                          <tbody>
-                              <tr>
-                                  <td class="align-middle">
-                                      <label for="event-capacity">ظرفیت مجاز</label>
-                                  </td>
-                                  <td class="align-middle">
-                                      <span id="event-capacity" name="event-capacity"></span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="align-middle">
-                                      <label for="event-more-capacity">ظرفیت بیشتر</label>
-                                  </td>
-                                  <td class="align-middle">
-                                    <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity">
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <tr>
-                                    <td class="align-middle">
-                                        <label for="event-price-per-person">قیمت هر نفر</label>
-                                    </td>
-                                    <td class="align-middle">
-                                      <span class="form-control" id="event-price-per-person" name="event-price-per-person"></span>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                  <td class="align-middle">
-                                      <label for="event-price">قیمت هر شب</label>
-                                  </td>
-                                  <td class="align-middle">
-                                    <span class="form-control" id="event-price" name="event-price"></span>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="align-middle">
-                                    <label for="event-cleaning">نظافت:</label>
-                                  </td>
-                                  <td class="align-middle">
-                                    <input type="checkbox"  id="event-cleaning" name="event-cleaning">
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="align-middle">
-                                    <label for="event-paid">پرداخت:</label>
-                                  </td>
-                                  <td class="align-middle">
-                                    <input type="checkbox"  id="event-paid" name="event-paid">
-                                  </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-md-8">
+                  <table class="table">
+                    <tbody>
+                      <!-- Additional Fields (if any) -->
+                    </tbody>
+                  </table>
                 </div>
-            </div>          
+              </div>
+            </div>
           </div>
           <div class="mbsc-form-group">
-              <div mbsc-page class="demo-range-select">
-                <div style="height:100%">
-                        <div id="demo-range-selection"></div>
-                </div>
+            <div mbsc-page class="demo-range-select">
+              <div style="height:100%">
+                <div id="demo-range-selection"></div>
+              </div>
             </div>
-              <div class="mbsc-button-group">
-                <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
-                <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">مبلغ نهایی</button>
-                <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
+            <div class="mbsc-button-group">
+              <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
+              <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">مبلغ نهایی</button>
+              <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
             </div>
           </div>
-      </div> 
-      </div>
-      <!-- /Calendar & Modal -->
-    </div>
+        </div>
   </div>
 </div>
 <!-- / Content -->
-
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment-jalaali/build/moment-jalaali.min.js"></script>
 <script>
   mobiscroll.setOptions({
     locale: mobiscroll.localeFa,
@@ -267,7 +241,9 @@
 
   datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
     controls: ['calendar'],
-    display: 'inline',            // Specify display mode like: display: 'bottom' or omit setting to use default
+    display: 'inline',   
+    selectCounter:true,
+    focusOnOpen:true,         // Specify display mode like: display: 'bottom' or omit setting to use default
     rangeSelectMode: 'wizard',
     select: 'range',              // More info about select: https://mobiscroll.com/docs/javascript/datepicker/api#opt-select
     showRangeLabels: true
@@ -289,7 +265,7 @@
     var matchingResource = resourceData.find(function (resource) {
         return resource.id === resourceId;
     });
-    $('#event-capacity').text(matchingResource.capacity + ' نفر');
+    $('#event-capacity').text(matchingResource.capacity + ' نفر مجاز/ظرفیت بیشتر ');
     $('#event-price').text(matchingResource.price);
     // $('#event-cleaning').val('checked');
     $('#event-more-capacity').val(0);
@@ -414,6 +390,9 @@
     });
   }
   
+  var now = new Date();
+  var yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+
   function fillPopupWithData(data) {
     // مثال: تنظیم عنوان و متن رزرو در پاپ آپ
 
@@ -434,7 +413,7 @@
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
     $('#event-cleaning').prop('checked', data.cleaning);
-    $('#event-capacity').text(data.capacity + ' نفر');
+    $('#event-capacity').text(data.capacity + ' نفر مجاز/ظرفیت بیشتر ');
     $('#event-more-capacity').val(data.morecapacity);
     $('#event-paid').prop('checked', data.paid);
     $('#event-price').text(data.price),
@@ -461,6 +440,14 @@
         size: 30,
         },
     },
+    invalid: [
+    {
+      recurring: {
+        repeat: 'daily',
+        until: yesterday,
+      },
+    },
+    ],
     data: reservationData,
     resources: resourceData,
     // colors: [
@@ -477,21 +464,30 @@
       return (
         '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
         '<div mbsc-calendar-today></div>' +
-        '</div>'+
-        '<div id="custom-date-range"><button mbsc-button data-variant="flat" class="m-1 p-1 mbsc-button-mycalendar mbsc-calendar-button">' +
-        '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">Button' +
-        '</span></button></div>'
-        );
+        '</div>' +
+        '<div id="custom-date-range"></div>' +
+        '<label>' +
+        'شروع' +
+        '<input id="start" mbsc-input placeholder="لطفا کلیک کنید" />' +
+        '</label>' +
+        '<label>' +
+        'پایان' +
+        '<input id="end" mbsc-input placeholder="لطفا کلیک کنید" />' +
+        '</label>'
+      );
     },
     onPageLoaded: function (args) {
       startDate = args.firstDay;
       end = args.lastDay;
       endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 1, 0);
       // set button text
+      console.log("startDate")
+    
+      console.log(startDate)
       // rangeButton.innerText = getFormattedRange(startDate, endDate);
-      rangeButton.innerText = 'انتخاب تاریخ ورود و خروج';
-      // set range value
-      myRange.setVal([startDate, endDate]);
+      // // rangeButton.innerText = 'انتخاب تاریخ ورود و خروج';
+      // // set range value
+      // myRange.setVal([startDate, endDate]);
     },
     onEventClick: function (args) {
       tempEvent = args.event;  
@@ -518,6 +514,13 @@
       });
     },
   });
+
+//   mobiscroll.scrollview('.mbsc-timeline-grid-scroll', {
+//     theme: 'ios',
+//     themeVariant: 'light',
+//     itemWidth: 80,
+//     paging: true,
+// });
 
   popup = mobiscroll.popup('#demo-add-popup', {
     display: 'bottom',
@@ -562,6 +565,8 @@
 
   var myRange = mobiscroll.datepicker('#custom-date-range', {
     select: 'range',
+    startInput: '#start',
+    endInput: '#end',
     display: 'center',
     showOverlay: false,
     locale: mobiscroll.localeFa,
@@ -575,7 +580,7 @@
           // navigate the calendar
           var newDate = date[0].getTime() - (5 * 24 * 60 * 60 * 1000);
           var newStartDate = new Date(newDate);
-
+          console.log(newStartDate)
           myCalendar.navigate(newStartDate);
         }
         startDate = date[0];
@@ -647,11 +652,10 @@
   // });
 
 
-  $(document).ready(function () {
-    $('#id_price_currency').select2();
-  });
+  // $(document).ready(function () {
+  //   $('#id_price_currency').select2();
+  // });
 
- 
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -692,10 +696,42 @@ document.addEventListener("DOMContentLoaded", function() {
     // Set the value of the event-pay button
     $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان');
   });
+
+  // Get the horizontal scrollbar element
+  var horizontalScrollbar = document.querySelector('.mbsc-timeline-grid-scroll');
+  // Listen for the scroll event on the horizontal scrollbar
+  horizontalScrollbar.addEventListener('scroll', function() {
+      // Check if scrolling has stopped
+      if (!this._scrolling) {
+          // Set a flag to indicate scrolling has started
+          this._scrolling = true;
+          var self = this;
+          setTimeout(function() {
+              // Get the scroll position
+              var scrollLeft = horizontalScrollbar.scrollLeft;
+              // Get the width of the first column
+              var firstColumnWidth = document.querySelector('.mbsc-timeline-column').offsetWidth;
+
+              // Calculate the index of the nearest visible column
+              var columnIndex = Math.round(scrollLeft / firstColumnWidth);
+
+              // Calculate the new scroll position to fully display the nearest visible column
+              var newScrollLeft = columnIndex * firstColumnWidth;
+
+              // Scroll to the new position
+              horizontalScrollbar.scrollTo({
+                  left: newScrollLeft,
+                  behavior: 'smooth' // Optional: smooth scrolling effect
+              });
+
+              // Reset the scrolling flag
+              self._scrolling = false;
+          }, 400); // Adjust the delay as needed
+      }
+  });
 });
 
 </script>
-
 {% endblock %}
 
 

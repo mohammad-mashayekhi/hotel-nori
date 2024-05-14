@@ -248,9 +248,10 @@ def add_reservation(request):
             formatted_start = jalali_start.strftime('%Y/%m/%d')
             formatted_end = jalali_end.strftime('%Y/%m/%d')
             if paid:
-                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
-            else : 
                 send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-test')
+            else : 
+                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+
             return JsonResponse({'success': True})
         except Reservation.DoesNotExist:
             # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
@@ -259,7 +260,6 @@ def add_reservation(request):
             print(e)
             # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
             return JsonResponse({'success': False, 'error': str(e)}, status=500)
-
     return JsonResponse({'success': False})
 
 
@@ -384,3 +384,16 @@ def send_message_accept_reserve(phone_number,room_id,enter_date,exit_date,messag
         print(e)
 
 
+
+
+
+
+#   '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
+#         '<div mbsc-calendar-today></div>' +
+#         '</div>' +
+#         '<div id="custom-date-range" style="text-align:center;">' +
+#         '<button mbsc-button data-variant="flat" class="m-1 p-1 mbsc-button-mycalendar mbsc-calendar-button">' +
+#         '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">انتخاب تاریخ روز شروع و پایان</span>' +
+#         '</button>' +
+#         '</div>' +
+#         '<span type="text" id="datetime-picker" name="datetime-picker">'
