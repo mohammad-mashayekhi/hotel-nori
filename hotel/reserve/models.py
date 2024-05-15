@@ -7,6 +7,7 @@ class Reservation(models.Model):
         ('pending_payment', 'در انتظار پرداخت'),  # در انتظار پرداخت
         ('confirmed', 'تایید شده'),              # تایید شده
         ('canceled', 'کنسل شده'),                # لغو شده
+        ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
     ]
     reserve_id = ShortUUIDField(unique=True , length=5 , max_length=9 , alphabet="abcdefgh12345")
     start = models.DateField()

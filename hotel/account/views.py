@@ -74,8 +74,12 @@ from datetime import datetime, timedelta
 
 def calendar(request):
     reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning'))
+    closetime = Reservation.objects.filter(status='closetime')
     resources = Resource.objects.all()
     reservation_data = []
+    closetime_data = []
+    resource_data = []
+
     for reservation in reservations:
         # Create start datetime with time set to 12:00
         start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
@@ -110,7 +114,19 @@ def calendar(request):
             'user': reservation.user.username,  # نام کاربر
             # 'bufferAfter': bufferAfter,
         })
-    resource_data = []
+    for closetime in closetime:
+        start_datetime = datetime.combine(closetime.start, datetime.strptime('14:00', '%H:%M').time())
+        # Create end datetime with time set to 14:00
+        end_datetime = datetime.combine(closetime.end, datetime.strptime('12:00', '%H:%M').time())
+        closetime_data.append({
+            'reserve_id' : closetime.reserve_id,
+            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+            'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
+            'title': closetime.title,
+            'resource': closetime.resource_id,
+            'cssClass': 'md-lunch-break-class mbsc-flex'
+        })
+
     for resource in resources:
         resource_data.append({
             'id': resource.id,
@@ -145,6 +161,7 @@ def calendar(request):
     context = {
             'reservation_data': json.dumps(reservation_data),
             'resource_data': json.dumps(resource_data),
+            'closetime_data': json.dumps(closetime_data),
             'form': form,
             'resources':resources,
         }
@@ -203,7 +220,10 @@ def add_reservation(request):
         paid = request.POST.get('paid')
         price =  request.POST.get('price')
 
-        print(price)
+        try:
+            resource = Resource.objects.get(id=resource_id)
+        except Resource.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
 
         if paid == 'true':
             paid = True
@@ -216,17 +236,6 @@ def add_reservation(request):
         else:
             cleaning = False
 
-        try:
-            resource = Resource.objects.get(id=resource_id)
-        except Resource.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
-
-        User = get_user_model()
-        try:
-            user = User.objects.get(username=user_username)
-        except User.DoesNotExist:
-            user = User.objects.create_user(username=user_username, password=user_username)
-
         overlapping_reservations = Reservation.objects.filter(
             resource=resource,
             status__in=['pending_payment', 'confirmed'],
@@ -237,6 +246,16 @@ def add_reservation(request):
         # Check for overlapping reservations
         if overlapping_reservations.exists():
             return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
+
+        if status == 'closetime':
+            new_reservation = Reservation.objects.create(title='زمان تعطیلی', start=start, end=end , resource=resource, author=author, user=author, status='closetime', cleaning=False)
+            return JsonResponse({'success': True})
+
+        User = get_user_model()
+        try:
+            user = User.objects.get(username=user_username)
+        except User.DoesNotExist:
+            user = User.objects.create_user(username=user_username, password=user_username)
 
         if cleaning == True:
             end -= timedelta(days=1) 
