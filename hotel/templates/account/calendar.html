@@ -322,6 +322,7 @@
                               cleaning : $('#event-cleaning').prop('checked'),
                               more_capacity :  $('#event-more-capacity').val(),
                               paid: $('#event-paid').prop('checked'),
+                              price: totalCost,
                           },
                           success: function(response) {
                               if (response.success) {
@@ -417,6 +418,8 @@
     $('#event-paid').prop('checked', data.paid);
     $('#event-price').text(data.price),
     $('#event-price-per-person').text(data.price_per_person),
+    $('#event-pay').text('مبلغ نهایی: ' + data.totalCost + ' تومان');
+
 
     firstday = data.start;
     lastday = data.end;

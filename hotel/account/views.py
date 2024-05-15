@@ -175,6 +175,7 @@ def get_reservation_info(request):
                 'paid':reservation.paid,
                 'price':reservation.resource.price,
                 'price_per_person':reservation.resource.price_per_person,
+                'totalCost':reservation.total_pay,
             }
             return JsonResponse(reservation_data)
         except Reservation.DoesNotExist:
@@ -200,6 +201,9 @@ def add_reservation(request):
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
         paid = request.POST.get('paid')
+        price =  request.POST.get('price')
+
+        print(price)
 
         if paid == 'true':
             paid = True
@@ -236,10 +240,10 @@ def add_reservation(request):
 
         if cleaning == True:
             end -= timedelta(days=1) 
-            new_reservation = Reservation.objects.create(title='نظافت', start=end, end=end + timedelta(days=1) , resource=resource, author=author, user=user, status='cleaning', cleaning=cleaning, more_capacity = more_capacity,paid = paid)
+            new_reservation = Reservation.objects.create(title='نظافت', start=end, end=end + timedelta(days=1) , resource=resource, author=author, user=user, status='cleaning', cleaning=cleaning, more_capacity = more_capacity,paid = paid , total_pay = price)
 
         # Create reservation if there are no overlaps
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity,paid = paid)
+        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity,paid = paid , total_pay = price )
         try:
             # Convert Gregorian date to Jalali date
             jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
