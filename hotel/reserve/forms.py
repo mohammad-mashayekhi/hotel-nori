@@ -1,5 +1,5 @@
 from django import forms
-from .models import Reservation , Resource
+from .models import Reservation, Resource
 from django_select2 import forms as s2forms
 
 

@@ -6,16 +6,16 @@ import jdatetime
 from datetime import datetime, timedelta
 from reserve.forms import ReservationForm  # ایمپورت کردن فرم
 from django.views.decorators.http import require_POST
-from django.contrib.auth import get_user_model ,logout ,authenticate
-from django.shortcuts import render ,redirect
-from .decorators import login_required,verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
-from account.forms import *
-from account.models import Userprofile
+from django.contrib.auth import get_user_model, logout, authenticate
+from django.shortcuts import render, redirect
+from .decorators import login_required, verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
+from .forms import UserProfileEditFormUser, Userprofile, UserProfileEditForm, CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.db.models import Q
 from kavenegar import *
 import random
+
 
 def account(request):
     if request.method == 'POST':
@@ -72,6 +72,7 @@ from datetime import datetime, timedelta
 
 from datetime import datetime, timedelta
 
+
 def calendar(request):
     reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning'))
     resources = Resource.objects.all()
@@ -100,12 +101,12 @@ def calendar(request):
         #     bufferAfter = 0 
 
         reservation_data.append({
-            'reserve_id' : reservation.reserve_id,
+            'reserve_id': reservation.reserve_id,
             'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
             'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
             'title': reservation.title,
             'resource': reservation.resource_id,
-            'color':color,
+            'color': color,
             'cleaning': reservation.cleaning , 
             'user': reservation.user.username,  # نام کاربر
             # 'bufferAfter': bufferAfter,
@@ -117,8 +118,8 @@ def calendar(request):
             'name': resource.name,
             'cssClass': resource.css,
             'capacity': resource.capacity,
-            'price' : resource.price,
-            'price_per_person':resource.price_per_person
+            'price': resource.price,
+            'price_per_person': resource.price_per_person
         })
 
     if request.method == 'POST':
@@ -134,22 +135,23 @@ def calendar(request):
                 'reservation_data': json.dumps(reservation_data),
                 'resource_data': json.dumps(resource_data),
                 'form': form,
-                'resources:':resources,
+                'resources:': resources,
             }
+
             return render(request, 'account/calendar.html', context)  # بازگرداندن کاربر به صفحه کلندر
         else:
             print(form.errors)  # چاپ کردن خطا در ترمینال
     else:
         form = ReservationForm()
-
-    context = {
+        context = {
             'reservation_data': json.dumps(reservation_data),
             'resource_data': json.dumps(resource_data),
             'form': form,
-            'resources':resources,
+            'resources': resources,
+            "reservations": reservations
         }
 
-    return render(request, 'account/calendar.html', context)
+        return render(request, 'account/calendar.html', context)
 
 
 def get_reservation_info(request):
