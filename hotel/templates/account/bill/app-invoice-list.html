@@ -5,18 +5,10 @@
 {% endblock %}
 
 {% block page-css %}
-<link
-      rel="stylesheet"
-      href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
-    />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"/>
     <link
       rel="stylesheet"
       href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
@@ -34,6 +26,7 @@
       href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}"
     />
 
+
 {% endblock %}
 
 {% block contant %}
@@ -45,40 +38,58 @@
   <!-- Invoice List Table -->
   <div class="card">
     <div class="card-datatable table-responsive">
-      <table class="datatables-users table">
-        <thead class="table-light">
-          <tr>
-            <th></th>
-            <th></th>
-            <th>نام</th>
-            <th>ایدی</th>
-            <th>شروع</th>
-            <th>پایان</th>
-            <th>کاربر</th>
-            <th>ایجاد کننده</th>
-            <th>اتاق</th>
-            <th>وضعیت</th>
-            <th>ویرایش</th>
-          </tr>
-        </thead>
-        <tbody id="table-body">
-          {% for r in reserve %}
-          <tr>
-            <td></td>
-            <td></td>
-            <td>{{ r.title }}</td>
-            <td>{{ r.reserve_id }}</td>
-            <td>{{ r.start }}</td>
-            <td>{{ r.end }}</td>          
-            <td>{{ r.user }}</td>
-            <td>{{ r.author }}</td>
-            <td>{{ r.resource }}</td>
-            <td>{{ r.status }}</td>
-            <td><a href="">ویرایش</a></td>
-          </tr>
-          {% endfor %}        
-        </tbody>
-      </table>
+            <label for="min-price"> حداقل قیمت : </label>
+            <input type="number" id="min-price" placeholder="حداقل قیمت را وارد کنید">
+            <label for="max-price"> حداکثر قیمت :</label>
+            <input type="number" id="max-price" placeholder="حداکثر قیمت را وارد کنید">
+            <label for="status-filter"> فیلتر وضعیت </label>
+            <select id="status-filter" class="status-filter">
+                <option value="">بدون فیلتر وضعیت</option>
+                <option value="در انتظار پرداخت">در انتظار پرداخت</option>
+                <option value="تایید شده">تایید شده</option>
+                <option value="کنسل شده">کنسل شده</option>
+                <option value="منقضی شده">منقضی شده</option>
+                <option value="نظافت">نظافت</option>
+            </select>
+            <br>
+          <table id="TableofR">
+            <thead>
+              <tr>
+                <th>شناسه رزرو</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+                <th>عنوان</th>
+                <th>ایجاد کننده</th>
+                <th>کاربر</th>
+                <th>پرداخت شده</th>
+                <th>شناسه پرداخت</th>
+                <th>اتاق</th>
+                <th>وضعیت</th>
+                <th>نظافت</th>
+                <th>ظرفیت بیشتر</th>
+                <th>مبلغ کل</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in reserve%}
+                <tr>
+                  <td>{{ r.reserve_id }}</td>
+                  <td>{{ r.start }}</td>
+                  <td>{{ r.end }}</td>
+                  <td><a href="">{{ r.title }}</a></td>
+                  <td>{{ r.author.username }}</td>
+                  <td>{{ r.user.username }}</td>
+                  <td>{{ r.paid|yesno }}</td>
+                  <td>{{ r.payment_id }}</td>
+                  <td>{{ r.resource.name }}</td>
+                  <td>{{ r.get_status_display }}</td>
+                  <td>{{ r.cleaning|yesno }}</td>
+                  <td>{{ r.more_capacity }}</td>
+                  <td>{{ r.total_pay }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
     </div>
   </div>
 </div>
@@ -90,6 +101,47 @@
 {% endblock %}
 
 {% block page-js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>
 <!-- <script src="{% static 'js/app-invoice-list.js' %}"></script> -->
 
+
+<script>
+    $(document).ready( function () {
+    var table = $('#TableofR').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
+        }
+    });
+        // Create the range filtering function
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = parseInt($('#min-price').val(), 10);
+            var max = parseInt($('#max-price').val(), 10);
+            var price = parseFloat(data[12]) || 0; // use data for the 'Total Pay' column
+
+            if ((isNaN(min) && isNaN(max)) ||
+                 (isNaN(min) && price <= max) ||
+                 (min <= price && isNaN(max)) ||
+                 (min <= price && price <= max)) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $('#status-filter').on('change', function() {
+        var value = $(this).val();
+        table.column(7).search(value).draw();
+    });
+
+    // Re-draw the table whenever the input values change
+    $('#min-price, #max-price').on('keyup', function() {
+        table.draw();
+    });
+
+
+} );
+</script>
 {% endblock %}

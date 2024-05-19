@@ -3,19 +3,21 @@ from reserve.models import Reservation, Resource
 import json
 from django.http import JsonResponse
 import jdatetime
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+from django.db.models import Count, Sum
 from reserve.forms import ReservationForm  # ایمپورت کردن فرم
 from django.views.decorators.http import require_POST
-from django.contrib.auth import get_user_model ,logout ,authenticate
-from django.shortcuts import render ,redirect
-from .decorators import login_required,verified_user_required, admin_level_one_required, admin_level_two_required,user_authenticated_and_verified_required
-from account.forms import *
-from account.models import Userprofile
+from django.contrib.auth import get_user_model, logout, authenticate
+from django.shortcuts import render, redirect
+from .decorators import login_required, verified_user_required, admin_level_one_required, admin_level_two_required, \
+    user_authenticated_and_verified_required
+from .forms import UserProfileEditFormUser, Userprofile, UserProfileEditForm, CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.db.models import Q
 from kavenegar import *
 import random
+
 
 def account(request):
     if request.method == 'POST':
@@ -36,6 +38,7 @@ def account(request):
     print('rbgshkfgkdfhlisdkf')
     return render(request, 'account/dashboard.html', {'form': form})
 
+
 def edit_user(request, user_id):
     user = Userprofile.objects.get(id=user_id)
     if request.method == 'POST':
@@ -48,29 +51,68 @@ def edit_user(request, user_id):
             return render(request, 'account/edit-user.html', {'form': form})
     else:
         form = UserProfileEditForm(instance=user)
-    
+
     return render(request, 'account/edit-user.html', {'form': form})
+
 
 def bill(request):
     reservations = Reservation.objects.all().order_by('-id')
-    return render(request, 'account/bill/app-invoice-list.html',{'reserve': reservations})
+    return render(request, 'account/bill/app-invoice-list.html', {'reserve': reservations})
 
+def calculate_growth_percentage(old_value, new_value):
+    if old_value == 0:
+        return 0
+    else:
+        return ((new_value - old_value) / old_value) * 100
 
 def users(request):
     all_users = get_user_model().objects.all()
-    return render(request, 'account/user-list.html', {'users': all_users})
+    today = date.today()
+
+    # Get the start and end dates for the last month
+    last_month_start = date(today.year, today.month - 1, 1)
+    last_month_end = date(today.year, today.month, 1) - timedelta(days=1)
+
+    # Get the start and end dates for the previous month
+    previous_month_start = date(today.year, today.month - 2, 1)
+    previous_month_end = last_month_start - timedelta(days=1)
+
+    total_customers = all_users.count()
+
+    total_income = Reservation.objects.aggregate(total_income=Sum('total_pay'))['total_income']
+
+    total_reservations = Reservation.objects.count()
+
+    total_cancellation = Reservation.objects.filter(status='canceled').count()
+
+    total_purchase = Reservation.objects.filter(paid=True).count()
+
+
+    context = {
+        "users": all_users,
+        'total_cancellation': total_cancellation,
+        'total_purchase': total_purchase,
+        'total_customers': total_customers,
+        'total_income': total_income,
+        'total_reservations': total_reservations,
+    }
+
+    return render(request, 'account/user-list.html', context=context)
 
 
 def rooms(request):
-    resources = Resource.objects.filter(status = True)
-    return render(request, 'account/room-list.html',{'resources': resources})
+    resources = Resource.objects.filter(status=True)
+    return render(request, 'account/room-list.html', {'resources': resources})
+
 
 def user_bill(request):
     return render(request, 'account/bill/app-invoice-list.html')
 
+
 from datetime import datetime, timedelta
 
 from datetime import datetime, timedelta
+
 
 def calendar(request):
     reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning'))
@@ -104,13 +146,14 @@ def calendar(request):
         #     bufferAfter = 0 
 
         reservation_data.append({
-            'reserve_id' : reservation.reserve_id,
-            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+            'reserve_id': reservation.reserve_id,
+            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),
+            # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
             'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
             'title': reservation.title,
             'resource': reservation.resource_id,
-            'color':color,
-            'cleaning': reservation.cleaning , 
+            'color': color,
+            'cleaning': reservation.cleaning,
             'user': reservation.user.username,  # نام کاربر
             # 'bufferAfter': bufferAfter,
         })
@@ -133,8 +176,8 @@ def calendar(request):
             'name': resource.name,
             'cssClass': resource.css,
             'capacity': resource.capacity,
-            'price' : resource.price,
-            'price_per_person':resource.price_per_person
+            'price': resource.price,
+            'price_per_person': resource.price_per_person
         })
 
     if request.method == 'POST':
@@ -150,23 +193,24 @@ def calendar(request):
                 'reservation_data': json.dumps(reservation_data),
                 'resource_data': json.dumps(resource_data),
                 'form': form,
-                'resources:':resources,
+                'resources:': resources,
             }
+
             return render(request, 'account/calendar.html', context)  # بازگرداندن کاربر به صفحه کلندر
         else:
             print(form.errors)  # چاپ کردن خطا در ترمینال
     else:
         form = ReservationForm()
-
-    context = {
+        context = {
             'reservation_data': json.dumps(reservation_data),
             'resource_data': json.dumps(resource_data),
             'closetime_data': json.dumps(closetime_data),
             'form': form,
-            'resources':resources,
+            'resources': resources,
+            "reservations": reservations
         }
 
-    return render(request, 'account/calendar.html', context)
+        return render(request, 'account/calendar.html', context)
 
 
 def get_reservation_info(request):
@@ -174,18 +218,17 @@ def get_reservation_info(request):
         reservation_id = request.GET.get('reservation_id')
         try:
             reservation = Reservation.objects.get(reserve_id=reservation_id)
-           
-            
+
             # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
             # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
 
             reservation_data = {
                 'title': reservation.title,
-                'start': reservation.start.strftime("%Y-%m-%d %H:%M:%S"),  
+                'start': reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
                 'end': reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
-                'status':reservation.status,
+                'status': reservation.status,
                 'cleaning': reservation.cleaning,
-                'resources':reservation.resource.id,
+                'resources': reservation.resource.id,
                 'user': reservation.user.username,  # نام کاربر
                 'capacity':reservation.resource.capacity,
                 'morecapacity':reservation.more_capacity,
@@ -200,9 +243,11 @@ def get_reservation_info(request):
     else:
         return JsonResponse({'error': 'Invalid request'}, status=400)
 
+
 from django.contrib.auth import get_user_model
 from account.models import Userprofile
 from dateutil.parser import parse
+
 
 def add_reservation(request):
     if request.method == 'POST':
@@ -317,7 +362,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-               # Redirect to a success page.
+                # Redirect to a success page.
                 return redirect('account:dashboard')  # Change 'success_page' to your desired success page
             else:
                 # Return an 'invalid login' error message.
@@ -334,7 +379,7 @@ def register(request):
             user = form.save(commit=False)
             user.username = form.cleaned_data['username']
             user.user_status = 'normal'  # تنظیم وضعیت به عادی
-            user.save()  
+            user.save()
             # اعتبارسنجی تایید شرایط و قوانین
             if form.cleaned_data['terms']:
                 # کاربر را وارد سیستم می‌کنیم
@@ -362,11 +407,11 @@ def logoutUser(request):
 #         # Convert Gregorian date to Jalali date
 #         jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
 #         jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
-        
+
 #         # Format the Jalali dates as needed
 #         formatted_start = jalali_start.strftime('%Y/%m/%d')
 #         formatted_end = jalali_end.strftime('%Y/%m/%d')
-        
+
 #         send_message_accept_reserve('09106961316',reservation.resource,formatted_start,formatted_end,message='')
 #         return JsonResponse({'success': True})
 #     except Reservation.DoesNotExist:
@@ -381,7 +426,8 @@ def logoutUser(request):
 def generate_otp_code():
     return str(random.randint(100000, 999999))
 
-def send_message_accept_reserve(phone_number,room_id,enter_date,exit_date,message):
+
+def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
     TEMPLATE = message
     RECEPTOR = phone_number
@@ -392,13 +438,13 @@ def send_message_accept_reserve(phone_number,room_id,enter_date,exit_date,messag
     try:
         api = KavenegarAPI(API)
         params = {
-        'receptor': RECEPTOR,
-        'template': TEMPLATE,
-        'token': TOKEN,
-        'token2': TOKEN2,
-        'token3': TOKEN3,
-        'type': TYPE ,
-    }
+            'receptor': RECEPTOR,
+            'template': TEMPLATE,
+            'token': TOKEN,
+            'token2': TOKEN2,
+            'token3': TOKEN3,
+            'type': TYPE,
+        }
         response = api.verify_lookup(params)
         print(response)
     except APIException as e:
