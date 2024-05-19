@@ -20,7 +20,7 @@
 
 {% block page-css %}
 <link rel="stylesheet" href="{% static 'vendor/css/pages/app-calendar.css' %}" />
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
+
 <style>
 .room1{
  border-bottom: 4px solid #003C43 !important;
@@ -167,7 +167,7 @@
 
 {% block contant %}
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="card app-calendar-wrapper">
+  <div class="card app-calendar-wrapper">
     <div class="row g-0">
       <!-- Calendar & Modal -->
       <div id="demo-add-delete-event" class="md-date-header-template mbsc-cloak md-pages">
@@ -243,122 +243,6 @@
 <!-- / Content -->
 <script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment-jalaali/build/moment-jalaali.min.js"></script>
-    <br>
-    <br>
-    <div>
-          <h1> لیست رزرو ها</h1>
-            <label for="min-price"> حداقل قیمت : </label>
-            <input type="number" id="min-price" placeholder="حداقل قیمت را وارد کنید">
-            <label for="max-price"> حداکثر قیمت :</label>
-            <input type="number" id="max-price" placeholder="حداکثر قیمت را وارد کنید">
-            <label for="status-filter"> فیلتر وضعیت </label>
-            <select id="status-filter" class="status-filter">
-                <option value="">بدون فیلتر وضعیت</option>
-                <option value="در انتظار پرداخت">در انتظار پرداخت</option>
-                <option value="تایید شده">تایید شده</option>
-                <option value="کنسل شده">کنسل شده</option>
-                <option value="منقضی شده">منقضی شده</option>
-                <option value="نظافت">نظافت</option>
-            </select>
-
-          <table id="ReserveTable">
-            <thead>
-              <tr>
-                <th>شناسه رزرو</th>
-                <th>تاریخ شروع</th>
-                <th>تاریخ پایان</th>
-                <th>عنوان</th>
-                <th>ایجاد کننده</th>
-                <th>کاربر</th>
-                <th>پرداخت شده</th>
-                <th>شناسه پرداخت</th>
-                <th>منبع</th>
-                <th>وضعیت</th>
-                <th>نظافت</th>
-                <th>ظرفیت بیشتر</th>
-                <th>مبلغ کل</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for reservation in reservations%}
-                <tr>
-                  <td>{{ reservation.reserve_id }}</td>
-                  <td>{{ reservation.start }}</td>
-                  <td>{{ reservation.end }}</td>
-                  <td>{{ reservation.title }}</td>
-                  <td>{{ reservation.author.username }}</td>
-                  <td>{{ reservation.user.username }}</td>
-                  <td>{{ reservation.paid|yesno }}</td>
-                  <td>{{ reservation.payment_id }}</td>
-                  <td>{{ reservation.resource.name }}</td>
-                  <td>{{ reservation.get_status_display }}</td>
-                  <td>{{ reservation.cleaning|yesno }}</td>
-                  <td>{{ reservation.more_capacity }}</td>
-                  <td>{{ reservation.total_pay }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-    </div>
-</div>
-</div>
-<!-- / Content -->
-{% endblock %}
-
-
-{% block vondors-js %}
-<script src="{% static 'vendor/libs/fullcalendar/fullcalendar.js' %}"></script>
-<script src="{% static 'vendor/libs/formvalidation/dist/js/FormValidation.min.js' %}"></script>
-<script src="{% static 'vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js' %}"></script>
-<script src="{% static 'vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js' %}"></script>
-<script src="{% static 'vendor/libs/select2/select2.js' %}"></script>
-<script src="{% static 'vendor/libs/jdate/jdate.js' %}"></script>
-<script src="{% static 'vendor/libs/flatpickr/flatpickr-jdate.js' %}"></script>
-<script src="{% static 'vendor/libs/flatpickr/fa-jdate.js' %}"></script>
-<script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
-{% endblock %}
-
-{% block page-js %}
-<script src="{% static 'js/app-calendar-events.js' %}"></script>
-<script src="{% static 'js/app-calendar.js' %}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>
-
-<script> $(document).ready( function () {
-    var table = $('#ReserveTable').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
-        }
-    });
-        // Create the range filtering function
-    $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-            var min = parseInt($('#min-price').val(), 10);
-            var max = parseInt($('#max-price').val(), 10);
-            var price = parseFloat(data[12]) || 0; // use data for the 'Total Pay' column
-
-            if ((isNaN(min) && isNaN(max)) ||
-                 (isNaN(min) && price <= max) ||
-                 (min <= price && isNaN(max)) ||
-                 (min <= price && price <= max)) {
-                return true;
-            }
-            return false;
-        }
-    );
-
-    $('#status-filter').on('change', function() {
-        var value = $(this).val();
-        table.column(9).search(value).draw();
-    });
-
-    // Re-draw the table whenever the input values change
-    $('#min-price, #max-price').on('keyup', function() {
-        table.draw();
-    });
-} );
-</script>
 <script>
   mobiscroll.setOptions({
     locale: mobiscroll.localeFa,
@@ -388,9 +272,8 @@
     select: 'range',              // More info about select: https://mobiscroll.com/docs/javascript/datepicker/api#opt-select
     showRangeLabels: true
   });
-
+  
   function createAddPopup(elm,resourceId,tempEvent) {
-    console.log("Calender touched")
     deleteButton.style.display = 'none';
 
     deleteEvent = true;
@@ -496,7 +379,7 @@
     tempEvent = args.event;
 
     deleteButton.style.display = 'block';
-
+    
     deleteEvent = false;
     restoreEvent = true;
 
@@ -581,7 +464,7 @@
     rtl: true,
     view: {
       timeline: {
-        type: 'year',
+        type: 'year', 
         size: 30,
         },
     },
@@ -628,8 +511,8 @@
       // myRange.setVal([startDate, endDate]);
     },
     onEventClick: function (args) {
-      tempEvent = args.event;
-      console.log(tempEvent)
+      tempEvent = args.event;  
+      console.log(tempEvent)  
       if (!popup.isVisible()) {
         createEditPopup(args);
       }
@@ -688,13 +571,13 @@
     $.ajax({
       url: 'account/remove_reservation/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
       method: 'POST',
-      data: {
+      data: { 
         csrfmiddlewaretoken: '{{ csrf_token }}',
-        reservation_id: tempEvent.reserve_id
+        reservation_id: tempEvent.reserve_id 
       }, // ارسال شناسه رزرو به سمت سرور
       success: function (data) {
         popup.close();
-
+        
       },
       error: function () {
         alert('خطا در دریافت اطلاعات رزرو');
@@ -748,7 +631,7 @@
               end: '2025-03-10T00:00',
               title: 'عدم نمایش',
               cssClass: 'md-lunch-break-class mbsc-flex',
-            },
+            },  
           ],
         });
       } else {
@@ -777,9 +660,9 @@
   //   $.ajax({
   //     url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
   //     method: 'POST',
-  //     data: {
+  //     data: { 
   //       csrfmiddlewaretoken: '{{ csrf_token }}',
-  //       reservation_id: tempEvent.reserve_id
+  //       reservation_id: tempEvent.reserve_id 
   //     }, // ارسال شناسه رزرو به سمت سرور
   //     success: function (data) {
   //       popup.close();
@@ -794,7 +677,6 @@
   // $(document).ready(function () {
   //   $('#id_price_currency').select2();
   // });
-
 
 </script>
 <script>
@@ -834,7 +716,6 @@ document.addEventListener("DOMContentLoaded", function() {
     // Get the resource price (replace this with your logic to get the actual price)
     var resourcePrice = document.getElementById('event-price').textContent;
     console.log(resourcePrice)
-    var resourcePrice = $('#event-price').val()
 
     // Calculate the total cost
     var totalCost = differenceInDays * resourcePrice;
