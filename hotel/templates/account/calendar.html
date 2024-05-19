@@ -140,7 +140,7 @@
 @media (max-width: 768px) {
   .mbsc-timeline-resource-title {
     text-align: center;
-    font-size: 0.8em;
+    font-size: 0.7em;
   }
 }
 .mbsc-calendar-controls{
@@ -169,11 +169,6 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="card app-calendar-wrapper">
     <div class="row g-0">
-      <div class="container">
-        <div class="text-center">
-          <button class="btn btn-primary" id="openModalBtn">افزودن زمان تعطیلی</button>
-        </div>
-      </div>
       <!-- Calendar & Modal -->
       <div id="demo-add-delete-event" class="md-date-header-template mbsc-cloak md-pages">
       </div>
@@ -189,15 +184,13 @@
                 <select class="form-control" id="event-status" name="event-status" required>
                   <option value="pending_payment">در انتظار پرداخت</option>
                   <option value="confirmed">تایید شده</option>
-                  <option value="canceled">کنسل شده</option>
-                  <option value="closetime">زمان تعطیلی</option>
+                  <option value="closetime">غیرقابل رزرو</option>
                 </select>
                 <span id="event-capacity" name="event-capacity"></span><br>
                 <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity"><br>
                 <label for="event-cleaning">نظافت:</label>
                 <input type="checkbox" id="event-cleaning" name="event-cleaning">
-                <span>  /  </span>
-                <label for="event-paid">پرداخت:</label>
+                <label for="event-paid">پرداخت حضوری:</label>
                 <input type="checkbox" id="event-paid" name="event-paid">
               </div>
               <!-- Second Column -->
@@ -211,7 +204,7 @@
                   {% endfor %}
                 </select>
                 
-                <label for="event-price-per-person">قیمت هر نفر</label>
+                <label for="event-price-per-person">قیمت هر نفر مازاد</label>
                 <span class="form-control" id="event-price-per-person" name="event-price-per-person"></span>
                 <label for="event-price">قیمت هر شب</label>
                 <span class="form-control" id="event-price" name="event-price"></span>
@@ -298,11 +291,12 @@
     });
     $('#event-capacity').text(matchingResource.capacity + ' نفر مجاز/ظرفیت بیشتر ');
     $('#event-price').text(matchingResource.price);
-    // $('#event-cleaning').val('checked');
+    $('#event-cleaning').prop('checked',true);
     $('#event-more-capacity').val(0);
-    $('#event-paid').val('checked');
+    $('#event-paid').prop('checked',false);
+
     $('#event-price-per-person').text(matchingResource.price_per_person),
-    
+
     firstday = tempEvent.start;
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
@@ -564,6 +558,7 @@
       medium: {
         display: 'anchored',
         width: 400,
+        height:1200,
         fullScreen: false,
         touchUi: false,
       },
