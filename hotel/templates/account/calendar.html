@@ -118,7 +118,7 @@
 } 
 @media (max-width: 768px) {
 .mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
- width: 65px;
+ width: 45px;
 } 
 }
 
@@ -136,11 +136,32 @@
   text-align: center;
   font-size: 1em;
 }
+.mbsc-form-control-wrapper{
+    border-style:solid !important;
+    border-color:rgb(198, 198, 198) !important;
+    border-radius: 15px !important;
+  }
+.mbsc-bt-cotrol-today{
+    margin-left: 5px;
+    padding: 5px;
+    background-color:white;
+}
 }
 @media (max-width: 768px) {
   .mbsc-timeline-resource-title {
     text-align: center;
     font-size: 0.7em;
+  }
+  .mbsc-form-control-wrapper{
+    border-style:solid !important;
+    border-color:rgb(198, 198, 198) !important;
+    border-radius: 15px !important;
+    font-size: 0.7rem;
+  }
+  .mbsc-bt-cotrol-today{
+    margin-left: 5px;
+    padding: 5px;
+    background-color:white;
   }
 }
 .mbsc-calendar-controls{
@@ -177,7 +198,7 @@
           <div class="mbsc-form-group" style="margin: 20px;">
             <div class="row">
               <!-- First Column -->
-              <div class="col-md-6">
+              <div class="col-md-6 col-6">
                 <label for="event-title">نام</label>
                 <input type="text" class="form-control input" id="event-title" name="event-title" required>
                 <label for="event-status">وضعیت</label>
@@ -194,7 +215,7 @@
                 <input type="checkbox" id="event-paid" name="event-paid">
               </div>
               <!-- Second Column -->
-              <div class="col-md-6">
+              <div class="col-md-6 col-6">
                 <label for="event-user">شماره تلفن</label>
                 <input type="tel" class="form-control input" id="event-user" name="event-user" required>
                 <label for="event-resource">اتاق</label>
@@ -289,7 +310,7 @@
     var matchingResource = resourceData.find(function (resource) {
         return resource.id === resourceId;
     });
-    $('#event-capacity').text(matchingResource.capacity + ' نفر مجاز/ظرفیت بیشتر ');
+    $('#event-capacity').text(matchingResource.capacity + ' نفر مجاز + ' + matchingResource.max_capacity + ' نفر ');
     $('#event-price').text(matchingResource.price);
     $('#event-cleaning').prop('checked',true);
     $('#event-more-capacity').val(0);
@@ -420,8 +441,6 @@
 
   function fillPopupWithData(data) {
     // مثال: تنظیم عنوان و متن رزرو در پاپ آپ
-
-    console.log(data.morecapacity)
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
@@ -438,7 +457,10 @@
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
     $('#event-cleaning').prop('checked', data.cleaning);
-    $('#event-capacity').text(data.capacity + ' نفر مجاز/ظرفیت بیشتر ');
+    var matchingResource = resourceData.find(function (resource) {
+        return resource.id === data.resources;
+    });
+    $('#event-capacity').text(data.capacity + ' نفر مجاز + ' + matchingResource.max_capacity + ' نفر ');
     $('#event-more-capacity').val(data.morecapacity);
     $('#event-paid').prop('checked', data.paid);
     $('#event-price').text(data.price),
@@ -483,16 +505,16 @@
     // ],
     renderHeader: function () {
       return (
-        '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
+        '<div class="mbsc-form-control-wrapper mbsc-bt-cotrol-today">' +
         '<div mbsc-calendar-today></div>' +
         '</div>' +
         '<div id="custom-date-range"></div>' +
         '<label>' +
-        'شروع:' +
+        'شروع :' +
         '<input id="start" mbsc-input placeholder="کلیک کنید" />' +
         '</label>' +
         '<label>' +
-        'پایان:' +
+        'پایان :' +
         '<input id="end" mbsc-input placeholder="کلیک کنید" />' +
         '</label>'
       );
@@ -681,20 +703,18 @@
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // document.getElementById('event-resource').addEventListener('change', function() {
     document.querySelector('.mbsc-range-control-value').addEventListener('contentChanged', function() {
       var selectedResourceId = parseInt($(this).val(), 10); // Convert to integer
       var matchingResource = resourceData.find(function(resource) {
         return resource.id === selectedResourceId;
       });
       if (matchingResource) {
-        $('#event-capacity').text(matchingResource.capacity + ' نفر');
+        $('#event-capacity').text(matchingResource.capacity + 'نفر مجاز + ' + matchingResource.max_capacity + ' نفر ');
       } else {
           // Handle the case when no matching resource is found
         $('#event-capacity').text('نفری یافت نشد');
       }
       console.log("Matching Resource:", matchingResource);
-
     });
   });
 </script>

@@ -177,7 +177,8 @@ def calendar(request):
             'cssClass': resource.css,
             'capacity': resource.capacity,
             'price': resource.price,
-            'price_per_person': resource.price_per_person
+            'price_per_person': resource.price_per_person,
+            'max_capacity': resource.max_capacity,
         })
 
     if request.method == 'POST':

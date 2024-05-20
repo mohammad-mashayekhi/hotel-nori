@@ -29,6 +29,7 @@ class Resource(models.Model):
     name = models.CharField(max_length=100)
     css = models.CharField(max_length=7)  
     capacity = models.IntegerField(blank=True, null=True)
+    max_capacity = models.IntegerField(blank=True, null=True)
     price = models.IntegerField( blank=True, null=True)
     price_per_person = models.IntegerField( blank=True, null=True)
     number_area = models.IntegerField(blank=True, null=True)
