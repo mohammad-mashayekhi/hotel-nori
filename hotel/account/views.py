@@ -431,7 +431,7 @@ def generate_otp_code():
 def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
     TEMPLATE = message
-    RECEPTOR = phone_number
+    RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
     TOKEN = room_id
     TOKEN2 = enter_date
     TOKEN3 = exit_date
@@ -454,7 +454,9 @@ def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, me
         print(e)
 
 
-
+def convert_to_western_numerals(persian_number):
+    persian_to_western = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'}
+    return ''.join(persian_to_western.get(char, char) for char in persian_number)
 
 
 
