@@ -21996,7 +21996,7 @@ html:not([dir=rtl]) .layout-menu-toggle {
     padding-left: 0;
   }
   [dir=rtl].layout-menu-fixed:not(.layout-menu-collapsed) .layout-page, [dir=rtl].layout-menu-fixed-offcanvas:not(.layout-menu-collapsed) .layout-page {
-    padding-right: 3.25rem;
+    padding-right: 10rem;
     padding-left: 0;
   }
   [dir=rtl].layout-menu-fixed:not(.layout-menu-collapsed).layout-menu-flipped .layout-page, [dir=rtl].layout-menu-fixed-offcanvas:not(.layout-menu-collapsed).layout-menu-flipped .layout-page {

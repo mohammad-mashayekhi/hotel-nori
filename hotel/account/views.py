@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from reserve.models import Reservation, Resource
 import json
 from django.http import JsonResponse
@@ -58,6 +58,13 @@ def edit_user(request, user_id):
 def bill(request):
     reservations = Reservation.objects.all().order_by('-id')
     return render(request, 'account/bill/app-invoice-list.html', {'reserve': reservations})
+
+def billdetail(request, reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+    # Here you can generate the bill for the specific reservation
+    # You can pass the reservation object to a template to display the bill
+    return render(request, 'account/bill/billdetail.html', {'reservation': reservation})
+
 
 def calculate_growth_percentage(old_value, new_value):
     if old_value == 0:
