@@ -76,7 +76,7 @@
                   <td>{{ r.reserve_id }}</td>
                   <td>{{ r.start }}</td>
                   <td>{{ r.end }}</td>
-                  <td><a href="">{{ r.title }}</a></td>
+                  <td><a href="{% url 'account:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
                   <td>{{ r.author.username }}</td>
                   <td>{{ r.user.username }}</td>
                   <td>{{ r.paid|yesno }}</td>

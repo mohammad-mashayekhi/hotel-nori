@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings 
 from shortuuid.django_fields import ShortUUIDField
+from django.utils import timezone
+from jalali_date import datetime2jalali, date2jalali
 
 class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
@@ -22,6 +24,11 @@ class Reservation(models.Model):
     cleaning = models.BooleanField(default=False)  # True for active, False for inactive
     more_capacity = models.IntegerField(blank=True, null=True)
     total_pay = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now, editable=False)  # Save creation time
+
+    def get_created_at_dhamsi(self):
+        return date2jalali(self.created_at).strftime('%y/%m/%d %H:%M:%S')
+    
     def __str__(self):
         return self.title
 

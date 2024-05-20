@@ -1,337 +1,302 @@
 {% extends 'account/base.html' %}
 {% load static %}
-
 {% block vendors-css %}
-    <!-- Vendors CSS -->
-    <link
-      rel="stylesheet"
-      href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css"
-    />
-    <link
-      rel="stylesheet"
-      href="../../assets/vendor/libs/node-waves/node-waves.css"
-    />
-    <link
-      rel="stylesheet"
-      href="../../assets/vendor/libs/typeahead-js/typeahead.css"
-    />
-    <link
-      rel="stylesheet"
-      href="../../assets/vendor/libs/flatpickr/flatpickr.css"
-    />
-
-    <!-- Page CSS -->
-
-    <link
-      rel="stylesheet"
-      href="../../assets/vendor/css/pages/app-invoice.css"
-    />
-  
-    {% endblock %}
-
-
-    {% block contant %}    
-            <!-- Content -->
-            <div class="container-xxl flex-grow-1 container-p-y" len="13520">
-            
-            
-
-              <div class="row invoice-preview" len="8865">
-                <!-- Invoice -->
-                <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4" len="7514">
-                  <div class="card invoice-preview-card" len="7461">
-                    <div class="card-body" len="3428">
-                      <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column" len="3311">
-                        <div class="mb-xl-0 pb-3" len="2944">
-                          <div class="d-flex svg-illustration align-items-center gap-2 mb-4" len="2644">
-                            <span class="app-brand-logo demo" len="2497">
-              <span style="color:var(--bs-primary);" len="2449">
-                <svg width="268" height="150" viewBox="0 0 38 20" fill="none" xmlns="http://www.w3.org/2000/svg" len="2342">
-                  <path d="M30.0944 2.22569C29.0511 0.444187 26.7508 -0.172113 24.9566 0.849138C23.1623 1.87039 22.5536 4.14247 23.5969 5.92397L30.5368 17.7743C31.5801 19.5558 33.8804 20.1721 35.6746 19.1509C37.4689 18.1296 38.0776 15.8575 37.0343 14.076L30.0944 2.22569Z" fill="currentColor" len="0"></path>
-                  <path d="M30.171 2.22569C29.1277 0.444187 26.8274 -0.172113 25.0332 0.849138C23.2389 1.87039 22.6302 4.14247 23.6735 5.92397L30.6134 17.7743C31.6567 19.5558 33.957 20.1721 35.7512 19.1509C37.5455 18.1296 38.1542 15.8575 37.1109 14.076L30.171 2.22569Z" fill="url(#paint0_linear_2989_100980)" fill-opacity="0.4" len="0"></path>
-                  <path d="M22.9676 2.22569C24.0109 0.444187 26.3112 -0.172113 28.1054 0.849138C29.8996 1.87039 30.5084 4.14247 29.4651 5.92397L22.5251 17.7743C21.4818 19.5558 19.1816 20.1721 17.3873 19.1509C15.5931 18.1296 14.9843 15.8575 16.0276 14.076L22.9676 2.22569Z" fill="currentColor" len="0"></path>
-                  <path d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z" fill="currentColor" len="0"></path>
-                  <path d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z" fill="url(#paint1_linear_2989_100980)" fill-opacity="0.4" len="0"></path>
-                  <path d="M7.82901 2.22569C8.87231 0.444187 11.1726 -0.172113 12.9668 0.849138C14.7611 1.87039 15.3698 4.14247 14.3265 5.92397L7.38656 17.7743C6.34325 19.5558 4.04298 20.1721 2.24875 19.1509C0.454514 18.1296 -0.154233 15.8575 0.88907 14.076L7.82901 2.22569Z" fill="currentColor" len="0"></path>
-                  <defs len="527">
-                    <linearGradient id="paint0_linear_2989_100980" x1="5.36642" y1="0.849138" x2="10.532" y2="24.104" gradientUnits="userSpaceOnUse">
-                      <stop offset="0" stop-opacity="1"></stop>
-                      <stop offset="1" stop-opacity="0"></stop>
-                    </linearGradient>
-                    <linearGradient id="paint1_linear_2989_100980" x1="5.19475" y1="0.849139" x2="10.3357" y2="24.1155" gradientUnits="userSpaceOnUse">
-                      <stop offset="0" stop-opacity="1"></stop>
-                      <stop offset="1" stop-opacity="0"></stop>
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </span>
-              </span>
-                            <span class="h4 mb-0 app-brand-text fw-bold" len="11" lang="fa" style="">متــریالایز</span>
-                          </div>
-                          <p class="mb-1" len="36" lang="fa" style="">پارک علم و فناوری، اتاق 43</p>
-                          <p class="mb-1" len="31" lang="fa" style="">تماس با</p>
-                          <p class="mb-0" len="37" lang="fa" style="">09131234567</p>
-                        </div>
-                        <div len="293">
-                          <h5 len="14" lang="fa" style="">فاکتور # 86423</h5>
-                          <div class="mb-1" len="95">
-                            <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">اوریل 25، 2021</span></font>
-                          </div>
-                          <div len="90">
-                            <font lang="fa"><span len="9">تاریخ تولد:</span> <span len="12">مه 25، 2021</span></font>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr class="my-0" len="0">
-                    <div class="card-body" len="1326">
-                      <div class="d-flex justify-content-between flex-wrap" len="1250">
-                        <div class="my-3" len="317">
-                          <h6 class="pb-2" len="11" lang="fa">فاکتور به:</h6>
-                          <p class="mb-1" len="13" lang="fa">مهدی صادقی</p>
-                          <p class="mb-1" len="22" lang="fa">شرکت تیک تاک</p>
-                          <p class="mb-1" len="24" lang="fa">کوچک هیث، B10 0HF، انگلستان</p>
-                          <p class="mb-1" len="12" lang="fa">718-986-6062</p>
-                          <p class="mb-0" len="24" lang="fa">example@gmail.com</p>
-                        </div>
-                        <div class="my-3" len="854">
-                          <h6 class="pb-2" len="8" lang="fa" style="">بیل به:</h6>
-                          <table len="772">
-                            <tbody len="729">
-                              <tr len="116">
-                                <td class="pe-3 fw-medium" len="10" lang="fa" style="">مجموع به علت:</td>
-                                <td len="10" lang="fa" style="">$12،110.55</td>
-                              </tr>
-                              <tr len="119">
-                                <td class="pe-3 fw-medium" len="10" lang="fa">نام بانک:</td>
-                                <td len="13" lang="fa" style="">بانک امریکایی</td>
-                              </tr>
-                              <tr len="117">
-                                <td class="pe-3 fw-medium" len="8" lang="fa">کشور:</td>
-                                <td len="13" lang="fa" style="">ایالات متحده</td>
-                              </tr>
-                              <tr len="118">
-                                <td class="pe-3 fw-medium" len="5" lang="fa" style="">ایبان:</td>
-                                <td len="17" lang="fa" style="">دانلود: ETD95476213874685.000</td>
-                              </tr>
-                              <tr len="114">
-                                <td class="pe-3 fw-medium" len="11" lang="fa" style="">کد سوئیفت:</td>
-                                <td len="7" lang="fa">BR91905 (برزیلی)</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="table-responsive" len="2219">
-                      <table class="table m-0" len="2170">
-                        <thead class="table-light border-top" len="193">
-                          <tr len="160">
-                            <th len="4" lang="fa">مورد</th>
-                            <th len="11" lang="fa">توضیحات</th>
-                            <th len="4" lang="fa" style="">هزینه</th>
-                            <th len="3" lang="fa">تعداد</th>
-                            <th len="5" lang="fa">قيمت</th>
-                          </tr>
-                        </thead>
-                        <tbody len="1885">
-                          <tr len="222">
-                            <td class="text-nowrap" len="20" lang="fa">قالب مدیریت Vuexy</td>
-                            <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
-                            <td len="3" lang="fa" style="">$32</td>
-                            <td len="1" lang="fa">1</td>
-                            <td len="6" lang="fa">$32.00</td>
-                          </tr>
-                          <tr len="225">
-                            <td class="text-nowrap" len="20" lang="fa">Frest Admin الگو</td>
-                            <td class="text-nowrap" len="22" lang="fa">قالب مدیریت زاویه ای</td>
-                            <td len="3" lang="fa">$22</td>
-                            <td len="1" lang="fa">1</td>
-                            <td len="6" lang="fa">$22.00</td>
-                          </tr>
-                          <tr len="221">
-                            <td class="text-nowrap" len="19" lang="fa">Apex Admin الگو</td>
-                            <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
-                            <td len="3" lang="fa">$17</td>
-                            <td len="1" lang="fa">2</td>
-                            <td len="6" lang="fa">$34.00</td>
-                          </tr>
-                          <tr len="224">
-                            <td class="text-nowrap" len="21" lang="fa">قالب مدیریت قوی</td>
-                            <td class="text-nowrap" len="20" lang="fa">قالب مدیر ریاکت</td>
-                            <td len="3" lang="fa">$66</td>
-                            <td len="1" lang="fa">1</td>
-                            <td len="6" lang="fa">$66.00</td>
-                          </tr>
-                          <tr len="872">
-                            <td colspan="3" class="align-top px-4 py-5" len="238">
-                              <p class="mb-2" len="132">
-                                <font lang="fa"><span class="me-1 fw-semibold" len="12">فروشنده:</span> <span len="14">الفی سولومون</span></font>
-                              </p>
-                              <span len="24" lang="fa">با تشکر برای کسب و کار شما</span>
-                            </td>
-                            <td class="text-end px-4 py-5" len="191" style="text-align: right;">
-                              <p class="mb-2" len="9" style="text-align: right;" lang="fa">زیر مجموعه:</p>
-                              <p class="mb-2" len="9" style="text-align: right;" lang="fa">تخفیف:</p>
-                              <p class="mb-2" len="4" style="text-align: right;" lang="fa">مالیات:</p>
-                              <p class="mb-0" len="6" style="text-align: right;" lang="fa">مجموع:</p>
-                            </td>
-                            <td class="px-4 py-5" len="273">
-                              <p class="fw-semibold mb-2 text-end" len="7" style="text-align: right;" lang="fa">$154.25</p>
-                              <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$00.00</p>
-                              <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$50.00</p>
-                              <p class="fw-semibold mb-0 text-end" len="7" style="text-align: right;" lang="fa">$204.25</p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-              
-                    <div class="card-body" len="307">
-                      <div class="row" len="268">
-                        <div class="col-12" len="222">
-                          <font><font lang="fa"><span class="fw-bold" len="5">وی افزود:</span> </font><span len="138"><font lang="fa">از همکاری با شما و تیمتان لذت بردم. </font><font lang="fa">ما امیدواریم که شما ما را در ذهن برای پروژه های ازاد اینده نگه دارید. </font><font lang="fa">سپاسگزارم!</font></span><font></font></font>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /Invoice -->
-              
-                <!-- Invoice Actions -->
-                <div class="col-xl-3 col-md-4 col-12 invoice-actions" len="1132">
-                  <div class="card" len="1100">
-                    <div class="card-body" len="1059">
-                      <button class="btn btn-primary d-grid w-100 mb-3 waves-effect waves-light" data-bs-toggle="offcanvas" data-bs-target="#sendInvoiceOffcanvas" len="169">
-                        <span class="d-flex align-items-center justify-content-center text-nowrap" len="67"><i class="mdi mdi-send-outline scaleX-n1-rtl me-1" len="0"></i><font lang="fa">ارسال فاکتور</font></span>
-                      </button>
-                      <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button>
-                      <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank" href="app-invoice-print.html" len="25" lang="fa"> چاپ </a>
-                      <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32" lang="fa"> ویرایش فاکتور </a>
-                      <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas" data-bs-target="#addPaymentOffcanvas" len="154">
-                        <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i class="mdi mdi-currency-usd me-1" len="0"></i><font lang="fa">اضافه کردن پرداخت</font></span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <!-- /Invoice Actions -->
+<!-- Vendors CSS -->
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+<!-- Page CSS -->
+<link rel="stylesheet" href="{% static 'vendor/css/pages/app-invoice.css' %}" />
+{% endblock %}
+{% block contant %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y" len="13520">
+  <div class="row invoice-preview" len="8865">
+    <!-- Invoice -->
+    <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4" len="7514">
+      <div class="card invoice-preview-card" len="7461">
+        <div class="card-body" len="3428">
+          <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column" len="3311">
+            <div class="mb-xl-0 pb-3" len="2944">
+              <div class="d-flex svg-illustration align-items-center gap-2 mb-4" len="2644">
+                <h5 len="14" lang="fa" style="">فاکتور : {{ reservation.reserve_id }}</h5>
               </div>
-              
-              <!-- Offcanvas -->
-              <!-- Send Invoice Sidebar -->
-              <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true" len="2063">
-                <div class="offcanvas-header mb-3" len="165">
-                  <h5 class="offcanvas-title" len="12" lang="fa">ارسال فاکتور</h5>
-                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" len="0"></button>
-                </div>
-                <div class="offcanvas-body flex-grow-1" len="1804">
-                  <form>
-                    <div class="form-floating form-floating-outline mb-4" len="185">
-                      <input type="text" class="form-control" id="invoice-from" value="shelbyComapny@email.com" placeholder="company@email.com" len="0">
-                      <label for="invoice-from" len="4" style="text-align: right;" lang="fa">از</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="179">
-                      <input type="text" class="form-control" id="invoice-to" value="qConsolidated@email.com" placeholder="company@email.com" len="0">
-                      <label for="invoice-to" len="2" style="text-align: right;" lang="fa">به</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="213">
-                      <input type="text" class="form-control" id="invoice-subject" value="Invoice of purchased Admin Templates" placeholder="Invoice regarding goods" len="0">
-                      <label for="invoice-subject" len="7" style="text-align: right;" lang="fa">موضوع</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="411">
-                      <textarea class="form-control" name="invoice-message" id="invoice-message" style="height: 190px;" len="233">Dear Queen Consolidated,
+              <p class="mb-1" len="36" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</p>
+            </div>
+            <div len="293">
+              <div class="mb-1" len="95">
+                <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_dhamsi}}</span></font>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="my-0" len="0">
+        <div class="card-body" len="1326">
+          <div class="d-flex justify-content-between flex-wrap" len="1250">
+            <div class="my-3" len="317">
+              <h6 class="pb-2" len="11" lang="fa">فاکتور به:</h6>
+              <p class="mb-1" len="13" lang="fa">مهدی صادقی</p>
+              <p class="mb-1" len="22" lang="fa">شرکت تیک تاک</p>
+              <p class="mb-1" len="24" lang="fa">کوچک هیث، B10 0HF، انگلستان</p>
+              <p class="mb-1" len="12" lang="fa">718-986-6062</p>
+              <p class="mb-0" len="24" lang="fa">example@gmail.com</p>
+            </div>
+            <div class="my-3" len="854">
+              <h6 class="pb-2" len="8" lang="fa" style="">بیل به:</h6>
+              <table len="772">
+                <tbody len="729">
+                  <tr len="116">
+                    <td class="pe-3 fw-medium" len="10" lang="fa" style="">مجموع به علت:</td>
+                    <td len="10" lang="fa" style="">$12،110.55</td>
+                  </tr>
+                  <tr len="119">
+                    <td class="pe-3 fw-medium" len="10" lang="fa">نام بانک:</td>
+                    <td len="13" lang="fa" style="">بانک امریکایی</td>
+                  </tr>
+                  <tr len="117">
+                    <td class="pe-3 fw-medium" len="8" lang="fa">کشور:</td>
+                    <td len="13" lang="fa" style="">ایالات متحده</td>
+                  </tr>
+                  <tr len="118">
+                    <td class="pe-3 fw-medium" len="5" lang="fa" style="">ایبان:</td>
+                    <td len="17" lang="fa" style="">دانلود: ETD95476213874685.000</td>
+                  </tr>
+                  <tr len="114">
+                    <td class="pe-3 fw-medium" len="11" lang="fa" style="">کد سوئیفت:</td>
+                    <td len="7" lang="fa">BR91905 (برزیلی)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive" len="2219">
+          <table class="table m-0" len="2170">
+            <thead class="table-light border-top" len="193">
+              <tr len="160">
+                <th len="4" lang="fa">مورد</th>
+                <th len="11" lang="fa">توضیحات</th>
+                <th len="4" lang="fa" style="">هزینه</th>
+                <th len="3" lang="fa">تعداد</th>
+                <th len="5" lang="fa">قيمت</th>
+              </tr>
+            </thead>
+            <tbody len="1885">
+              <tr len="222">
+                <td class="text-nowrap" len="20" lang="fa">قالب مدیریت Vuexy</td>
+                <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
+                <td len="3" lang="fa" style="">$32</td>
+                <td len="1" lang="fa">1</td>
+                <td len="6" lang="fa">$32.00</td>
+              </tr>
+              <tr len="225">
+                <td class="text-nowrap" len="20" lang="fa">Frest Admin الگو</td>
+                <td class="text-nowrap" len="22" lang="fa">قالب مدیریت زاویه ای</td>
+                <td len="3" lang="fa">$22</td>
+                <td len="1" lang="fa">1</td>
+                <td len="6" lang="fa">$22.00</td>
+              </tr>
+              <tr len="221">
+                <td class="text-nowrap" len="19" lang="fa">Apex Admin الگو</td>
+                <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
+                <td len="3" lang="fa">$17</td>
+                <td len="1" lang="fa">2</td>
+                <td len="6" lang="fa">$34.00</td>
+              </tr>
+              <tr len="224">
+                <td class="text-nowrap" len="21" lang="fa">قالب مدیریت قوی</td>
+                <td class="text-nowrap" len="20" lang="fa">قالب مدیر ریاکت</td>
+                <td len="3" lang="fa">$66</td>
+                <td len="1" lang="fa">1</td>
+                <td len="6" lang="fa">$66.00</td>
+              </tr>
+              <tr len="872">
+                <td colspan="3" class="align-top px-4 py-5" len="238">
+                  <p class="mb-2" len="132">
+                    <font lang="fa"><span class="me-1 fw-semibold" len="12">فروشنده:</span> <span len="14">الفی
+                        سولومون</span></font>
+                  </p>
+                  <span len="24" lang="fa">با تشکر برای کسب و کار شما</span>
+                </td>
+                <td class="text-end px-4 py-5" len="191" style="text-align: right;">
+                  <p class="mb-2" len="9" style="text-align: right;" lang="fa">زیر مجموعه:</p>
+                  <p class="mb-2" len="9" style="text-align: right;" lang="fa">تخفیف:</p>
+                  <p class="mb-2" len="4" style="text-align: right;" lang="fa">مالیات:</p>
+                  <p class="mb-0" len="6" style="text-align: right;" lang="fa">مجموع:</p>
+                </td>
+                <td class="px-4 py-5" len="273">
+                  <p class="fw-semibold mb-2 text-end" len="7" style="text-align: right;" lang="fa">$154.25</p>
+                  <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$00.00</p>
+                  <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$50.00</p>
+                  <p class="fw-semibold mb-0 text-end" len="7" style="text-align: right;" lang="fa">$204.25</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-body" len="307">
+          <div class="row" len="268">
+            <div class="col-12" len="222">
+              <font>
+                <font lang="fa"><span class="fw-bold" len="5">وی افزود:</span> </font><span len="138">
+                  <font lang="fa">از همکاری با شما و تیمتان لذت بردم. </font>
+                  <font lang="fa">ما امیدواریم که شما ما را در ذهن برای پروژه های ازاد اینده نگه دارید. </font>
+                  <font lang="fa">سپاسگزارم!</font>
+                </span>
+                <font></font>
+              </font>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /Invoice -->
+
+    <!-- Invoice Actions -->
+    <div class="col-xl-3 col-md-4 col-12 invoice-actions" len="1132">
+      <div class="card" len="1100">
+        <div class="card-body" len="1059">
+          <button class="btn btn-primary d-grid w-100 mb-3 waves-effect waves-light" data-bs-toggle="offcanvas"
+            data-bs-target="#sendInvoiceOffcanvas" len="169">
+            <span class="d-flex align-items-center justify-content-center text-nowrap" len="67"><i
+                class="mdi mdi-send-outline scaleX-n1-rtl me-1" len="0"></i>
+              <font lang="fa">ارسال فاکتور</font>
+            </span>
+          </button>
+          <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button>
+          <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
+            href="{% url 'account:billprint' reservation.reserve_id %}" len="25" lang="fa"> چاپ </a>
+          <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
+            lang="fa"> ویرایش فاکتور </a>
+          <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
+            data-bs-target="#addPaymentOffcanvas" len="154">
+            <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i
+                class="mdi mdi-currency-usd me-1" len="0"></i>
+              <font lang="fa">اضافه کردن پرداخت</font>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- /Invoice Actions -->
+  </div>
+  <!-- Offcanvas -->
+  <!-- Send Invoice Sidebar -->
+  <div class="offcanvas offcanvas-end" id="sendInvoiceOffcanvas" aria-hidden="true" len="2063">
+    <div class="offcanvas-header mb-3" len="165">
+      <h5 class="offcanvas-title" len="12" lang="fa">ارسال فاکتور</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
+        len="0"></button>
+    </div>
+    <div class="offcanvas-body flex-grow-1" len="1804">
+      <form>
+        <div class="form-floating form-floating-outline mb-4" len="185">
+          <input type="text" class="form-control" id="invoice-from" value="shelbyComapny@email.com"
+            placeholder="company@email.com" len="0">
+          <label for="invoice-from" len="4" style="text-align: right;" lang="fa">از</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="179">
+          <input type="text" class="form-control" id="invoice-to" value="qConsolidated@email.com"
+            placeholder="company@email.com" len="0">
+          <label for="invoice-to" len="2" style="text-align: right;" lang="fa">به</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="213">
+          <input type="text" class="form-control" id="invoice-subject" value="Invoice of purchased Admin Templates"
+            placeholder="Invoice regarding goods" len="0">
+          <label for="invoice-subject" len="7" style="text-align: right;" lang="fa">موضوع</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="411">
+          <textarea class="form-control" name="invoice-message" id="invoice-message" style="height: 190px;" len="233">Dear Queen Consolidated,
                         Thank you for your business, always a pleasure to work with you!
                         We have generated a new invoice in the amount of $95.59
                         We would appreciate payment of this invoice by 05/11/2021</textarea>
-                      <label for="invoice-message" len="7" style="text-align: right;" lang="fa">پیام</label>
-                    </div>
-                    <div class="mb-4" len="191">
-                      <span class="badge bg-label-primary" len="131">
-                        <i class="mdi mdi-link-variant mdi-14px me-1" len="0"></i>
-                        <span class="align-middle" len="16" lang="fa">فاکتور پیوست شده</span>
-                      </span>
-                    </div>
-                    <div class="mb-3 d-flex flex-wrap" len="252">
-                      <button type="button" class="btn btn-primary me-3 waves-effect waves-light" data-bs-dismiss="offcanvas" len="4" lang="fa">ارسال</button>
-                      <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="offcanvas" len="6" lang="fa">لغو</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <!-- /Send Invoice Sidebar -->
-              
-              <!-- Add Payment Sidebar -->
-              <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true" len="2160">
-                <div class="offcanvas-header mb-3" len="164">
-                  <h5 class="offcanvas-title" len="11" lang="fa">اضافه کردن پرداخت</h5>
-                  <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" len="0"></button>
-                </div>
-                <div class="offcanvas-body flex-grow-1" len="1902">
-                  <div class="d-flex justify-content-between bg-lighter p-2 mb-3" len="91">
-                    <p class="mb-0" len="16" lang="fa">موجودی فاکتور:</p>
-                    <p class="fw-bold mb-0" len="8" lang="fa">$5000.00</p>
-                  </div>
-                  <form>
-                    <div class="input-group input-group-merge mb-4" len="312">
-                      <span class="input-group-text" len="1">ریال</span>
-                      <div class="form-floating form-floating-outline" len="193">
-                        <input type="text" id="invoiceAmount" name="invoiceAmount" class="form-control invoice-amount" placeholder="100" len="0">
-                        <label for="invoiceAmount" len="14" style="text-align: right;" lang="fa">مبلغ پرداخت</label>
-                      </div>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="178">
-                      <input id="payment-date" class="form-control invoice-date flatpickr-input" type="text" readonly="readonly" len="0">
-                      <label for="payment-date" len="12" style="text-align: right;" lang="fa">تاریخ پرداخت</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="496">
-                      <select class="form-select" id="payment-method" style="text-align: right;">
-                        <option value="" selected="" disabled="" len="21">روش پرداخت را انتخاب کنید</option>
-                        <option value="Cash" len="4">پول نقد</option>
-                        <option value="Bank Transfer" len="13">انتقال بانکی</option>
-                        <option value="کارت اعتباری" len="10">دبیت کارت</option>
-                        <option value="کارت اعتباری" len="11">کارت اعتباری</option>
-                        <option value="Paypal" len="6">پی پال</option>
-                      </select>
-                      <label for="payment-method" len="14" style="text-align: right;" lang="fa">روش پرداخت</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-4" len="162">
-                      <textarea class="form-control" id="payment-note" style="height: 62px;" len="0"></textarea>
-                      <label for="payment-note" len="21" style="text-align: right;" lang="fa">یادداشت پرداخت داخلی</label>
-                    </div>
-                    <div class="mb-3 d-flex flex-wrap" len="252">
-                      <button type="button" class="btn btn-primary me-3 waves-effect waves-light" data-bs-dismiss="offcanvas" len="4" lang="fa">ارسال</button>
-                      <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="offcanvas" len="6" lang="fa">لغو</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <!-- /Add Payment Sidebar -->
-              
-              <!-- /Offcanvas -->
-              
-              
-                          
-                        </div>
-            <!-- / Content -->
-    {% endblock %}
+          <label for="invoice-message" len="7" style="text-align: right;" lang="fa">پیام</label>
+        </div>
+        <div class="mb-4" len="191">
+          <span class="badge bg-label-primary" len="131">
+            <i class="mdi mdi-link-variant mdi-14px me-1" len="0"></i>
+            <span class="align-middle" len="16" lang="fa">فاکتور پیوست شده</span>
+          </span>
+        </div>
+        <div class="mb-3 d-flex flex-wrap" len="252">
+          <button type="button" class="btn btn-primary me-3 waves-effect waves-light" data-bs-dismiss="offcanvas"
+            len="4" lang="fa">ارسال</button>
+          <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="offcanvas" len="6"
+            lang="fa">لغو</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- /Send Invoice Sidebar -->
 
-    {% block vondors-js %}
-    <!-- Vendors JS -->
-    <script src="../../assets/vendor/libs/moment/moment.js"></script>
-    <script src="../../assets/vendor/libs/jdate/jdate.js"></script>
-    <script src="../../assets/vendor/libs/flatpickr/flatpickr-jdate.js"></script>
-    <script src="../../assets/vendor/libs/flatpickr/fa-jdate.js"></script>
-    <script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
-    <script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
-    {% endblock %}
-
-    
-
-    {% block page-js %}
-    <!-- Page JS -->
-    <script src="../../assets/js/offcanvas-add-payment.js"></script>
-    <script src="../../assets/js/offcanvas-send-invoice.js"></script>
-    {% endblock %}
-
-
-
+  <!-- Add Payment Sidebar -->
+  <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true" len="2160">
+    <div class="offcanvas-header mb-3" len="164">
+      <h5 class="offcanvas-title" len="11" lang="fa">اضافه کردن پرداخت</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
+        len="0"></button>
+    </div>
+    <div class="offcanvas-body flex-grow-1" len="1902">
+      <div class="d-flex justify-content-between bg-lighter p-2 mb-3" len="91">
+        <p class="mb-0" len="16" lang="fa">موجودی فاکتور:</p>
+        <p class="fw-bold mb-0" len="8" lang="fa">$5000.00</p>
+      </div>
+      <form>
+        <div class="input-group input-group-merge mb-4" len="312">
+          <span class="input-group-text" len="1">ریال</span>
+          <div class="form-floating form-floating-outline" len="193">
+            <input type="text" id="invoiceAmount" name="invoiceAmount" class="form-control invoice-amount"
+              placeholder="100" len="0">
+            <label for="invoiceAmount" len="14" style="text-align: right;" lang="fa">مبلغ پرداخت</label>
+          </div>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="178">
+          <input id="payment-date" class="form-control invoice-date flatpickr-input" type="text" readonly="readonly"
+            len="0">
+          <label for="payment-date" len="12" style="text-align: right;" lang="fa">تاریخ پرداخت</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="496">
+          <select class="form-select" id="payment-method" style="text-align: right;">
+            <option value="" selected="" disabled="" len="21">روش پرداخت را انتخاب کنید</option>
+            <option value="Cash" len="4">پول نقد</option>
+            <option value="Bank Transfer" len="13">انتقال بانکی</option>
+            <option value="کارت اعتباری" len="10">دبیت کارت</option>
+            <option value="کارت اعتباری" len="11">کارت اعتباری</option>
+            <option value="Paypal" len="6">پی پال</option>
+          </select>
+          <label for="payment-method" len="14" style="text-align: right;" lang="fa">روش پرداخت</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-4" len="162">
+          <textarea class="form-control" id="payment-note" style="height: 62px;" len="0"></textarea>
+          <label for="payment-note" len="21" style="text-align: right;" lang="fa">یادداشت پرداخت داخلی</label>
+        </div>
+        <div class="mb-3 d-flex flex-wrap" len="252">
+          <button type="button" class="btn btn-primary me-3 waves-effect waves-light" data-bs-dismiss="offcanvas"
+            len="4" lang="fa">ارسال</button>
+          <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="offcanvas" len="6"
+            lang="fa">لغو</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- /Add Payment Sidebar -->
+  <!-- /Offcanvas -->
+</div>
+<!-- / Content -->
+{% endblock %}
+{% block vondors-js %}
+<!-- Vendors JS -->
+<script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
+<script src="{% static 'vendor/libs/jdate/jdate.js' %}"></script>
+<script src="{% static 'vendor/libs/flatpickr/flatpickr-jdate.js' %}"></script>
+<script src="{% static 'vendor/libs/flatpickr/fa-jdate.js' %}"></script>
+<script src="{% static 'vendor/libs/cleavejs/cleave.js' %}"></script>
+<script src="{% static 'vendor/libs/cleavejs/cleave-phone.js' %}"></script>
+{% endblock %}
+{% block page-js %}
+<!-- Page JS -->
+<script src="{% static 'js/offcanvas-add-payment.js' %}"></script>
+<script src="{% static 'js/offcanvas-send-invoice.js' %}"></script>
+{% endblock %}

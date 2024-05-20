@@ -59,6 +59,12 @@ def bill(request):
     reservations = Reservation.objects.all().order_by('-id')
     return render(request, 'account/bill/app-invoice-list.html', {'reserve': reservations})
 
+
+def billprint(request,reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+
+    return render(request, 'account/bill/billprint.html', {'reserve': reservation})
+
 def billdetail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
     # Here you can generate the bill for the specific reservation
