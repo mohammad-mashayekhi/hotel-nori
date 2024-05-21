@@ -3,6 +3,7 @@
 
 {% block vendors-css %}
 <!-- Vendors CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
 <link
 rel="stylesheet"
 href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css'%}"/>
@@ -53,7 +54,7 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
         <h4 class="fw-bold py-3 mb-4">
             <span class="text-muted fw-light">لیست /</span> کاربر ها
         </h4>
-      <table class="datatables-users table">
+      <table id="UserTable" class="datatables-users table">
         <thead class="table-light">
           <tr>
             <th></th>
@@ -237,5 +238,17 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
 {% endblock %}
 
 {% block page-js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>
+<script>
+    $(document).ready( function () {
+        var user_table = $('#UserTable').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
+            }
+        });
+    });
+</script>
 <!-- <script src="{% static 'js/app-user-list.js'%}"></script> -->
 {% endblock %}
