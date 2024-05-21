@@ -1,12 +1,13 @@
 {% extends 'account/base.html' %}
 {% load static %}
 {% load jformat %}
+{% load boolean_visualize %}
 {% block vendors-css %}
 {% endblock %}
 
 {% block page-css %}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
-<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
     <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}"/>
     <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"/>
     <link
@@ -79,11 +80,11 @@
                   <td><a href="{% url 'account:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
                   <td>{{ r.author.username }}</td>
                   <td>{{ r.user.username }}</td>
-                  <td>{{ r.paid|yesno }}</td>
+                  <td>{% render_boolean_icon r.paid %}</td>
                   <td>{{ r.payment_id }}</td>
                   <td>{{ r.resource.name }}</td>
                   <td>{{ r.get_status_display }}</td>
-                  <td>{{ r.cleaning|yesno }}</td>
+                  <td>{% render_boolean_icon r.cleaning %}</td>
                   <td>{{ r.more_capacity }}</td>
                   <td>{{ r.total_pay }}</td>
                 </tr>
