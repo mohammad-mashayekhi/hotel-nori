@@ -32,13 +32,129 @@
 
 {% block contant %}
 <div class="container-xxl flex-grow-1 container-p-y">
-  <h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">لیست /</span> رزروها
-  </h4>
-
-  <!-- Invoice List Table -->
-  <div class="card">
-    <div class="card-datatable table-responsive">
+      <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-primary rounded">
+                    <div class="mdi mdi-account-outline mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0">{{ total_customers }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-danger">8.1%</small>#}
+                  </div>
+                  <small class="text-muted"> کل مشتری ها</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-warning rounded">
+                    <div class="mdi mdi-poll mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0"> {{ total_purchase }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-up text-success mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-success">18.2%</small>#}
+                  </div>
+                  <small class="text-muted">  کل پرداخت ها</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-info rounded">
+                    <div class="mdi mdi-trending-up mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0">{{ total_reservations }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-danger">24.6%</small>#}
+                  </div>
+                  <small class="text-muted"> تعداد کل رزور ها</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-success rounded">
+                    <div class="mdi mdi-currency-usd mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0">{{ total_income }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-down text-success mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-success">22.5%</small>#}
+                  </div>
+                  <small class="text-muted">کل درآمد</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-info rounded">
+                    <div class="mdi mdi-trending-up mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0">{{ total_cancellation }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-danger">24.6%</small>#}
+                  </div>
+                  <small class="text-muted"> تعداد کل کنسلی ها</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Invoice List Table -->
+    <div class="card">
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light">لیست /</span> رزروها
+        </h4>
+        <div class="card-datatable table-responsive">
             <label for="min-price"> حداقل قیمت : </label>
             <input type="number" id="min-price" placeholder="حداقل قیمت را وارد کنید">
             <label for="max-price"> حداکثر قیمت :</label>
