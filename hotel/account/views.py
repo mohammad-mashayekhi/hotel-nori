@@ -56,8 +56,31 @@ def edit_user(request, user_id):
 
 
 def bill(request):
+    all_users = get_user_model().objects.all()
+
+    total_customers = all_users.count()
+
+    total_income = Reservation.objects.aggregate(total_income=Sum('total_pay'))['total_income']
+
+    total_reservations = Reservation.objects.count()
+
+    total_cancellation = Reservation.objects.filter(status='canceled').count()
+
+    total_purchase = Reservation.objects.filter(paid=True).count()
+
     reservations = Reservation.objects.all().order_by('-id')
-    return render(request, 'account/bill/app-invoice-list.html', {'reserve': reservations})
+
+    context = {
+        "users": all_users,
+        'total_cancellation': total_cancellation,
+        'total_purchase': total_purchase,
+        'total_customers': total_customers,
+        'total_income': total_income,
+        'total_reservations': total_reservations,
+        'reserve': reservations
+    }
+
+    return render(request, 'account/bill/app-invoice-list.html', context=context)
 
 
 def billprint(request,reserve_id):
@@ -80,34 +103,8 @@ def calculate_growth_percentage(old_value, new_value):
 
 def users(request):
     all_users = get_user_model().objects.all()
-    today = date.today()
-
-    # Get the start and end dates for the last month
-    last_month_start = date(today.year, today.month - 1, 1)
-    last_month_end = date(today.year, today.month, 1) - timedelta(days=1)
-
-    # Get the start and end dates for the previous month
-    previous_month_start = date(today.year, today.month - 2, 1)
-    previous_month_end = last_month_start - timedelta(days=1)
-
-    total_customers = all_users.count()
-
-    total_income = Reservation.objects.aggregate(total_income=Sum('total_pay'))['total_income']
-
-    total_reservations = Reservation.objects.count()
-
-    total_cancellation = Reservation.objects.filter(status='canceled').count()
-
-    total_purchase = Reservation.objects.filter(paid=True).count()
-
-
     context = {
         "users": all_users,
-        'total_cancellation': total_cancellation,
-        'total_purchase': total_purchase,
-        'total_customers': total_customers,
-        'total_income': total_income,
-        'total_reservations': total_reservations,
     }
 
     return render(request, 'account/user-list.html', context=context)
