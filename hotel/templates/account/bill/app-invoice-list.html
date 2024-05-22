@@ -191,8 +191,8 @@
               {% for r in reserve%}
                 <tr>
                   <td>{{ r.reserve_id }}</td>
-                  <td>{{ r.start | jformat:'%A %d %B %Y'}}</td>
-                  <td>{{ r.end | jformat:'%A %d %B %Y'}}</td>
+                  <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
+                  <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'account:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
                   <td>{{ r.author.username }}</td>
                   <td>{{ r.user.username }}</td>
