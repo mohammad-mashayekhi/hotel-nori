@@ -184,7 +184,7 @@ def calendar(request):
         resource_data.append({
             'id': resource.id,
             'name': resource.name,
-            'cssClass': resource.css,
+            'cssClass': resource.css + ' room',
             'capacity': resource.capacity,
             'price': resource.price,
             'price_per_person': resource.price_per_person,
@@ -304,7 +304,7 @@ def add_reservation(request):
             return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
 
         if status == 'closetime':
-            new_reservation = Reservation.objects.create(title='زمان تعطیلی', start=start, end=end , resource=resource, author=author, user=author, status='closetime', cleaning=False)
+            new_reservation = Reservation.objects.create(title='غیرقابل رزرو', start=start, end=end , resource=resource, author=author, user=author, status='closetime', cleaning=False)
             return JsonResponse({'success': True})
 
         User = get_user_model()

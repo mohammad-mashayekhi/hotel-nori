@@ -24,114 +24,81 @@
 <style>
 .room1{
  border-bottom: 4px solid #003C43 !important;
- min-height: 52px !important;
-}
-.room1.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room2{
  border-bottom: 4px solid #135D66 !important;
- min-height: 52px !important;
-}
-.room2.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room3{
  border-bottom: 4px solid #77B0AA !important;
- min-height: 52px !important;
-}
-.room3.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room4{
  border-bottom: 4px solid #58A399 !important;
- min-height: 52px !important;
-}
-.room4.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room5{
  border-bottom: 4px solid #ADBC9F !important;
- min-height: 52px !important;
-}
-.room5.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room6{
  border-bottom: 4px solid #A8CD9F !important;
- min-height: 52px !important;
-}
-.room6.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room7{
  border-bottom: 4px solid #C6EBC5 !important;
- min-height: 52px !important;
-}
-.room7.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room8{
  border-bottom: 4px solid #F9E897 !important;
- min-height: 52px !important;
-}
-.room8.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room9{
  border-bottom: 4px solid #F2C18D !important;
- min-height: 52px !important;
-}
-.room9.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room10{
  border-bottom: 4px solid #A3333D !important;
- min-height: 52px !important;
-}
-.room10.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room11{
  border-bottom: 4px solid #e3c3c6 !important;
- min-height: 52px !important;
-}
-.room11.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
+ min-height: 40px !important;
+ /* height: 36px !important; */
 }
 .room12{
   border-bottom: 4px solid #590531 !important;
-  min-height: 52px !important;
-}
-.room12.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
+  min-height: 40px !important;
+  /* height: 36px !important; */
 }
 .mbsc-timeline-header .mbsc-flex .mbsc-ios .mbsc-rtl{
   background: rgba(246, 231, 203, 0.7) !important;
   font-weight: bold;
-  
 }
-@media (min-width: 769px) {
-.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
- width: 85px;
- } 
-} 
-@media (max-width: 768px) {
-.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
- width: 45px;
-} 
-}
-
 .container-xxl .flex-grow-1 .container-p-y{
  padding-right:0px;
 }
 .mbsc-timeline-column, .mbsc-timeline-header-column{
- width: 48px;
-}
-.mbsc-timeline-event-background{
-  height: 36px !important;
+ width: 46px;
 }
 @media (min-width: 769px) {
+.room.mbsc-timeline-resource{
+  background:  rgba(246, 231, 203, 0.7);
+}
+.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
+ width: 85px;
+} 
 .mbsc-timeline-resource-title{
   text-align: center;
   font-size: 1em;
@@ -146,11 +113,24 @@
     padding: 5px;
     background-color:white;
 }
+.mbsc-timeline-event-background{
+  height: 35px !important;
 }
+}
+/* for mobile  */
 @media (max-width: 768px) {
+  .room{
+    min-height: 30px !important;
+  }
+  .room.mbsc-timeline-resource{
+  background:  rgba(246, 231, 203, 0.7);
+  }
+  .mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
+  width: 45px;
+  } 
   .mbsc-timeline-resource-title {
     text-align: center;
-    font-size: 0.7em;
+    font-size: 0.75rem;
   }
   .mbsc-form-control-wrapper{
     border-style:solid !important;
@@ -163,6 +143,12 @@
     padding: 5px;
     background-color:white;
   }
+  .mbsc-timeline-event-background{
+   height: 33px !important;
+  }
+}
+.mbsc-timeline-header-month-text.mbsc-ios {
+    display: -webkit-box;
 }
 .mbsc-calendar-controls{
   justify-content: center !important;
