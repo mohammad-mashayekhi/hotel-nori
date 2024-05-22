@@ -3,7 +3,7 @@
 <html
   lang="en"
   class="light-style"
-  dir="ltr"
+  dir="rtl"
   data-theme="theme-default"
   data-assets-path="{% static '' %}"
   data-template="vertical-menu-template"
@@ -76,194 +76,105 @@
     <!-- Content -->
 
     <div class="invoice-print p-5">
-      <div class="d-flex justify-content-between flex-row">
-        <div class="mb-4">
-          <div class="d-flex svg-illustration align-items-center gap-2 mb-4">
-            <span class="app-brand-logo demo">
-              <span style="color: var(--bs-primary)">
-                <svg
-                  width="268"
-                  height="150"
-                  viewBox="0 0 38 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M30.0944 2.22569C29.0511 0.444187 26.7508 -0.172113 24.9566 0.849138C23.1623 1.87039 22.5536 4.14247 23.5969 5.92397L30.5368 17.7743C31.5801 19.5558 33.8804 20.1721 35.6746 19.1509C37.4689 18.1296 38.0776 15.8575 37.0343 14.076L30.0944 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M30.171 2.22569C29.1277 0.444187 26.8274 -0.172113 25.0332 0.849138C23.2389 1.87039 22.6302 4.14247 23.6735 5.92397L30.6134 17.7743C31.6567 19.5558 33.957 20.1721 35.7512 19.1509C37.5455 18.1296 38.1542 15.8575 37.1109 14.076L30.171 2.22569Z"
-                    fill="url(#paint0_linear_2989_100980)"
-                    fill-opacity="0.4"
-                  />
-                  <path
-                    d="M22.9676 2.22569C24.0109 0.444187 26.3112 -0.172113 28.1054 0.849138C29.8996 1.87039 30.5084 4.14247 29.4651 5.92397L22.5251 17.7743C21.4818 19.5558 19.1816 20.1721 17.3873 19.1509C15.5931 18.1296 14.9843 15.8575 16.0276 14.076L22.9676 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
-                    fill="url(#paint1_linear_2989_100980)"
-                    fill-opacity="0.4"
-                  />
-                  <path
-                    d="M7.82901 2.22569C8.87231 0.444187 11.1726 -0.172113 12.9668 0.849138C14.7611 1.87039 15.3698 4.14247 14.3265 5.92397L7.38656 17.7743C6.34325 19.5558 4.04298 20.1721 2.24875 19.1509C0.454514 18.1296 -0.154233 15.8575 0.88907 14.076L7.82901 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_2989_100980"
-                      x1="5.36642"
-                      y1="0.849138"
-                      x2="10.532"
-                      y2="24.104"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop offset="0" stop-opacity="1" />
-                      <stop offset="1" stop-opacity="0" />
-                    </linearGradient>
-                    <linearGradient
-                      id="paint1_linear_2989_100980"
-                      x1="5.19475"
-                      y1="0.849139"
-                      x2="10.3357"
-                      y2="24.1155"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop offset="0" stop-opacity="1" />
-                      <stop offset="1" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </span>
-            </span>
-            <span class="h4 mb-0 app-brand-text fw-bold">حسینیه مرحوم مهدیان</span>
+      <div class="card-body" len="3428">
+        <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column" len="3311">
+          <div class="mb-xl-0 pb-3" len="2944">
+            <div class="d-flex svg-illustration align-items-center gap-2 mb-4" len="2644">
+              <h5 len="14" lang="fa" style="">فاکتور : {{ reservation.reserve_id }}</h5>
+            </div>
+            <p class="mb-1" len="36" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</p>
           </div>
-          <p class="mb-1">یزد صفاییه</p>
-          <p class="mb-1">پارک علم و فناوری، اتاق 32</p>
-          <p class="mb-0">
-            <span class="d-inline-block" dir="ltr">+21 (321) 654 9870</span> ،
-            <span class="d-inline-block" dir="ltr">+44 (876) 543 2198</span>
-          </p>
-        </div>
-        <div>
-          <h4>صورتحساب #3492</h4>
-          <div class="mb-2">
-            <span>تاریخ صدور:</span>
-            <span class="fw-semibold">25 فروردین 1402</span>
-          </div>
-          <div>
-            <span>تاریخ سررسید:</span>
-            <span class="fw-semibold">25 اردیبهشت 1402</span>
+          <div len="293">
+            <div class="mb-1" len="95">
+              <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
+            </div>
           </div>
         </div>
       </div>
 
       <hr />
-
-      <div class="row d-flex justify-content-between mb-4">
-        <div class="col-sm-6 w-50">
-          <h6>صورتحساب به:</h6>
-          <p class="mb-1">تونی استارک</p>
-          <p class="mb-1">شرکت صنایع استارک</p>
-          <p class="mb-1">پارک علم و فناوری، اتاق 43</p>
-          <p class="mb-1">718-986-6062</p>
-          <p class="mb-0">example@gmail.com</p>
-        </div>
-        <div class="col-sm-6 w-50">
-          <h6>قبض به:</h6>
-          <table class="lh-2">
-            <tbody>
-              <tr>
-                <td class="pe-3">مجموع سررسید:</td>
-                <td>12,000,000 تومان</td>
-              </tr>
-              <tr>
-                <td class="pe-3">نام بانک:</td>
-                <td>بانک آمریکا</td>
-              </tr>
-              <tr>
-                <td class="pe-3">کشور:</td>
-                <td>ایالات متحده</td>
-              </tr>
-              <tr>
-                <td class="pe-3">IBAN:</td>
-                <td>ETD95476213874685</td>
-              </tr>
-              <tr>
-                <td class="pe-3">کد SWIFT:</td>
-                <td>BR91905</td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="card-body" len="1326">
+        <div class="d-flex justify-content-between flex-wrap" len="1250">
+          <div class="my-3" len="317">
+            <h6 class="pb-2" len="11" lang="fa">فاکتور اجاره:</h6>
+            <p class="mb-1" len="13" lang="fa">نام :‌{{reservation.user.username}}</p>
+            <p class="mb-1" len="22" lang="fa">نام خانوادگی :{{reservation.user.lastname}}</p>
+            <p class="mb-1" len="24" lang="fa">شماره موبایل :{{reservation.user.mobile_number}}</p>
+            <p class="mb-1" len="12" lang="fa">سطح کاربر :{{reservation.user.user_status}}</p>
+          </div>
+          <!-- <div class="my-3" len="854">
+            <h6 class="pb-2" len="8" lang="fa" style="">بیل به:</h6>
+            <table len="772">
+              <tbody len="729">
+                <tr len="116">
+                  <td class="pe-3 fw-medium" len="10" lang="fa" style="">مجموع به علت:</td>
+                  <td len="10" lang="fa" style="">$12،110.55</td>
+                </tr>
+                <tr len="119">
+                  <td class="pe-3 fw-medium" len="10" lang="fa">نام بانک:</td>
+                  <td len="13" lang="fa" style="">بانک امریکایی</td>
+                </tr>
+                <tr len="117">
+                  <td class="pe-3 fw-medium" len="8" lang="fa">کشور:</td>
+                  <td len="13" lang="fa" style="">ایالات متحده</td>
+                </tr>
+                <tr len="118">
+                  <td class="pe-3 fw-medium" len="5" lang="fa" style="">ایبان:</td>
+                  <td len="17" lang="fa" style="">دانلود: ETD95476213874685.000</td>
+                </tr>
+                <tr len="114">
+                  <td class="pe-3 fw-medium" len="11" lang="fa" style="">کد سوئیفت:</td>
+                  <td len="7" lang="fa">BR91905 (برزیلی)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
         </div>
       </div>
-
-      <div class="table-responsive">
-        <table class="table border-top m-0">
-          <thead>
-            <tr>
-              <th>مورد</th>
-              <th>شرح</th>
-              <th>هزینه</th>
-              <th>تعداد</th>
-              <th>قیمت</th>
+      <div class="table-responsive" len="2219">
+        <table class="table m-0" len="2170">
+          <thead class="table-light border-top" len="193">
+            <tr len="160">
+              <th class="text-center" lang="fa">واحد</th>
+              <th class="text-center" lang="fa">تاریخ ورود</th>
+              <th class="text-center" lang="fa">تاریخ خروج</th>
+              <th class="text-center" lang="fa">نظافت</th>
+              <th class="text-center" lang="fa">ظرفیت بیشتر</th>
+              <th class="text-center" lang="fa">وضعیت پرداخت</th>
+              <th class="text-center" lang="fa">مبلغ نهایی</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>32,000 تومان</td>
-              <td>1</td>
-              <td>32,000 تومان</td>
+          <tbody len="1885">
+            <tr len="222">
+              <td class="text-center" lang="fa">{{reservation.resource}}</td>
+              <td class="text-center" lang="fa">{{reservation.get_start_shamsi}} - ساعت ۱۴</td>
+              <td class="text-center" lang="fa">{{reservation.get_end_shamsi}} - ساعت ۱۲</td>
+              <td class="text-center" lang="fa">{{reservation.get_cleaning_text}}</td>
+              <td class="text-center" lang="fa">{{reservation.get_more_capacity}}</td>
+              <td class="text-center" lang="fa">{{reservation.get_paid}}</td>
+              <td class="text-center" lang="fa">{{reservation.get_total_pay}}</td>
             </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>22,000 تومان</td>
-              <td>1</td>
-              <td>22,000 تومان</td>
-            </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>17,000 تومان</td>
-              <td>2</td>
-              <td>34,000 تومان</td>
-            </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>66,000 تومان</td>
-              <td>1</td>
-              <td>66,000 تومان</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="align-top px-4 py-3">
-                <p class="mb-2">
-                  <span class="me-1 fw-bold">فروشنده:</span>
-                  <span>استیو راجرز</span>
+            <!-- <tr len="872">
+              <td colspan="3" class="align-top px-4 py-5" len="238">
+                <p class="mb-2" len="132">
+                  <font lang="fa"><span class="me-1 fw-semibold" len="12">فروشنده:</span> <span len="14">الفی
+                      سولومون</span></font>
                 </p>
-                <span>با تشکر از کسب و کار شما</span>
+                <span len="24" lang="fa">با تشکر برای کسب و کار شما</span>
               </td>
-              <td class="text-end px-4 py-3">
-                <p class="mb-2">جمع جزء:</p>
-                <p class="mb-2">تخفیف:</p>
-                <p class="mb-2">مالیات:</p>
-                <p class="mb-0">جمع کل:</p>
+              <td class="text-end px-4 py-5" len="191" style="text-align: right;">
+                <p class="mb-2" len="9" style="text-align: right;" lang="fa">زیر مجموعه:</p>
+                <p class="mb-2" len="9" style="text-align: right;" lang="fa">تخفیف:</p>
+                <p class="mb-2" len="4" style="text-align: right;" lang="fa">مالیات:</p>
+                <p class="mb-0" len="6" style="text-align: right;" lang="fa">مجموع:</p>
               </td>
-              <td class="px-4 py-3">
-                <p class="fw-semibold mb-2">154,000 تومان</p>
-                <p class="fw-semibold mb-2">0 تومان</p>
-                <p class="fw-semibold mb-2">50,000 تومان</p>
-                <p class="fw-semibold mb-0">204,000 تومان</p>
+              <td class="px-4 py-5" len="273">
+                <p class="fw-semibold mb-2 text-end" len="7" style="text-align: right;" lang="fa">$154.25</p>
+                <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$00.00</p>
+                <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$50.00</p>
+                <p class="fw-semibold mb-0 text-end" len="7" style="text-align: right;" lang="fa">$204.25</p>
               </td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
       </div>

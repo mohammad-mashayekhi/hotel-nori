@@ -149,6 +149,13 @@ body {
   -webkit-tap-highlight-color: rgba(76, 78, 100, 0);
 }
 
+th,thead {
+  font-family: IRANSans !important;
+  font-size: var(--bs-body-font-size) !important;
+  font-weight: var(--bs-body-font-weight) !important;
+  letter-spacing: 0px !important;
+}
+
 hr {
   margin: 1rem 0;
   color: #eaeaec;

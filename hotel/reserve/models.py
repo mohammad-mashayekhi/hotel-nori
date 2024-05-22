@@ -26,9 +26,40 @@ class Reservation(models.Model):
     total_pay = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now, editable=False)  # Save creation time
 
-    def get_created_at_dhamsi(self):
+    def get_created_at_shamsi(self):
         return date2jalali(self.created_at).strftime('%y/%m/%d %H:%M:%S')
     
+    def get_start_shamsi(self):
+        return date2jalali(self.start).strftime('%y/%m/%d')
+
+    def get_end_shamsi(self):
+        return date2jalali(self.end).strftime('%y/%m/%d')
+
+    def get_cleaning_text(self):
+        if self.cleaning:
+            return "میخواهد"
+        else:
+            return "نمیخواهد"
+
+    def get_more_capacity(self):
+        if self.more_capacity:
+            return self.cleaning
+        else:
+            return 0   
+        
+    def get_paid(self):
+        if self.paid:
+            return "پرداخت شده"
+        else:
+            return "پرداخت نشده"
+
+    def get_total_pay(self):
+        if self.total_pay:
+            return self.total_pay
+        else:
+            return 0
+            
+
     def __str__(self):
         return self.title
 

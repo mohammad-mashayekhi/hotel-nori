@@ -26,7 +26,7 @@
             </div>
             <div len="293">
               <div class="mb-1" len="95">
-                <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_dhamsi}}</span></font>
+                <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
               </div>
             </div>
           </div>
@@ -35,14 +35,13 @@
         <div class="card-body" len="1326">
           <div class="d-flex justify-content-between flex-wrap" len="1250">
             <div class="my-3" len="317">
-              <h6 class="pb-2" len="11" lang="fa">فاکتور به:</h6>
-              <p class="mb-1" len="13" lang="fa">مهدی صادقی</p>
-              <p class="mb-1" len="22" lang="fa">شرکت تیک تاک</p>
-              <p class="mb-1" len="24" lang="fa">کوچک هیث، B10 0HF، انگلستان</p>
-              <p class="mb-1" len="12" lang="fa">718-986-6062</p>
-              <p class="mb-0" len="24" lang="fa">example@gmail.com</p>
+              <h6 class="pb-2" len="11" lang="fa">فاکتور اجاره:</h6>
+              <p class="mb-1" len="13" lang="fa">نام :‌{{reservation.user.username}}</p>
+              <p class="mb-1" len="22" lang="fa">نام خانوادگی :{{reservation.user.lastname}}</p>
+              <p class="mb-1" len="24" lang="fa">شماره موبایل :{{reservation.user.mobile_number}}</p>
+              <p class="mb-1" len="12" lang="fa">سطح کاربر :{{reservation.user.user_status}}</p>
             </div>
-            <div class="my-3" len="854">
+            <!-- <div class="my-3" len="854">
               <h6 class="pb-2" len="8" lang="fa" style="">بیل به:</h6>
               <table len="772">
                 <tbody len="729">
@@ -68,50 +67,33 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="table-responsive" len="2219">
           <table class="table m-0" len="2170">
             <thead class="table-light border-top" len="193">
               <tr len="160">
-                <th len="4" lang="fa">مورد</th>
-                <th len="11" lang="fa">توضیحات</th>
-                <th len="4" lang="fa" style="">هزینه</th>
-                <th len="3" lang="fa">تعداد</th>
-                <th len="5" lang="fa">قيمت</th>
+                <th class="text-center" lang="fa">واحد</th>
+                <th class="text-center" lang="fa">تاریخ ورود</th>
+                <th class="text-center" lang="fa">تاریخ خروج</th>
+                <th class="text-center" lang="fa">نظافت</th>
+                <th class="text-center" lang="fa">ظرفیت بیشتر</th>
+                <th class="text-center" lang="fa">وضعیت پرداخت</th>
+                <th class="text-center" lang="fa">مبلغ نهایی</th>
               </tr>
             </thead>
             <tbody len="1885">
               <tr len="222">
-                <td class="text-nowrap" len="20" lang="fa">قالب مدیریت Vuexy</td>
-                <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
-                <td len="3" lang="fa" style="">$32</td>
-                <td len="1" lang="fa">1</td>
-                <td len="6" lang="fa">$32.00</td>
+                <td class="text-center" lang="fa">{{reservation.resource}}</td>
+                <td class="text-center" lang="fa">{{reservation.get_start_shamsi}} - ساعت ۱۴</td>
+                <td class="text-center" lang="fa">{{reservation.get_end_shamsi}} - ساعت ۱۲</td>
+                <td class="text-center" lang="fa">{{reservation.get_cleaning_text}}</td>
+                <td class="text-center" lang="fa">{{reservation.get_more_capacity}}</td>
+                <td class="text-center" lang="fa">{{reservation.get_paid}}</td>
+                <td class="text-center" lang="fa">{{reservation.get_total_pay}}</td>
               </tr>
-              <tr len="225">
-                <td class="text-nowrap" len="20" lang="fa">Frest Admin الگو</td>
-                <td class="text-nowrap" len="22" lang="fa">قالب مدیریت زاویه ای</td>
-                <td len="3" lang="fa">$22</td>
-                <td len="1" lang="fa">1</td>
-                <td len="6" lang="fa">$22.00</td>
-              </tr>
-              <tr len="221">
-                <td class="text-nowrap" len="19" lang="fa">Apex Admin الگو</td>
-                <td class="text-nowrap" len="19" lang="fa">قالب مدیریت HTML</td>
-                <td len="3" lang="fa">$17</td>
-                <td len="1" lang="fa">2</td>
-                <td len="6" lang="fa">$34.00</td>
-              </tr>
-              <tr len="224">
-                <td class="text-nowrap" len="21" lang="fa">قالب مدیریت قوی</td>
-                <td class="text-nowrap" len="20" lang="fa">قالب مدیر ریاکت</td>
-                <td len="3" lang="fa">$66</td>
-                <td len="1" lang="fa">1</td>
-                <td len="6" lang="fa">$66.00</td>
-              </tr>
-              <tr len="872">
+              <!-- <tr len="872">
                 <td colspan="3" class="align-top px-4 py-5" len="238">
                   <p class="mb-2" len="132">
                     <font lang="fa"><span class="me-1 fw-semibold" len="12">فروشنده:</span> <span len="14">الفی
@@ -131,19 +113,16 @@
                   <p class="fw-semibold mb-2 text-end" len="6" style="text-align: right;" lang="fa">$50.00</p>
                   <p class="fw-semibold mb-0 text-end" len="7" style="text-align: right;" lang="fa">$204.25</p>
                 </td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
         </div>
-
         <div class="card-body" len="307">
           <div class="row" len="268">
             <div class="col-12" len="222">
               <font>
-                <font lang="fa"><span class="fw-bold" len="5">وی افزود:</span> </font><span len="138">
-                  <font lang="fa">از همکاری با شما و تیمتان لذت بردم. </font>
-                  <font lang="fa">ما امیدواریم که شما ما را در ذهن برای پروژه های ازاد اینده نگه دارید. </font>
-                  <font lang="fa">سپاسگزارم!</font>
+                <font lang="fa"><span class="fw-bold" len="5">نکته:</span> </font><span len="138">
+                  <font lang="fa">لطفا برای پرداخت فیلترشکن خود را خاموش بفرمایید</font>
                 </span>
                 <font></font>
               </font>
@@ -158,23 +137,23 @@
     <div class="col-xl-3 col-md-4 col-12 invoice-actions" len="1132">
       <div class="card" len="1100">
         <div class="card-body" len="1059">
-          <button class="btn btn-primary d-grid w-100 mb-3 waves-effect waves-light" data-bs-toggle="offcanvas"
+          <!-- <button class="btn btn-primary d-grid w-100 mb-3 waves-effect waves-light" data-bs-toggle="offcanvas"
             data-bs-target="#sendInvoiceOffcanvas" len="169">
             <span class="d-flex align-items-center justify-content-center text-nowrap" len="67"><i
                 class="mdi mdi-send-outline scaleX-n1-rtl me-1" len="0"></i>
               <font lang="fa">ارسال فاکتور</font>
             </span>
-          </button>
-          <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button>
+          </button> -->
+          <!-- <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button> -->
           <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
             href="{% url 'account:billprint' reservation.reserve_id %}" len="25" lang="fa"> چاپ </a>
-          <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
-            lang="fa"> ویرایش فاکتور </a>
+          <!-- <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
+            lang="fa"> ویرایش فاکتور </a> -->
           <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
             data-bs-target="#addPaymentOffcanvas" len="154">
             <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i
                 class="mdi mdi-currency-usd me-1" len="0"></i>
-              <font lang="fa">اضافه کردن پرداخت</font>
+              <font lang="fa">پرداخت</font>
             </span>
           </button>
         </div>
