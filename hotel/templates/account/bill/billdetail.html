@@ -168,9 +168,11 @@
           <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button>
           <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
             href="{% url 'account:billprint' reservation.reserve_id %}" len="25" lang="fa"> چاپ </a>
+        {% if request.user.uesr_status == "admin_level_2" %}
           <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
             lang="fa"> ویرایش فاکتور </a>
-          <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
+        {% endif %}
+            <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
             data-bs-target="#addPaymentOffcanvas" len="154">
             <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i
                 class="mdi mdi-currency-usd me-1" len="0"></i>

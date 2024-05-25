@@ -216,8 +216,10 @@
               </div>
               <!-- Second Column -->
               <div class="col-md-6 col-6">
+              {% if request.user.user_status != "normal" %}
                 <label for="event-user">شماره تلفن</label>
-                <input type="tel" class="form-control input" id="event-user" name="event-user" required>
+                <input type="text" class="form-control input" id="event-user"  name="event-user" required>
+              {% endif %}
                 <label for="event-resource">اتاق</label>
                 <select class="form-control" id="event-resource" name="event-resource" required>
                   {% for resources in resources %}
