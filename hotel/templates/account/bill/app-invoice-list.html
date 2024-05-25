@@ -32,6 +32,7 @@
 
 {% block contant %}
 <div class="container-xxl flex-grow-1 container-p-y">
+{% if request.user.user_status != "normal" %}
       <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
           <div class="card">
@@ -149,6 +150,7 @@
           </div>
         </div>
       </div>
+{% endif %}
     <!-- Invoice List Table -->
     <div class="card">
         <h4 class="fw-bold py-3 mb-4">
@@ -191,8 +193,8 @@
               {% for r in reserve%}
                 <tr>
                   <td>{{ r.reserve_id }}</td>
-                  <td>{{ r.start | jformat:'%A %d %B %Y'}}</td>
-                  <td>{{ r.end | jformat:'%A %d %B %Y'}}</td>
+                  <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
+                  <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'account:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
                   <td>{{ r.author.username }}</td>
                   <td>{{ r.user.username }}</td>

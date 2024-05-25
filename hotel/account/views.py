@@ -1,132 +1,164 @@
-from django.shortcuts import render, get_object_or_404
-from reserve.models import Reservation, Resource
 import json
-from django.http import JsonResponse
-import jdatetime
-from datetime import datetime, timedelta, date
-from django.db.models import Count, Sum
-from reserve.forms import ReservationForm  # ایمپورت کردن فرم
-from django.views.decorators.http import require_POST
-from django.contrib.auth import get_user_model, logout, authenticate
-from django.shortcuts import render, redirect
-from .decorators import login_required, verified_user_required, admin_level_one_required, admin_level_two_required, \
-    user_authenticated_and_verified_required
-from .forms import UserProfileEditFormUser, Userprofile, UserProfileEditForm, CustomUserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login as auth_login
-from django.db.models import Q
-from kavenegar import *
 import random
+from datetime import date, datetime, timedelta
+
+import jdatetime
+from dateutil.parser import parse
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import login
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import (
+    PermissionDenied,
+    login_required,
+    user_passes_test,
+)
+from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import Count, Q, Sum
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
+from kavenegar import *
+
+from account.models import Userprofile
+from reserve.forms import ReservationForm  # ایمپورت کردن فرم
+from reserve.models import Reservation, Resource
+
+from .decorators import (
+    is_admin,
+    is_admin_level_one,
+    is_admin_level_two,
+    is_verified_user,
+)
+from .forms import (
+    CustomUserCreationForm,
+    Userprofile,
+    UserProfileEditForm,
+    UserProfileEditFormUser,
+)
 
 
+@login_required
 def account(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserProfileEditFormUser(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('account:dashboard')
+            return redirect("account:dashboard")
         # اضافه کردن کد برای نمایش ارورها در صورتی که فرم نامعتبر باشد
         else:
             errors = form.errors.values()
             # انجام هر عملیات مربوط به نمایش ارورها، مانند چاپ آنها در کنسول یا ارسال به تمپلیت برای نمایش به کاربر
-            for error_list in errors:
-                for error in error_list:
-                    print('jashdajsdhahsdhiuashdoi')
-                    print(error)
+            return render(request, "account/dashboard.html", {"errors": errors})
     else:
         form = UserProfileEditFormUser(instance=request.user)
-    print('rbgshkfgkdfhlisdkf')
-    return render(request, 'account/dashboard.html', {'form': form})
+
+    return render(request, "account/dashboard.html", {"form": form})
 
 
+@user_passes_test(is_admin)
 def edit_user(request, user_id):
     user = Userprofile.objects.get(id=user_id)
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserProfileEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             all_users = get_user_model().objects.all()
-            return render(request, 'account/user-list.html', {'users': all_users})
+            return render(request, "account/user-list.html", {"users": all_users})
         else:
-            return render(request, 'account/edit-user.html', {'form': form})
+            return render(request, "account/edit-user.html", {"form": form})
     else:
         form = UserProfileEditForm(instance=user)
 
-    return render(request, 'account/edit-user.html', {'form': form})
+    return render(request, "account/edit-user.html", {"form": form})
 
 
+@login_required
 def bill(request):
-    all_users = get_user_model().objects.all()
+    if is_admin(request.user):
+        all_users = get_user_model().objects.all()
 
-    total_customers = all_users.count()
+        total_customers = all_users.count()
 
-    total_income = Reservation.objects.aggregate(total_income=Sum('total_pay'))['total_income']
+        total_income = Reservation.objects.aggregate(total_income=Sum("total_pay"))[
+            "total_income"
+        ]
 
-    total_reservations = Reservation.objects.count()
+        total_reservations = Reservation.objects.count()
 
-    total_cancellation = Reservation.objects.filter(status='canceled').count()
+        total_cancellation = Reservation.objects.filter(status="canceled").count()
 
-    total_purchase = Reservation.objects.filter(paid=True).count()
+        total_purchase = Reservation.objects.filter(paid=True).count()
 
-    reservations = Reservation.objects.all().order_by('-id')
+        reservations = Reservation.objects.all().order_by("-id")
 
-    context = {
-        "users": all_users,
-        'total_cancellation': total_cancellation,
-        'total_purchase': total_purchase,
-        'total_customers': total_customers,
-        'total_income': total_income,
-        'total_reservations': total_reservations,
-        'reserve': reservations
-    }
-
-    return render(request, 'account/bill/app-invoice-list.html', context=context)
-
-
-def billprint(request,reserve_id):
-    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-
-    return render(request, 'account/bill/billprint.html', {'reservation': reservation})
-
-def billdetail(request, reserve_id):
-    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-    # Here you can generate the bill for the specific reservation
-    # You can pass the reservation object to a template to display the bill
-    return render(request, 'account/bill/billdetail.html', {'reservation': reservation})
-
-
-def calculate_growth_percentage(old_value, new_value):
-    if old_value == 0:
-        return 0
+        context = {
+            "users": all_users,
+            "total_cancellation": total_cancellation,
+            "total_purchase": total_purchase,
+            "total_customers": total_customers,
+            "total_income": total_income,
+            "total_reservations": total_reservations,
+            "reserve": reservations,
+        }
     else:
-        return ((new_value - old_value) / old_value) * 100
+        reservations = Reservation.objects.filter(user=request.user)
+        context = {"reservations": reservations}
+    return render(request, "account/bill/app-invoice-list.html", context=context)
 
+
+def bill_print(request, reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+    return render(request, "account/bill/billprint.html", {"reserve": reservation})
+
+
+@login_required
+def bill_detail(request, reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+
+    if not is_admin(request.user) and reservation.user != request.user:
+        raise PermissionDenied
+
+    return render(request, "account/bill/billdetail.html", {"reservation": reservation})
+
+
+@login_required
+@user_passes_test(is_admin)
 def users(request):
-    all_users = get_user_model().objects.all()
+    user = get_user_model()
+    all_users = user.objects.all()
     context = {
         "users": all_users,
     }
 
-    return render(request, 'account/user-list.html', context=context)
+    return render(request, "account/user-list.html", context=context)
 
 
+@login_required
 def rooms(request):
     resources = Resource.objects.filter(status=True)
-    return render(request, 'account/room-list.html', {'resources': resources})
+    return render(request, "account/room-list.html", {"resources": resources})
 
 
+@login_required
 def user_bill(request):
-    return render(request, 'account/bill/app-invoice-list.html')
+    reservations = Reservation.objects.filter(user=request.user)
+    return render(
+        request, "account/bill/app-invoice-list.html", context={"reserve": reservations}
+    )
 
 
-from datetime import datetime, timedelta
-
-from datetime import datetime, timedelta
-
-
+@login_required
 def calendar(request):
-    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning') |Q(status='onlocalpay') )
-    closetime = Reservation.objects.filter(status='closetime')
+    reservations = Reservation.objects.filter(
+        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
+    )
+
+    if not is_admin(request.user):
+        print(request.user)
+        reservations = reservations.filter(user=request.user)
+        print(reservations)
+    closetime = Reservation.objects.filter(status="closetime")
     resources = Resource.objects.all()
     reservation_data = []
     closetime_data = []
@@ -134,63 +166,80 @@ def calendar(request):
 
     for reservation in reservations:
         # Create start datetime with time set to 12:00
-        start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
+        start_datetime = datetime.combine(
+            reservation.start, datetime.strptime("14:00", "%H:%M").time()
+        )
         # Create end datetime with time set to 14:00
-        end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time())
+        end_datetime = datetime.combine(
+            reservation.end, datetime.strptime("12:00", "%H:%M").time()
+        )
+
         # start_datetime = start_datetime - timedelta(days=3)
         # end_datetime = end_datetime - timedelta(days=3)
 
-        if reservation.status == 'confirmed' or reservation.status == 'onlocalpay':
-            color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
-        elif reservation.status == 'pending_payment':
-            color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
-        elif reservation.status == 'cleaning':
-            color = '#DD5746'  # رنگ زرد برای رزروهای نظافت
+        if reservation.status == "confirmed":
+            color = "#4A827C"  # رنگ سبز برای رزروهای تایید شده
+        elif reservation.status == "pending_payment":
+            color = "#D1A975"  # رنگ زرد برای رزروهای در انتظار پرداخت
+        elif reservation.status == "cleaning":
+            color = "#DD5746"  # رنگ زرد برای رزروهای نظافت
         else:
-            color = '#000000'  # رنگ پیش‌فرض برای حالت‌های دیگر
+            color = "#000000"  # رنگ پیش‌فرض برای حالت‌های دیگر
 
-        # if reservation.cleaning : 
+        # if reservation.cleaning :
         #     bufferAfter = 1440
         # else :
-        #     bufferAfter = 0 
+        #     bufferAfter = 0
 
-        reservation_data.append({
-            'reserve_id': reservation.reserve_id,
-            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),
-            # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-            'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
-            'title': reservation.title,
-            'resource': reservation.resource_id,
-            'color': color,
-            'cleaning': reservation.cleaning,
-            'user': reservation.user.username,  # نام کاربر
-            # 'bufferAfter': bufferAfter,
-        })
+        reservation_data.append(
+            {
+                "reserve_id": reservation.reserve_id,
+                "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
+                # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+                "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+                "title": reservation.title,
+                "resource": reservation.resource_id,
+                "color": color,
+                "cleaning": reservation.cleaning,
+                "user": reservation.user.username,  # نام کاربر
+                # 'bufferAfter': bufferAfter,
+            }
+        )
+
     for closetime in closetime:
-        start_datetime = datetime.combine(closetime.start, datetime.strptime('14:00', '%H:%M').time())
+        start_datetime = datetime.combine(
+            closetime.start, datetime.strptime("14:00", "%H:%M").time()
+        )
         # Create end datetime with time set to 14:00
-        end_datetime = datetime.combine(closetime.end, datetime.strptime('12:00', '%H:%M').time())
-        closetime_data.append({
-            'reserve_id' : closetime.reserve_id,
-            'start': start_datetime.strftime('%Y-%m-%dT%H:%M'),  # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-            'end': end_datetime.strftime('%Y-%m-%dT%H:%M'),
-            'title': closetime.title,
-            'resource': closetime.resource_id,
-            'cssClass': 'md-lunch-break-class mbsc-flex'
-        })
+        end_datetime = datetime.combine(
+            closetime.end, datetime.strptime("12:00", "%H:%M").time()
+        )
+        closetime_data.append(
+            {
+                "reserve_id": closetime.reserve_id,
+                "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
+                # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+                "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+                "title": closetime.title,
+                "resource": closetime.resource_id,
+                "cssClass": "md-lunch-break-class mbsc-flex",
+            }
+        )
 
     for resource in resources:
-        resource_data.append({
-            'id': resource.id,
-            'name': resource.name,
-            'cssClass': resource.css + ' room',
-            'capacity': resource.capacity,
-            'price': resource.price,
-            'price_per_person': resource.price_per_person,
-            'max_capacity': resource.max_capacity,
-        })
+        resource_data.append(
+            {
+                "id": resource.id,
+                "name": resource.name,
+                "cssClass": resource.css,
+                "capacity": resource.capacity,
+                "price": resource.price,
+                "price_per_person": resource.price_per_person,
+                "max_capacity": resource.max_capacity,
+            }
+        )
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ReservationForm(request.POST)
         if form.is_valid():
             reservation = form.save(commit=False)
@@ -200,88 +249,96 @@ def calendar(request):
             reservation.save()
             form = ReservationForm()
             context = {
-                'reservation_data': json.dumps(reservation_data),
-                'resource_data': json.dumps(resource_data),
-                'form': form,
-                'resources:': resources,
+                "reservation_data": json.dumps(reservation_data),
+                "resource_data": json.dumps(resource_data),
+                "form": form,
+                "resources:": resources,
             }
 
-            return render(request, 'account/calendar.html', context)  # بازگرداندن کاربر به صفحه کلندر
+            return render(
+                request, "account/calendar.html", context
+            )  # بازگرداندن کاربر به صفحه کلندر
         else:
             print(form.errors)  # چاپ کردن خطا در ترمینال
     else:
         form = ReservationForm()
         context = {
-            'reservation_data': json.dumps(reservation_data),
-            'resource_data': json.dumps(resource_data),
-            'closetime_data': json.dumps(closetime_data),
-            'form': form,
-            'resources': resources,
-            "reservations": reservations
+            "reservation_data": json.dumps(reservation_data),
+            "resource_data": json.dumps(resource_data),
+            "closetime_data": json.dumps(closetime_data),
+            "form": form,
+            "resources": resources,
+            "reservations": reservations,
         }
 
-        return render(request, 'account/calendar.html', context)
+        return render(request, "account/calendar.html", context)
 
 
+@login_required
 def get_reservation_info(request):
-    if request.method == 'GET' and 'reservation_id' in request.GET:
-        reservation_id = request.GET.get('reservation_id')
+    if request.method == "GET" and "reservation_id" in request.GET:
+        reservation_id = request.GET.get("reservation_id")
         try:
             reservation = Reservation.objects.get(reserve_id=reservation_id)
 
+            if not is_admin(request.user) and reservation.user != request.user:
+                raise PermissionDenied
             # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
             # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
 
             reservation_data = {
-                'title': reservation.title,
-                'start': reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
-                'end': reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
-                'status': reservation.status,
-                'cleaning': reservation.cleaning,
-                'resources': reservation.resource.id,
-                'user': reservation.user.username,  # نام کاربر
-                'capacity':reservation.resource.capacity,
-                'morecapacity':reservation.more_capacity,
-                'paid':reservation.paid,
-                'price':reservation.resource.price,
-                'price_per_person':reservation.resource.price_per_person,
-                'totalCost':reservation.total_pay,
+                "title": reservation.title,
+                "start": reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
+                "end": reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
+                "status": reservation.status,
+                "cleaning": reservation.cleaning,
+                "resources": reservation.resource.id,
+                "user": reservation.user.username,  # نام کاربر
+                "capacity": reservation.resource.capacity,
+                "morecapacity": reservation.more_capacity,
+                "paid": reservation.paid,
+                "price": reservation.resource.price,
+                "price_per_person": reservation.resource.price_per_person,
+                "totalCost": reservation.total_pay,
             }
             return JsonResponse(reservation_data)
         except Reservation.DoesNotExist:
-            return JsonResponse({'error': 'Reservation not found'}, status=404)
+            return JsonResponse({"error": "Reservation not found"}, status=404)
     else:
-        return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-from django.contrib.auth import get_user_model
-from account.models import Userprofile
-from dateutil.parser import parse
+        return JsonResponse({"error": "Invalid request"}, status=400)
 
 
 def add_reservation(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        start = request.POST.get('start')
-        end = request.POST.get('end')
-        resource_id = request.POST.get('resourceId')
+    if request.method == "POST":
+        title = request.POST.get("title")
+        start = request.POST.get("start")
+        end = request.POST.get("end")
+        resource_id = request.POST.get("resourceId")
         author = request.user
-        status = request.POST.get('status')
-        user_username = request.POST.get('user')
-        cleaning = request.POST.get('cleaning')
-        more_capacity = request.POST.get('more_capacity')
+        status = request.POST.get("status")
+
+        cleaning = request.POST.get("cleaning")
+        more_capacity = request.POST.get("more_capacity")
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
         price =  request.POST.get('price')
-        print(start)
-        print(end)
         start = datetime.combine(start, datetime.strptime('13:00', '%H:%M').time())
         # Create end datetime with time set to 14:00
         end = datetime.combine(end, datetime.strptime('12:00', '%H:%M').time())
+        if request.user.user_status == "normal":
+            user_username = request.user.username
+        else:
+            user_username = request.POST.get("user")
+
+        if not is_admin(request.user) and author != request.user:
+            raise PermissionDenied
+
+        print(user_username)
+
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
-            return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
+            return JsonResponse({"success": False, "error": "Invalid resource ID"})
 
         if cleaning == 'true':
             cleaning = True
@@ -291,10 +348,8 @@ def add_reservation(request):
 
         overlapping_reservations = Reservation.objects.filter(
             resource=resource,
-            status__in=['pending_payment', 'confirmed'],
-        ).exclude(
-            Q(end__lte=start) | Q(start__gte=end)
-        )
+            status__in=["pending_payment", "confirmed"],
+        ).exclude(Q(end__lte=start) | Q(start__gte=end))
 
         # Check for overlapping reservations
         if overlapping_reservations.exists():
@@ -305,10 +360,14 @@ def add_reservation(request):
             return JsonResponse({'success': True})
 
         User = get_user_model()
+        user = User.objects.get(username=user_username)
+        print("hey it is", user)
         try:
             user = User.objects.get(username=user_username)
         except User.DoesNotExist:
-            user = User.objects.create_user(username=user_username, password=user_username)
+            user = User.objects.create_user(
+                username=user_username, password=user_username
+            )
 
         if cleaning == True:
             end -= timedelta(days=1) 
@@ -331,77 +390,91 @@ def add_reservation(request):
             return JsonResponse({'success': True})
         except Reservation.DoesNotExist:
             # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-            return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+            return JsonResponse(
+                {"success": False, "error": "Reservation not found"}, status=404
+            )
         except Exception as e:
             print(e)
             # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-            return JsonResponse({'success': False, 'error': str(e)}, status=500)
-    return JsonResponse({'success': False})
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    return JsonResponse({"success": False})
 
 
 @require_POST
+@login_required
 def cancel_reservation(request):
     # دریافت شناسه رزرو از درخواست POST
-    reservation_id = request.POST.get('reservation_id')
-    print(reservation_id)
+    reservation_id = request.POST.get("reservation_id")
     try:
         # یافتن رزرو مربوطه از پایگاه داده
         reservation = Reservation.objects.get(reserve_id=reservation_id)
+        if not is_admin(user) and reservation.user != request.user:
+            raise PermissionDenied
 
         # تغییر حالت رزرو به کنسل شده
-        reservation.status = 'canceled'
+        reservation.status = "canceled"
         reservation.save()
 
-        return JsonResponse({'success': True})
+        return JsonResponse({"success": True})
     except Reservation.DoesNotExist:
         # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-        return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+        return JsonResponse(
+            {"success": False, "error": "Reservation not found"}, status=404
+        )
     except Exception as e:
         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
 def login(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                # Redirect to a success page.
-                return redirect('account:dashboard')  # Change 'success_page' to your desired success page
+                return redirect("account:dashboard")
             else:
-                # Return an 'invalid login' error message.
-                form.add_error(None, 'نام کاربری یا رمز عبور اشتباه است')
-    else:
-        form = AuthenticationForm(request)
-    return render(request, 'account/login.html', {'form': form})
+                # Add a non-specific error message for security reasons (avoid revealing which credential is incorrect)
+                form.add_error(None, "Invalid login credentials.")
+
+    else:  # GET request
+        if request.user.is_authenticated:
+            # User is already logged in, redirect to dashboard
+            return redirect("account:dashboard")
+
+        form = AuthenticationForm(request=request)
+
+    return render(request, "account/login.html", {"form": form})
 
 
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = form.cleaned_data['username']
-            user.user_status = 'normal'  # تنظیم وضعیت به عادی
+            user.username = form.cleaned_data["username"]
+            user.user_status = "normal"  # تنظیم وضعیت به عادی
             user.save()
             # اعتبارسنجی تایید شرایط و قوانین
-            if form.cleaned_data['terms']:
+            if form.cleaned_data["terms"]:
                 # کاربر را وارد سیستم می‌کنیم
                 auth_login(request, user)
-                return redirect('success_page_register')  # Change 'success_page' to your desired success page
+                return redirect(
+                    "success_page_register"
+                )  # Change 'success_page' to your desired success page
     else:
         form = CustomUserCreationForm()
-    return render(request, 'account/register.html', {'form': form})
+    return render(request, "account/register.html", {"form": form})
 
 
-@login_required(login_url='account:login')
+@login_required(login_url="account:login")
 def logoutUser(request):
     logout(request)
-    return redirect('home')
+    return redirect("home")
 
 
 # def add_reminder_sms(request):
@@ -482,9 +555,19 @@ def send_message_accept_reserve(phone_number,reserve_id, room_id, enter_date, ex
 
 
 def convert_to_western_numerals(persian_number):
-    persian_to_western = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'}
-    return ''.join(persian_to_western.get(char, char) for char in persian_number)
-
+    persian_to_western = {
+        "۰": "0",
+        "۱": "1",
+        "۲": "2",
+        "۳": "3",
+        "۴": "4",
+        "۵": "5",
+        "۶": "6",
+        "۷": "7",
+        "۸": "8",
+        "۹": "9",
+    }
+    return "".join(persian_to_western.get(char, char) for char in persian_number)
 
 
 #   '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +

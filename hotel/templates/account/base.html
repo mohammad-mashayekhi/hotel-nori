@@ -109,6 +109,7 @@
 
         <ul class="menu-inner py-1">
           <!-- Dashboards -->
+        {% if request.user.user_status != "normal" %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">ادمین</span>
           </li>
@@ -142,6 +143,7 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+        {% else %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">کاربر</span>
           </li>
@@ -149,6 +151,12 @@
             <a href="{% url 'account:dashboard' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-view-grid-outline"></i>
               <div>حساب کاربری</div>
+            </a>
+          </li>
+          <li class="menu-item {% if request.resolver_match.view_name == 'account:calendar' %} active {% endif %}">
+            <a href="{% url 'account:calendar' %}" class="menu-link ">
+              <i class="menu-icon tf-icons mdi mdi-calendar-blank-outline"></i>
+              <div>جدول رزرو</div>
             </a>
           </li>
           <li class="menu-item{% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
@@ -163,6 +171,7 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+        {% endif %}
         </ul>
       </aside>
       <!-- / Menu -->

@@ -13,7 +13,7 @@ import platform
 from pathlib import Path
 import os
 import locale
-
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
@@ -152,12 +152,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'assets'),)
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = reverse_lazy("account:login")
 
 AUTH_USER_MODEL = 'account.UserProfile'

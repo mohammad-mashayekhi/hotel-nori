@@ -6,33 +6,42 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0001_initial'),
+        ("account", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='userprofile',
-            name='birth_date',
+            model_name="userprofile",
+            name="birth_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='card_number',
+            model_name="userprofile",
+            name="card_number",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='gender',
+            model_name="userprofile",
+            name="gender",
             field=models.CharField(blank=True, max_length=10, null=True),
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='national_code',
+            model_name="userprofile",
+            name="national_code",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='userprofile',
-            name='user_status',
-            field=models.CharField(choices=[('normal', 'کاربر عادی'), ('verified', 'کاربر تایید شده'), ('admin_level_1', 'کاربر ادمین سطح یک'), ('admin_level_2', 'کاربر ادمین سطح دو')], default='normal', max_length=20),
+            model_name="userprofile",
+            name="user_status",
+            field=models.CharField(
+                choices=[
+                    ("normal", "کاربر عادی"),
+                    ("verified", "کاربر تایید شده"),
+                    ("admin_level_1", "کاربر ادمین سطح یک"),
+                    ("admin_level_2", "کاربر ادمین سطح دو"),
+                ],
+                default="normal",
+                max_length=20,
+            ),
         ),
     ]
