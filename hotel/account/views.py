@@ -125,7 +125,7 @@ from datetime import datetime, timedelta
 
 
 def calendar(request):
-    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning'))
+    reservations = Reservation.objects.filter(Q(status='confirmed') | Q(status='pending_payment') | Q(status='cleaning') |Q(status='onlocalpay') )
     closetime = Reservation.objects.filter(status='closetime')
     resources = Resource.objects.all()
     reservation_data = []
@@ -137,11 +137,10 @@ def calendar(request):
         start_datetime = datetime.combine(reservation.start, datetime.strptime('14:00', '%H:%M').time())
         # Create end datetime with time set to 14:00
         end_datetime = datetime.combine(reservation.end, datetime.strptime('12:00', '%H:%M').time())
-
         # start_datetime = start_datetime - timedelta(days=3)
         # end_datetime = end_datetime - timedelta(days=3)
 
-        if reservation.status == 'confirmed':
+        if reservation.status == 'confirmed' or reservation.status == 'onlocalpay':
             color = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
         elif reservation.status == 'pending_payment':
             color = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
@@ -273,18 +272,16 @@ def add_reservation(request):
         more_capacity = request.POST.get('more_capacity')
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
-        paid = request.POST.get('paid')
         price =  request.POST.get('price')
-
+        print(start)
+        print(end)
+        start = datetime.combine(start, datetime.strptime('13:00', '%H:%M').time())
+        # Create end datetime with time set to 14:00
+        end = datetime.combine(end, datetime.strptime('12:00', '%H:%M').time())
         try:
             resource = Resource.objects.get(id=resource_id)
         except Resource.DoesNotExist:
             return JsonResponse({'success': False, 'error': 'Invalid resource ID'})
-
-        if paid == 'true':
-            paid = True
-        else:
-            paid = False
 
         if cleaning == 'true':
             cleaning = True
@@ -315,10 +312,10 @@ def add_reservation(request):
 
         if cleaning == True:
             end -= timedelta(days=1) 
-            new_reservation = Reservation.objects.create(title='نظافت', start=end, end=end + timedelta(days=1) , resource=resource, author=author, user=user, status='cleaning', cleaning=cleaning, more_capacity = more_capacity,paid = paid , total_pay = price)
+            new_reservation = Reservation.objects.create(title='نظافت', start=end, end=end + timedelta(days=1) , resource=resource, author=author, user=user, status='cleaning', cleaning=cleaning, more_capacity = more_capacity , total_pay = price)
 
         # Create reservation if there are no overlaps
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity,paid = paid , total_pay = price )
+        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity , total_pay = price )
         try:
             # Convert Gregorian date to Jalali date
             jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
@@ -326,10 +323,10 @@ def add_reservation(request):
             # Format the Jalali dates as needed
             formatted_start = jalali_start.strftime('%Y/%m/%d')
             formatted_end = jalali_end.strftime('%Y/%m/%d')
-            if paid:
-                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-test')
+            if status == 'onlocalpay':
+                send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-test')
             else : 
-                send_message_accept_reserve(user_username,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+                send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
 
             return JsonResponse({'success': True})
         except Reservation.DoesNotExist:
@@ -438,30 +435,50 @@ def generate_otp_code():
     return str(random.randint(100000, 999999))
 
 
-def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
+def send_message_accept_reserve(phone_number,reserve_id, room_id, enter_date, exit_date, message):
     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
     TEMPLATE = message
     RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
     TOKEN = room_id
     TOKEN2 = enter_date
     TOKEN3 = exit_date
+    TOKEN10 = reserve_id
     TYPE = 'sms'
-    try:
-        api = KavenegarAPI(API)
-        params = {
-            'receptor': RECEPTOR,
-            'template': TEMPLATE,
-            'token': TOKEN,
-            'token2': TOKEN2,
-            'token3': TOKEN3,
-            'type': TYPE,
-        }
-        response = api.verify_lookup(params)
-        print(response)
-    except APIException as e:
-        print(e)
-    except HTTPException as e:
-        print(e)
+    if message == 'reserve-room-not-paid':
+        try:
+            api = KavenegarAPI(API)
+            params = {
+                'receptor': RECEPTOR,
+                'template': TEMPLATE,
+                'token': TOKEN,
+                'token2': TOKEN2,
+                'token3': TOKEN3,
+                'token10': TOKEN10,
+                'type': TYPE,
+            }
+            response = api.verify_lookup(params)
+            print(response)
+        except APIException as e:
+            print(e)
+        except HTTPException as e:
+            print(e)
+    else: 
+        try:
+            api = KavenegarAPI(API)
+            params = {
+                'receptor': RECEPTOR,
+                'template': TEMPLATE,
+                'token': TOKEN,
+                'token2': TOKEN2,
+                'token3': TOKEN3,
+                'type': TYPE,
+            }
+            response = api.verify_lookup(params)
+            print(response)
+        except APIException as e:
+            print(e)
+        except HTTPException as e:
+            print(e) 
 
 
 def convert_to_western_numerals(persian_number):

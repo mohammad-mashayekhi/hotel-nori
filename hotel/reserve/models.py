@@ -8,6 +8,7 @@ class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
         ('pending_payment', 'در انتظار پرداخت'),  # در انتظار پرداخت
         ('confirmed', 'تایید شده'),              # تایید شده
+        ('onlocalpay', 'پرداخت حضوری'),              # تایید شده و پرداخت حضوری
         ('canceled', 'کنسل شده'),                # لغو شده
         ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
     ]
@@ -27,7 +28,7 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(default=timezone.now, editable=False)  # Save creation time
 
     def get_created_at_shamsi(self):
-        return date2jalali(self.created_at).strftime('%y/%m/%d %H:%M:%S')
+        return date2jalali(self.created_at).strftime('%y/%m/%d')
     
     def get_start_shamsi(self):
         return date2jalali(self.start).strftime('%y/%m/%d')

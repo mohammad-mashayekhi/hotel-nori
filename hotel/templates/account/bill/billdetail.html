@@ -18,15 +18,12 @@
       <div class="card invoice-preview-card" len="7461">
         <div class="card-body" len="3428">
           <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column" len="3311">
-            <div class="mb-xl-0 pb-3" len="2944">
-              <div class="d-flex svg-illustration align-items-center gap-2 mb-4" len="2644">
-                <h5 len="14" lang="fa" style="">فاکتور : {{ reservation.reserve_id }}</h5>
-              </div>
-              <p class="mb-1" len="36" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</p>
+            <div class="row">
+                <h5 len="14" lang="fa" style="">شماره فاکتور : {{ reservation.reserve_id }}</h5>
             </div>
             <div len="293">
               <div class="mb-1" len="95">
-                <font lang="fa" style=""><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
+                <font lang="fa"><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
               </div>
             </div>
           </div>
@@ -34,40 +31,10 @@
         <hr class="my-0" len="0">
         <div class="card-body" len="1326">
           <div class="d-flex justify-content-between flex-wrap" len="1250">
-            <div class="my-3" len="317">
-              <h6 class="pb-2" len="11" lang="fa">فاکتور اجاره:</h6>
-              <p class="mb-1" len="13" lang="fa">نام :‌{{reservation.user.username}}</p>
-              <p class="mb-1" len="22" lang="fa">نام خانوادگی :{{reservation.user.lastname}}</p>
-              <p class="mb-1" len="24" lang="fa">شماره موبایل :{{reservation.user.mobile_number}}</p>
-              <p class="mb-1" len="12" lang="fa">سطح کاربر :{{reservation.user.user_status}}</p>
-            </div>
-            <!-- <div class="my-3" len="854">
-              <h6 class="pb-2" len="8" lang="fa" style="">بیل به:</h6>
-              <table len="772">
-                <tbody len="729">
-                  <tr len="116">
-                    <td class="pe-3 fw-medium" len="10" lang="fa" style="">مجموع به علت:</td>
-                    <td len="10" lang="fa" style="">$12،110.55</td>
-                  </tr>
-                  <tr len="119">
-                    <td class="pe-3 fw-medium" len="10" lang="fa">نام بانک:</td>
-                    <td len="13" lang="fa" style="">بانک امریکایی</td>
-                  </tr>
-                  <tr len="117">
-                    <td class="pe-3 fw-medium" len="8" lang="fa">کشور:</td>
-                    <td len="13" lang="fa" style="">ایالات متحده</td>
-                  </tr>
-                  <tr len="118">
-                    <td class="pe-3 fw-medium" len="5" lang="fa" style="">ایبان:</td>
-                    <td len="17" lang="fa" style="">دانلود: ETD95476213874685.000</td>
-                  </tr>
-                  <tr len="114">
-                    <td class="pe-3 fw-medium" len="11" lang="fa" style="">کد سوئیفت:</td>
-                    <td len="7" lang="fa">BR91905 (برزیلی)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div> -->
+              <p class="pb-2" len="11" lang="fa">اجاره واحد {{reservation.resource}}</p>
+              <p class="pb-2" len="13" lang="fa">نام :‌{{reservation.user.username}}</p>
+              <p class="pb-2" len="22" lang="fa">نام خانوادگی :{{reservation.user.lastname}}</p>
+              <p class="pb-2" len="24" lang="fa">شماره موبایل :{{reservation.user.mobile_number}}</p>
           </div>
         </div>
         <div class="table-responsive" len="2219">
@@ -136,19 +103,14 @@
     <!-- Invoice Actions -->
     <div class="col-xl-3 col-md-4 col-12 invoice-actions" len="1132">
       <div class="card" len="1100">
-        <div class="card-body" len="1059">
-          <!-- <button class="btn btn-primary d-grid w-100 mb-3 waves-effect waves-light" data-bs-toggle="offcanvas"
-            data-bs-target="#sendInvoiceOffcanvas" len="169">
-            <span class="d-flex align-items-center justify-content-center text-nowrap" len="67"><i
-                class="mdi mdi-send-outline scaleX-n1-rtl me-1" len="0"></i>
-              <font lang="fa">ارسال فاکتور</font>
-            </span>
-          </button> -->
+        <div class="card-body" style="text-align: center;">
           <!-- <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="28" lang="fa"> دانلود </button> -->
           <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
             href="{% url 'account:billprint' reservation.reserve_id %}" len="25" lang="fa"> چاپ </a>
-          <!-- <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
-            lang="fa"> ویرایش فاکتور </a> -->
+          <div class="center">
+              <h3>مبلع نهایی: {{ reservation.total_pay }} تومان</h3>
+          </div>
+          </h3n>
           <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
             data-bs-target="#addPaymentOffcanvas" len="154">
             <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i
