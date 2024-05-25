@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0002_userprofile_birth_date_userprofile_card_number_and_more'),
+        ("account", "0002_userprofile_birth_date_userprofile_card_number_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userprofile',
-            name='user_status',
-            field=models.CharField(choices=[('normal', 'کاربر عادی'), ('verified', 'کاربر تایید شده'), ('admin_level_a', 'کاربر ادمین سطح b'), ('admin_level_b', 'کاربر ادمین سطح a')], default='normal', max_length=20),
+            model_name="userprofile",
+            name="user_status",
+            field=models.CharField(
+                choices=[
+                    ("normal", "کاربر عادی"),
+                    ("verified", "کاربر تایید شده"),
+                    ("admin_level_a", "کاربر ادمین سطح b"),
+                    ("admin_level_b", "کاربر ادمین سطح a"),
+                ],
+                default="normal",
+                max_length=20,
+            ),
         ),
     ]
