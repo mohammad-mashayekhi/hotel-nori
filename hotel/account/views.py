@@ -1,18 +1,21 @@
 import json
-import random
+import secrets
 from datetime import date, datetime, timedelta
-
 import jdatetime
 from dateutil.parser import parse
-from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth import login
-from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout
+from django.contrib.auth import authenticate, get_user_model, authenticate, logout, login as auth_login
 from django.contrib.auth.decorators import (
     PermissionDenied,
     login_required,
     user_passes_test,
 )
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.shortcuts import render, redirect, reverse
+from django.urls import reverse_lazy
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count, Q, Sum
 from django.http import JsonResponse
@@ -21,7 +24,7 @@ from django.views.decorators.http import require_POST
 from kavenegar import *
 
 from account.models import Userprofile
-from reserve.forms import ReservationForm  # ایمپورت کردن فرم
+from reserve.forms import ReservationForm
 from reserve.models import Reservation, Resource
 
 from .decorators import (
@@ -35,6 +38,16 @@ from .forms import (
     Userprofile,
     UserProfileEditForm,
     UserProfileEditFormUser,
+    OTPValidationForm,
+    PhoneNumberForm
+)
+
+from .utils import (
+    otp_generator,
+    send_message_accept_reserve,
+    convert_to_western_numerals,
+    validate_otp,
+    send_otp
 )
 
 
@@ -381,7 +394,7 @@ def add_reservation(request):
                 username=user_username, password=user_username
             )
 
-        if cleaning == True:
+        if cleaning:
             end -= timedelta(days=1)
             new_reservation = Reservation.objects.create(
                 title="نظافت",
@@ -520,83 +533,52 @@ def register(request):
 
 
 @login_required(login_url="account:login")
-def logoutUser(request):
+def logout_user(request):
     logout(request)
     return redirect("home")
 
 
-# def add_reminder_sms(request):
-#     reservation_id = request.POST.get('reservation_id')
-
-#     print(reservation_id)
-#     try:
-#         # یافتن رزرو مربوطه از پایگاه داده
-#         reservation = Reservation.objects.get(reserve_id=reservation_id)
-
-#         # Convert Gregorian date to Jalali date
-#         jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
-#         jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
-
-#         # Format the Jalali dates as needed
-#         formatted_start = jalali_start.strftime('%Y/%m/%d')
-#         formatted_end = jalali_end.strftime('%Y/%m/%d')
-
-#         send_message_accept_reserve('09106961316',reservation.resource,formatted_start,formatted_end,message='')
-#         return JsonResponse({'success': True})
-#     except Reservation.DoesNotExist:
-#         # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-#         return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
-#     except Exception as e:
-#         print(e)
-#         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-#         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+def password_reset_request(request):
+    if request.method == 'POST':
+        form = PhoneNumberForm(request.POST)
+        if form.is_valid():
+            try:
+                user = Userprofile.objects.get(mobile_number=form.cleaned_data['phone_number'])
+                otp = otp_generator()
+                print(otp)
+                user.otp = otp
+                user.otp_expiry = timezone.now() + timedelta(minutes=10)  # Set OTP expiry time
+                user.save()
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                send_otp(user.mobile_number, otp)
+                return redirect(reverse("account:otp_validation", kwargs={"uidb64": uid}))
+            except Userprofile.DoesNotExist:
+                form.add_error("phone_number", "شماره نا معتبر هست")
+    else:
+        form = PhoneNumberForm()
+    return render(request, 'account/password_reset_request.html', {'form': form})
 
 
-def generate_otp_code():
-    return str(random.randint(100000, 999999))
-
-
-def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
-    API = "464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D"
-    TEMPLATE = message
-    RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
-    TOKEN = room_id
-    TOKEN2 = enter_date
-    TOKEN3 = exit_date
-    TYPE = "sms"
+def otp_validation(request, uidb64=None):
     try:
-        api = KavenegarAPI(API)
-        params = {
-            "receptor": RECEPTOR,
-            "template": TEMPLATE,
-            "token": TOKEN,
-            "token2": TOKEN2,
-            "token3": TOKEN3,
-            "type": TYPE,
-        }
-        response = api.verify_lookup(params)
-        print(response)
-    except APIException as e:
-        print(e)
-    except HTTPException as e:
-        print(e)
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = Userprofile.objects.get(pk=uid)
+    except (Userprofile.DoesNotExist, ValueError):
+        return render(request, 'account/otp_validation.html', context={"invalid_uidb64": uidb64})
+
+    if request.method == 'POST':
+        form = OTPValidationForm(user_otp=user.otp,otp_expiry=user.otp_expiry,data=request.POST)
+        if form.is_valid():
+            token = PasswordResetTokenGenerator().make_token(user)
+            return redirect(reverse("account:password_reset_set", kwargs={"uidb64": uidb64, "token":token}))
+    else:
+        form = OTPValidationForm()
+    return render(request, 'account/otp_validation.html', {'form': form})
 
 
-def convert_to_western_numerals(persian_number):
-    persian_to_western = {
-        "۰": "0",
-        "۱": "1",
-        "۲": "2",
-        "۳": "3",
-        "۴": "4",
-        "۵": "5",
-        "۶": "6",
-        "۷": "7",
-        "۸": "8",
-        "۹": "9",
-    }
-    return "".join(persian_to_western.get(char, char) for char in persian_number)
-
+class PasswordResetSetView(PasswordResetConfirmView):
+    template_name = 'account/password_reset_set.html'
+    success_url = reverse_lazy("home")
 
 #   '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
 #         '<div mbsc-calendar-today></div>' +
