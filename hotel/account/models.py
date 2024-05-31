@@ -15,6 +15,8 @@ class Userprofile(AbstractUser):
     mobile_number = models.CharField(max_length=20)
     card_number = models.CharField(max_length=20, blank=True, null=True)
     national_code = models.CharField(max_length=20, blank=True, null=True)
+    otp = models.IntegerField(max_length=20, blank=True, null=True)
+    otp_expiry = models.DateTimeField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     user_status = models.CharField(
