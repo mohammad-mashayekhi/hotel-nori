@@ -23,10 +23,7 @@
           <div class="card-body mt-2">
             <p class="mb-4">لطفا برای رزرو وارد حساب خود شوید</p>
             <form method="POST" class="mb-3">
-              <div>
                 {% csrf_token %}
-                <p>{{ form.non_field_errors }}</p>
-              </div>
               <div class="form-floating form-floating-outline mb-3">
                 <input type="text" class="form-control" id="username" name="username" placeholder="نام کاربری خود را وارد کنید" autofocus>
                 <label for="username">نام کاربری</label>
@@ -40,6 +37,9 @@
                   <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                 </div>
               </div>
+                <div>
+                    <p>{{ form.non_field_errors }}</p>
+                </div>
               <div class="mb-3 d-flex justify-content-between">
                 <a href="auth-forgot-password-cover.html" class="float-end mb-1">
                   <span>رمز عبور را فراموش کردید؟</span>
