@@ -3,6 +3,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.forms.widgets import DateInput, Select
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
+from django.utils import timezone
 from .models import Userprofile
 from .utils import validate_otp
 
@@ -97,6 +98,6 @@ class OTPValidationForm(forms.Form):
         form_otp = self.cleaned_data['otp']
         user_otp = self.user_otp
         otp_expiry = self.otp_expiry
-        if user_otp == form_otp and otp_expiry > datetime.now():
-            raise forms.ValidationError("Invalid OTP. Please enter a valid OTP or request a new one.")
+        if user_otp != int(form_otp) or timezone.now() > otp_expiry:
+            raise forms.ValidationError("کد otp نا معتبر هست. دوباره سعی کنید یا یکی دیگر درخواست دهید.")
         return form_otp

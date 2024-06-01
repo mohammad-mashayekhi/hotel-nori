@@ -564,28 +564,21 @@ def otp_validation(request, uidb64=None):
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Userprofile.objects.get(pk=uid)
     except (Userprofile.DoesNotExist, ValueError):
-        return render(request, 'account/otp_validation.html', context={"invalid_uidb64": uidb64})
+        return render(request, 'account/otp_validation.html', context={"invalid_uidb64": True})
 
     if request.method == 'POST':
-        form = OTPValidationForm(user_otp=user.otp,otp_expiry=user.otp_expiry,data=request.POST)
+        form = OTPValidationForm(user_otp=user.otp, otp_expiry=user.otp_expiry,data=request.POST)
         if form.is_valid():
             token = PasswordResetTokenGenerator().make_token(user)
+            print(token)
             return redirect(reverse("account:password_reset_set", kwargs={"uidb64": uidb64, "token":token}))
     else:
         form = OTPValidationForm()
-    return render(request, 'account/otp_validation.html', {'form': form})
+    return render(request, 'account/otp_validation.html', {'form': form, 'phone_number': user.mobile_number})
 
 
 class PasswordResetSetView(PasswordResetConfirmView):
     template_name = 'account/password_reset_set.html'
     success_url = reverse_lazy("home")
 
-#   '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
-#         '<div mbsc-calendar-today></div>' +
-#         '</div>' +
-#         '<div id="custom-date-range" style="text-align:center;">' +
-#         '<button mbsc-button data-variant="flat" class="m-1 p-1 mbsc-button-mycalendar mbsc-calendar-button">' +
-#         '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">انتخاب تاریخ روز شروع و پایان</span>' +
-#         '</button>' +
-#         '</div>' +
-#         '<span type="text" id="datetime-picker" name="datetime-picker">'
+
