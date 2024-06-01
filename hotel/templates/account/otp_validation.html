@@ -2,11 +2,24 @@
 {% load static %}
 
 {% block contant %}
+    
 <style>
- #id_username{
+    input:invalid {
+      /* Styles for invalid input (e.g., border color, background color) */
+      border-color: red;
+      background-color: #f5f5f5;
+    }
 
- }
+    .error-message {
+      color: red;
+      font-size: 0.8rem;
+      margin-bottom: 5px;
+    }
+    form:invalid .error-message {
+      display: block;
+    }
 </style>
+    
   <div class="position-relative" style="background-size:cover; background-image: url('{% static 'img/pages/back-login.jpg'%}')">
     <div class="authentication-wrapper authentication-basic container-p-y">
       <div class="authentication-inner py-4">
@@ -26,12 +39,16 @@
                 <form method="POST" class="mb-3">
                     {% csrf_token %}
                   <div class="form-floating form-floating-outline mb-3">
-                    <input type="text" class="form-control" id="otp" name="otp" maxlength="6" placeholder="کد تایید (6 رقمی)" autofocus>
+                    <input {% if form.otp.errors %} class="invalid form-control" {% endif %} type="text" class="form-control" id="otp" name="otp" maxlength="6" placeholder="کد تایید (6 رقمی)" autofocus>
                     <label for="otp">کد تایید</label>
                   </div>
-                    <div>
-                        <p>{{ form.non_field_errors }}</p>
+                    {% if form.otp.errors %}
+                    <div class="error-message">
+                        {% for error in form.otp.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %} 
                     </div>
+                    {% endif %}    
                   <button type="submit" class="btn btn-primary d-grid w-100">
                     تایید
                   </button>
@@ -39,7 +56,7 @@
 
                 <p class="text-center mt-2">
                   <span>کد تایید دریافت نکردید؟</span>
-                  <a href="#">
+                  <a href="{% url 'account:password_reset_request' %}" class="otp-request">
                     <span>مجدد ارسال کنید</span>
                   </a>
                 </p>
@@ -49,5 +66,50 @@
         </div>
     </div>
   </div>
+    
+{% endblock %}
 
+{% block scripts %}
+    <script>    
+    
+
+      
+    $(document).ready(function() {
+        $.ajax({
+            url: '/account/password_reset_request/', // Replace with your view to return the token
+            type: 'GET',
+            success: function (response) {
+                var htmlDoc = $.parseHTML(response);
+                var csrfToken = $(htmlDoc).find('input[name="csrfmiddlewaretoken"]').val();
+                // Store the token in a global variable or local storage
+                window.csrfToken = csrfToken;
+                console.log(csrfToken)
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error fetching CSRF token:", textStatus, errorThrown);
+            }
+        });
+        // Attach click event handler to links with class "otp-request"
+      $(document).on("click", ".otp-request", function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        var url = $(this).attr("href"); // Get the URL from the link's href attribute
+        var data = {"phone_number": "{{phone_number}}", "csrfmiddlewaretoken": csrfToken }; // Example: data = { someData: "value" };
+        
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: data,
+          success: function(response) {
+            console.log("OTP request response:", response.status);
+            // Handle the successful response data here (e.g., display message)
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error sending OTP request:", textStatus, errorThrown);
+            // Handle any errors that occur during the request
+          }
+        });
+      });
+    });
+
+</script>
 {% endblock %}
