@@ -25,13 +25,28 @@
 #         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 import secrets
+from kavenegar import *
 
-
-def send_otp(phone_number, otp):
-    """Sends the OTP code to the provided phone number using your SMS provider."""
-    # Integrate your SMS provider's API to send the OTP
-    # Replace with your specific implementation
-
+def send_otp_sms(phone_number, otp_code):
+    API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
+    TEMPLATE = 'otpzemz'
+    RECEPTOR = phone_number
+    TOKEN = otp_code
+    TYPE = 'sms'
+    try:
+        api = KavenegarAPI(API)
+        params = {
+        'receptor': RECEPTOR,
+        'template': TEMPLATE,
+        'token': TOKEN,
+        'type': TYPE,
+        'debugmode': "enabled"
+    }
+        response = api.verify_lookup(params)
+    except APIException as e:
+        print(e)
+    except HTTPException as e:
+        print(e)
 
 def validate_otp(user, otp):
     """Validates the entered OTP code against the one sent to the user."""

@@ -47,7 +47,7 @@ from .utils import (
     send_message_accept_reserve,
     convert_to_western_numerals,
     validate_otp,
-    send_otp
+    send_otp_sms
 )
 
 
@@ -550,7 +550,7 @@ def password_reset_request(request):
                 user.otp_expiry = timezone.now() + timedelta(minutes=10)  # Set OTP expiry time
                 user.save()
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
-                send_otp(user.mobile_number, otp)
+                send_otp_sms(user.mobile_number, otp)
                 return redirect(reverse("account:otp_validation", kwargs={"uidb64": uid}))
             except Userprofile.DoesNotExist:
                 form.add_error("phone_number", "شماره نا معتبر هست")
