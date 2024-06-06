@@ -168,9 +168,7 @@ def calendar(request):
     )
 
     if not is_admin(request.user):
-        print(request.user)
         reservations = reservations.filter(user=request.user)
-        print(reservations)
     closetime = Reservation.objects.filter(status="closetime")
     resources = Resource.objects.all()
     reservation_data = []
@@ -210,41 +208,40 @@ def calendar(request):
                 "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
                 # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
                 "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+                'status': reservation.status,
                 "title": reservation.title,
                 "resource": reservation.resource_id,
-                "color": color,
                 "cleaning": reservation.cleaning,
                 "user": reservation.user.username,  # نام کاربر
                 # 'bufferAfter': bufferAfter,
             }
         )
 
-    for closetime in closetime:
-        start_datetime = datetime.combine(
-            closetime.start, datetime.strptime("14:00", "%H:%M").time()
-        )
-        # Create end datetime with time set to 14:00
-        end_datetime = datetime.combine(
-            closetime.end, datetime.strptime("12:00", "%H:%M").time()
-        )
-        closetime_data.append(
-            {
-                "reserve_id": closetime.reserve_id,
-                "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
-                # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-                "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
-                "title": closetime.title,
-                "resource": closetime.resource_id,
-                "cssClass": "md-lunch-break-class mbsc-flex",
-            }
-        )
+    # for closetime in closetime:
+    #     start_datetime = datetime.combine(
+    #         closetime.start, datetime.strptime("14:00", "%H:%M").time()
+    #     )
+    #     # Create end datetime with time set to 14:00
+    #     end_datetime = datetime.combine(
+    #         closetime.end, datetime.strptime("12:00", "%H:%M").time()
+    #     )
+    #     closetime_data.append(
+    #         {
+    #             "reserve_id": closetime.reserve_id,
+    #             "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
+    #             # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+    #             "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+    #             "title": closetime.title,
+    #             "resource": closetime.resource_id,
+    #             "cssClass": "md-lunch-break-class mbsc-flex",
+    #         }
+    #     )
 
     for resource in resources:
         resource_data.append(
             {
                 "id": resource.id,
                 "name": resource.name,
-                "cssClass": resource.css,
                 "capacity": resource.capacity,
                 "price": resource.price,
                 "price_per_person": resource.price_per_person,
@@ -269,7 +266,7 @@ def calendar(request):
             }
 
             return render(
-                request, "account/calendar.html", context
+                request, "account/../templates/reserve/reserve_schedule.html", context
             )  # بازگرداندن کاربر به صفحه کلندر
         else:
             print(form.errors)  # چاپ کردن خطا در ترمینال
@@ -284,7 +281,7 @@ def calendar(request):
             "reservations": reservations,
         }
 
-        return render(request, "account/calendar.html", context)
+        return render(request, "account/../templates/reserve/reserve_schedule.html", context)
 
 
 @login_required
@@ -329,11 +326,11 @@ def add_reservation(request):
         resource_id = request.POST.get("resourceId")
         author = request.user
         status = request.POST.get("status")
-
         cleaning = request.POST.get("cleaning")
         more_capacity = request.POST.get("more_capacity")
         start = parse(start, fuzzy=True)
         end = parse(end, fuzzy=True)
+        print(start, end)
         paid = request.POST.get("paid")
         price = request.POST.get("price")
         if request.user.user_status == "normal":
@@ -385,8 +382,6 @@ def add_reservation(request):
             return JsonResponse({"success": True})
 
         User = get_user_model()
-        user = User.objects.get(username=user_username)
-        print("hey it is", user)
         try:
             user = User.objects.get(username=user_username)
         except User.DoesNotExist:
