@@ -15,7 +15,6 @@ from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes
-from django.utils import timezone
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import Count, Q, Sum
 from django.http import JsonResponse
@@ -542,7 +541,7 @@ def password_reset_request(request):
                 otp = otp_generator()
                 print(otp)
                 user.otp = otp
-                user.otp_expiry = timezone.now() + timedelta(minutes=10)  # Set OTP expiry time
+                user.otp_expiry = datetime.now() + timedelta(minutes=10)  # Set OTP expiry time
                 user.save()
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 send_otp_sms(user.mobile_number, otp)
