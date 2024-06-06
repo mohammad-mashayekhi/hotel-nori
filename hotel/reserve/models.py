@@ -11,9 +11,9 @@ class Reservation(models.Model):
         ('canceled', 'کنسل شده'),                # لغو شده
         ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
     ]
-    reserve_id = ShortUUIDField(unique=True , length=5 , max_length=9 , alphabet="abcdefgh12345")
-    start = models.DateField()
-    end = models.DateField()
+    reserve_id = ShortUUIDField(unique=True, length=5, max_length=9, alphabet="abcdefgh12345")
+    start = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True)
     title = models.CharField(max_length=100)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_reservations')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='booked_reservations')
@@ -32,9 +32,9 @@ class Reservation(models.Model):
     def __str__(self):
         return self.title
 
+
 class Resource(models.Model):
     name = models.CharField(max_length=100)
-    css = models.CharField(max_length=7)  
     capacity = models.IntegerField(blank=True, null=True)
     max_capacity = models.IntegerField(blank=True, null=True)
     price = models.IntegerField( blank=True, null=True)
