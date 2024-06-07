@@ -69,7 +69,7 @@ def reserve_schedule(request):
     }
     return render(request, "reserve/reserve_schedule.html", context)
 
-
+@login_required
 def add_reservation(request):
     if request.method != "POST":
         return JsonResponse({"success": False})
@@ -249,3 +249,57 @@ def cancel_reservation(request, reservation_id):
     except Exception as e:
         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+@login_required
+def list_of_bills(request):
+    if is_admin(request.user):
+        all_users = get_user_model().objects.all()
+
+        total_customers = all_users.count()
+
+        total_income = Reservation.objects.aggregate(total_income=Sum("total_pay"))[
+            "total_income"
+        ]
+
+        total_reservations = Reservation.objects.count()
+
+        total_cancellation = Reservation.objects.filter(status="canceled").count()
+
+        total_purchase = Reservation.objects.filter(paid=True).count()
+
+        reservations = Reservation.objects.all().order_by("-id")
+
+        context = {
+            "users": all_users,
+            "total_cancellation": total_cancellation,
+            "total_purchase": total_purchase,
+            "total_customers": total_customers,
+            "total_income": total_income,
+            "total_reservations": total_reservations,
+            "reserve": reservations,
+        }
+    else:
+        reservations = Reservation.objects.filter(user=request.user)
+        context = {"reservations": reservations}
+    return render(request, "reserve/bill/app-invoice-list.html", context=context)
+
+
+def bill_print(request, reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+    return render(request, "reserve/bill/billprint.html", {"reserve": reservation})
+
+
+@login_required
+def bill_detail(request, reserve_id):
+    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+
+    if not is_admin(request.user) and reservation.user != request.user:
+        raise PermissionDenied
+
+    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation})
+
+@login_required
+def rooms(request):
+    resources = Resource.objects.filter(status=True)
+    return render(request, "reserve/room-list.html", {"resources": resources})
+

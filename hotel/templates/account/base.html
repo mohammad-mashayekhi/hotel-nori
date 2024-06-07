@@ -119,8 +119,8 @@
               <div>حساب کاربری</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
-            <a href="{% url 'account:bill' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:bill' %} active {% endif %}">
+            <a href="{% url 'reserve:bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
@@ -137,8 +137,8 @@
               <div>جدول رزرو</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
-            <a href="{% url 'account:rooms' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:rooms' %} active {% endif %}">
+            <a href="{% url 'reserve:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
             </a>
@@ -159,14 +159,14 @@
               <div>جدول رزرو</div>
             </a>
           </li>
-          <li class="menu-item{% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
-            <a href="{% url 'account:user_bill' %}" class="menu-link ">
+          <li class="menu-item{% if request.resolver_match.view_name == 'reserve:bill' %} active {% endif %}">
+            <a href="{% url 'reserve:bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
-            <a href="{% url 'account:rooms' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:rooms' %} active {% endif %}">
+            <a href="{% url 'reserve:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
             </a>

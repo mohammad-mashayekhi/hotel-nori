@@ -7,13 +7,8 @@ app_name = "account"
 
 urlpatterns = [
     path("", views.account, name="dashboard"),
-    path("bill/", views.bill, name="bill"),
-    path("bill/<str:reserve_id>/", views.bill_detail, name="billdetail"),
-    path("bill/print/<str:reserve_id>/", views.bill_print, name="billprint"),
     path("users/", views.users, name="users"),
     path("edituser/<int:user_id>/", views.edit_user, name="edit_user"),
-    path("rooms/", views.rooms, name="rooms"),
-    path("user_bill/", views.user_bill, name="user_bill"),
     path("login/", views.login, name="login"),
     path("register/", views.register, name="register"),
     path("logout/", views.logout_user, name="logout"),
