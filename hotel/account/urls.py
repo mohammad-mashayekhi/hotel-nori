@@ -17,11 +17,13 @@ urlpatterns = [
     path("user_bill/", views.user_bill, name="user_bill"),
     path("login/", views.login, name="login"),
     path("register/", views.register, name="register"),
-    path("logout/", views.logoutUser, name="logout"),
+    path("logout/", views.logout_user, name="logout"),
     path(
         "get_reservation_info/", views.get_reservation_info, name="get_reservation_info"
     ),
     path("add_reservation/", views.add_reservation, name="add_reservation"),
     path("remove_reservation/", views.cancel_reservation, name="remove_reservation"),
-    # path('addـreminderـsms/', views.add_reminder_sms, name='addـreminderـsms'),
+    path("password_reset_request/", views.password_reset_request, name="password_reset_request"),
+    path("otp_validation/<uidb64>/", views.otp_validation, name="otp_validation"),
+    path("password_reset_set/<uidb64>/<token>/", views.PasswordResetSetView.as_view(), name="password_reset_set")
 ]
