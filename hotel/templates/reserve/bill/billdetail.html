@@ -9,7 +9,7 @@
 <!-- Page CSS -->
 <link rel="stylesheet" href="{% static 'vendor/css/pages/app-invoice.css' %}" />
 {% endblock %}
-{% block contant %}
+{% block content %}
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y" len="13520">
   <div class="row invoice-preview" len="8865">
@@ -36,7 +36,7 @@
           <div class="d-flex justify-content-between flex-wrap" len="1250">
             <div class="my-3" len="317">
               <h6 class="pb-2" len="11" lang="fa">فاکتور به:</h6>
-              <p class="mb-1" len="13" lang="fa">مهدی صادقی</p>
+              <p class="mb-1" len="13" lang="fa">{{ reservation.user.fullname }}</p>
               <p class="mb-1" len="22" lang="fa">شرکت تیک تاک</p>
               <p class="mb-1" len="24" lang="fa">کوچک هیث، B10 0HF، انگلستان</p>
               <p class="mb-1" len="12" lang="fa">718-986-6062</p>
@@ -172,6 +172,7 @@
           <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" len="32"
             lang="fa"> ویرایش فاکتور </a>
         {% endif %}
+        {% if reservation.status == "pending_payment" %}
             <button class="btn btn-success d-grid w-100 waves-effect waves-light" data-bs-toggle="offcanvas"
             data-bs-target="#addPaymentOffcanvas" len="154">
             <span class="d-flex align-items-center justify-content-center text-nowrap" len="52"><i
@@ -179,6 +180,7 @@
               <font lang="fa">اضافه کردن پرداخت</font>
             </span>
           </button>
+        {% endif %}
         </div>
       </div>
     </div>
@@ -236,52 +238,35 @@
   <!-- Add Payment Sidebar -->
   <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true" len="2160">
     <div class="offcanvas-header mb-3" len="164">
-      <h5 class="offcanvas-title" len="11" lang="fa">اضافه کردن پرداخت</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
+        {% if reservation.status == "pending_payment" %}
+            <h5 class="offcanvas-title" len="11" lang="fa">اضافه کردن پرداخت</h5>
+        {% endif %}      
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
         len="0"></button>
     </div>
+  {% if reservation.status == "pending_payment" %}
     <div class="offcanvas-body flex-grow-1" len="1902">
       <div class="d-flex justify-content-between bg-lighter p-2 mb-3" len="91">
-        <p class="mb-0" len="16" lang="fa">موجودی فاکتور:</p>
-        <p class="fw-bold mb-0" len="8" lang="fa">$5000.00</p>
+        <p class="mb-0" len="16" lang="fa">مبلغ پرداختی :</p>
+        <p class="fw-bold mb-0" len="8" lang="fa">{{ reservation.total_pay }}</p>
       </div>
-      <form>
-        <div class="input-group input-group-merge mb-4" len="312">
-          <span class="input-group-text" len="1">ریال</span>
-          <div class="form-floating form-floating-outline" len="193">
-            <input type="text" id="invoiceAmount" name="invoiceAmount" class="form-control invoice-amount"
-              placeholder="100" len="0">
-            <label for="invoiceAmount" len="14" style="text-align: right;" lang="fa">مبلغ پرداخت</label>
-          </div>
-        </div>
-        <div class="form-floating form-floating-outline mb-4" len="178">
-          <input id="payment-date" class="form-control invoice-date flatpickr-input" type="text" readonly="readonly"
-            len="0">
-          <label for="payment-date" len="12" style="text-align: right;" lang="fa">تاریخ پرداخت</label>
-        </div>
-        <div class="form-floating form-floating-outline mb-4" len="496">
-          <select class="form-select" id="payment-method" style="text-align: right;">
-            <option value="" selected="" disabled="" len="21">روش پرداخت را انتخاب کنید</option>
-            <option value="Cash" len="4">پول نقد</option>
-            <option value="Bank Transfer" len="13">انتقال بانکی</option>
-            <option value="کارت اعتباری" len="10">دبیت کارت</option>
-            <option value="کارت اعتباری" len="11">کارت اعتباری</option>
-            <option value="Paypal" len="6">پی پال</option>
-          </select>
-          <label for="payment-method" len="14" style="text-align: right;" lang="fa">روش پرداخت</label>
-        </div>
+        {% url 'zarinpal:request' %}
+      <form action="{% url 'zarinpal:request' %}" method="post">
+          {% csrf_token %}
+         <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
         <div class="form-floating form-floating-outline mb-4" len="162">
-          <textarea class="form-control" id="payment-note" style="height: 62px;" len="0"></textarea>
-          <label for="payment-note" len="21" style="text-align: right;" lang="fa">یادداشت پرداخت داخلی</label>
+          <textarea class="form-control" id="description" name="description" style="height: 62px;" len="0">صورت حساب روز حسینیه به شماره فاکتور
+               {{ reservation.reserve_id }}   </textarea>
+          <label for="payment-note" len="21" style="text-align: right;" lang="fa">یادداشت پرداخت </label>
         </div>
         <div class="mb-3 d-flex flex-wrap" len="252">
-          <button type="button" class="btn btn-primary me-3 waves-effect waves-light" data-bs-dismiss="offcanvas"
+            
+          <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" 
             len="4" lang="fa">ارسال</button>
-          <button type="button" class="btn btn-label-secondary waves-effect" data-bs-dismiss="offcanvas" len="6"
-            lang="fa">لغو</button>
         </div>
       </form>
     </div>
+  {% endif %}
   </div>
   <!-- /Add Payment Sidebar -->
   <!-- /Offcanvas -->
