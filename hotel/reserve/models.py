@@ -8,7 +8,7 @@ class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
         ('pending_payment', 'در انتظار پرداخت'),  # در انتظار پرداخت
         ('confirmed', 'تایید شده'),              # تایید شده
-        ('canceled', 'کنسل شده'),                # لغو شده
+        ('cancelled', 'کنسل شده'),                # لغو شده
         ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
     ]
     reserve_id = ShortUUIDField(unique=True, length=5, max_length=9, alphabet="abcdefgh12345")
@@ -24,7 +24,7 @@ class Reservation(models.Model):
     cleaning = models.BooleanField(default=False)  # True for active, False for inactive
     more_capacity = models.IntegerField(blank=True, null=True)
     total_pay = models.IntegerField(blank=True, null=True)
-    created_at = models.DateTimeField(default=timezone.now, editable=False)  # Save creation time
+    created_at = models.DateTimeField(auto_now_add=True)  # Save creation time
 
     def get_created_at_dhamsi(self):
         return date2jalali(self.created_at).strftime('%y/%m/%d %H:%M:%S')

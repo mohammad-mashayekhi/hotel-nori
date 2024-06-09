@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from dateutil.parser import parse
 from datetime import timedelta
@@ -82,7 +83,6 @@ def add_reservation(request):
     start = datetime_combine(start, "12:00")
     end = parse(data.get("end"), fuzzy=True)
     end = datetime_combine(end, "14:00")
-    print(start,end)
     resource_id = data.get("resourceId")
     author = request.user
     status = data.get("status")
@@ -157,7 +157,7 @@ def add_reservation(request):
         )
 
     # Create reservation
-    print(start,end)
+
     new_reservation = Reservation.objects.create(
         title=title,
         start=start,
@@ -185,7 +185,7 @@ def add_reservation(request):
         #     user_username, resource, formatted_start, formatted_end, message=message_key
         # )
 
-        return JsonResponse({"success": True})
+        return JsonResponse({"success": True, "reservation_id": new_reservation.reserve_id})
     except Exception as e:
         print(e)
         return JsonResponse({"success": False, "error": str(e)}, status=500)
@@ -230,14 +230,12 @@ def get_reservation_info(request):
 def cancel_reservation(request, reservation_id):
     try:
         # یافتن رزرو مربوطه از پایگاه داده
-        print(reservation_id)
         reservation = Reservation.objects.get(reserve_id=reservation_id)
-        print(reservation)
         if not is_admin(request.user) and reservation.user != request.user:
             raise PermissionDenied
 
         # تغییر حالت رزرو به کنسل شده
-        reservation.status = "canceled"
+        reservation.status = "cancelled"
         reservation.save()
 
         return JsonResponse({"success": True})
@@ -286,17 +284,22 @@ def list_of_bills(request):
 
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+
     return render(request, "reserve/bill/billprint.html", {"reserve": reservation})
 
 
 @login_required
 def bill_detail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+    if reservation.status == "pending_payment" and datetime.now() - reservation.created_at >= timedelta(hours=3):
+        reservation.status = "cancelled"
+        reservation.save()
 
     if not is_admin(request.user) and reservation.user != request.user:
         raise PermissionDenied
 
-    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation})
+    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation, "invalid": invalid})
+
 
 @login_required
 def rooms(request):
