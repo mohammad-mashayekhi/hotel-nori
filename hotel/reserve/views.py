@@ -27,10 +27,11 @@ def reserve_schedule(request):
     reservations = Reservation.objects.filter(
         Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
     )
+
     if not is_admin(request.user):
         reservations = reservations.filter(user=request.user)
     reservation_data = list(
-        Reservation.objects.values(
+        reservations.values(
             "reserve_id",
             "start",
             "end",
@@ -62,6 +63,7 @@ def reserve_schedule(request):
         reservation["end"] = date_formatter(reservation["end"])
 
     context = {
+
         "reservation_data": json.dumps(reservation_data),
         "resource_data": json.dumps(resource_data),
         "closed_time_data": json.dumps(closed_time_data),
@@ -69,6 +71,7 @@ def reserve_schedule(request):
         "reservations": reservations,
     }
     return render(request, "reserve/reserve_schedule.html", context)
+
 
 @login_required
 def add_reservation(request):
@@ -298,7 +301,7 @@ def bill_detail(request, reserve_id):
     if not is_admin(request.user) and reservation.user != request.user:
         raise PermissionDenied
 
-    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation, "invalid": invalid})
+    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation})
 
 
 @login_required
