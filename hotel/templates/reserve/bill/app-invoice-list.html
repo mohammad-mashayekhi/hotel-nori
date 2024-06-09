@@ -1,9 +1,10 @@
 {% extends 'account/base.html' %}
 {% load static %}
 {% load jformat %}
-{% load boolean_visualize %}
+{% load reserve_tags %}
 {% block vendors-css %}
-{% endblock %}
+{% endblock %}    
+
 
 {% block page-css %}
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
@@ -199,7 +200,7 @@
                   <td>{{ r.author.username }}</td>
                   <td>{{ r.user.username }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
-                  <td>{{ r.payment_id }}</td>
+                  <td>{% render_payment_id r.payment_id %}</td>
                   <td>{{ r.resource.name }}</td>
                   <td>{{ r.get_status_display }}</td>
                   <td>{% render_boolean_icon r.cleaning %}</td>
