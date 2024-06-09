@@ -74,6 +74,7 @@ def verify(request):
         response = response.json()
         if response['Status'] == 100 or response['Status'] == 101:
             reservation.paid = True
+            reservation.payment_id = response['RefID']
             reservation.save()
             data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
             return render(request, "zarinpal/purchase_status.html", context=data)
