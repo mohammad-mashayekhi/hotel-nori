@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'transaction',
     'account',
     'config',
+    'zarinpal',
 ]
 
 MIDDLEWARE = [
@@ -160,3 +161,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = reverse_lazy("account:login")
 AUTH_USER_MODEL = 'account.UserProfile'
+
+MERCHANT = "0ae87b99-948e-4126-bb14-cccd29891c80"
+SANDBOX = True
