@@ -4,7 +4,7 @@ import jdatetime
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
