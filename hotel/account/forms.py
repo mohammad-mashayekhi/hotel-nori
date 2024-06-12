@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UsernameField
 from django.forms.widgets import DateInput, Select
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
@@ -71,15 +71,14 @@ class UserProfileEditFormUser(forms.ModelForm):
             field.widget.attrs.pop("autofocus", None)
 
 
-
-
-
 class CustomUserCreationForm(UserCreationForm):
-    terms = forms.BooleanField()
+    username = None
+    mobile_number = UsernameField(help_text="شماره تلفن همراه به صورت 09993334444 وارد شود")
+    terms = forms.BooleanField(label="تیک قوانین")
 
     class Meta(UserCreationForm.Meta):
         model = Userprofile
-        fields = UserCreationForm.Meta.fields + ("terms",)
+        fields = ("mobile_number", "password1", "password2")
 
 
 class PhoneNumberForm(forms.Form):
