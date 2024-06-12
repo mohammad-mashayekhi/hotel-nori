@@ -40,6 +40,7 @@ USER_STATUS_CHOICES = [
 
 
 class Userprofile(AbstractUser):
+    username = None
     mobile_number = models.CharField(verbose_name="شماره  تلفن همراه",max_length=11,validators=[RegexValidator(r'^09\d{9}$', message="شماره وارد شده معتبر نمی باشد")], unique=True)
     card_number = models.CharField(max_length=20, blank=True, null=True)
     national_code = models.CharField(max_length=20, blank=True, null=True)
