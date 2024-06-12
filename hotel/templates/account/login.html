@@ -25,16 +25,25 @@
             <form method="POST" class="mb-3">
                 {% csrf_token %}
               <div class="form-floating form-floating-outline mb-3">
-                <input type="text" class="form-control" id="username" name="username" placeholder="نام کاربری خود را وارد کنید" autofocus>
-                <label for="username">نام کاربری</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="شماره تلفن همراه خود را وارد کنید" autofocus>
+                <label for="username">شماره تلفن همراه</label>
+                  {% if form.username.errors %}
+                      {% for error in form.username.errors %}
+                          <p class="error errorlist">{{ error }}</p>
+                      {% endfor %}
+                  {% endif  %}                   
               </div>
               <div class="mb-3 form-password-toggle">
                 <div class="input-group input-group-merge">
                   <div class="form-floating form-floating-outline">
                     <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
                     <label for="password">رمز عبور</label>
+                    {% if form.password.errors %}
+                      {% for error in form.password.errors %}
+                          <p class="error errorlist">{{ error }}</p>
+                      {% endfor %}
+                    {% endif  %}  
                   </div>
-                  <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                 </div>
               </div>
                 <div>
