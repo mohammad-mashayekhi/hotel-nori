@@ -97,5 +97,5 @@ def convert_to_western_numerals(persian_number):
 
 def otp_generator():
     otp_num = secrets.randbelow(99999)
-    formatted_number = f"{otp_num:06}"  # if number is 123 it will be like 00123
+    formatted_number = f"{otp_num:05}"  # if number is 123 it will be like 00123
     return formatted_number
