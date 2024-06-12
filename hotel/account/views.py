@@ -24,16 +24,14 @@ from .utils import ( otp_generator, send_otp_sms, validate_otp)
 
 
 @login_required
-def account(request):
+def update_profile(request):
     if request.method == "POST":
         form = UserProfileEditFormUser(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("account:dashboard")
-        # اضافه کردن کد برای نمایش ارورها در صورتی که فرم نامعتبر باشد
         else:
             errors = form.errors.values()
-            # انجام هر عملیات مربوط به نمایش ارورها، مانند چاپ آنها در کنسول یا ارسال به تمپلیت برای نمایش به کاربر
             return render(request, "account/dashboard.html", {"errors": errors})
     else:
         form = UserProfileEditFormUser(instance=request.user)
@@ -42,7 +40,7 @@ def account(request):
 
 
 @user_passes_test(is_admin)
-def edit_user(request, user_id):
+def edit_user_profile(request, user_id):
     user = Userprofile.objects.get(id=user_id)
     if request.method == "POST":
         form = UserProfileEditForm(request.POST, instance=user)
