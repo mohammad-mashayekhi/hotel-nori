@@ -109,7 +109,7 @@
 
         <ul class="menu-inner py-1">
           <!-- Dashboards -->
-        {% if request.user.user_status != "normal" %}
+        {% if request.user.user_status != "verified" %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">ادمین</span>
           </li>

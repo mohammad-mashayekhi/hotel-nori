@@ -95,7 +95,7 @@ def add_reservation(request):
     price = data.get("price")
     user_username = (
         data.get("user")
-        if request.user.user_status != "normal"
+        if request.user.user_status != "verified"
         else request.user.username
     )
 
