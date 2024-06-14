@@ -16,7 +16,7 @@ from .forms import ReservationForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
 from .decorators import is_admin
-
+from coupon.models import Coupon
 
 def date_formatter(date):
     return date.strftime("%Y-%m-%dT%H:%M")
@@ -25,7 +25,7 @@ def date_formatter(date):
 @login_required
 def reserve_schedule(request):
     reservations = Reservation.objects.filter(
-        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
+        Q(status="confirmed") | Q(status="pending_payment")
     )
 
     if not is_admin(request.user):
@@ -54,6 +54,7 @@ def reserve_schedule(request):
         )
     )
 
+    # change format of the date from datetime objects to string so they can be used in javascript scripts
     for reservation in reservation_data:
         reservation["start"] = date_formatter(reservation["start"])
         reservation["end"] = date_formatter(reservation["end"])
@@ -93,10 +94,10 @@ def add_reservation(request):
     more_capacity = data.get("more_capacity")
     paid = data.get("paid") == "true"
     price = data.get("price")
-    user_username = (
+    user_mobile_number = (
         data.get("user")
         if request.user.user_status != "verified"
-        else request.user.username
+        else request.user.mobile_number
     )
 
     # Check if user is authorized
@@ -108,10 +109,6 @@ def add_reservation(request):
         resource = Resource.objects.get(id=resource_id)
     except Resource.DoesNotExist:
         return JsonResponse({"success": False, "error": "Invalid resource ID"})
-
-    # Adjust end time if cleaning
-    if cleaning:
-        end += timedelta(days=1)
 
     # Check for overlapping reservations
     overlapping_reservations = Reservation.objects.filter(
@@ -139,12 +136,11 @@ def add_reservation(request):
     # Get or create user
     User = get_user_model()
     user, created = User.objects.get_or_create(
-        username=user_username, defaults={"password": user_username}
+        mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
     )
 
     # Handle cleaning reservation
     if cleaning:
-        end -= timedelta(days=1)
         Reservation.objects.create(
             title="نظافت",
             start=end,
@@ -152,7 +148,7 @@ def add_reservation(request):
             resource=resource,
             author=author,
             user=user,
-            status="cleaning",
+            status="pending_payment",
             cleaning=cleaning,
             more_capacity=more_capacity,
             paid=paid,
@@ -228,7 +224,6 @@ def get_reservation_info(request):
         return JsonResponse({"error": "Invalid request"}, status=400)
 
 
-
 @login_required
 def cancel_reservation(request, reservation_id):
     try:
@@ -250,6 +245,7 @@ def cancel_reservation(request, reservation_id):
     except Exception as e:
         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+
 
 @login_required
 def list_of_bills(request):
@@ -277,7 +273,7 @@ def list_of_bills(request):
             "total_customers": total_customers,
             "total_income": total_income,
             "total_reservations": total_reservations,
-            "reserve": reservations,
+            "reservations": reservations,
         }
     else:
         reservations = Reservation.objects.filter(user=request.user)
@@ -294,18 +290,25 @@ def bill_print(request, reserve_id):
 @login_required
 def bill_detail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-    if reservation.status == "pending_payment" and datetime.now() - reservation.created_at >= timedelta(hours=3):
-        reservation.status = "cancelled"
-        reservation.save()
 
     if not is_admin(request.user) and reservation.user != request.user:
         raise PermissionDenied
 
-    return render(request, "reserve/bill/billdetail.html", {"reservation": reservation})
+    if reservation.status == "pending_payment" and datetime.now() - reservation.created_at >= timedelta(hours=3):
+        reservation.status = "cancelled"
+        reservation.save()
+
+    context = {"reservation": reservation}
+
+    if request.session.get("coupon"):
+        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+        dicount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
+        total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
+        context.update({"coupon": coupon, "dicount": dicount, "total_pay_with_discount": total_pay_with_discount})
+    return render(request, "reserve/bill/billdetail.html", context=context)
 
 
 @login_required
 def rooms(request):
     resources = Resource.objects.filter(status=True)
     return render(request, "reserve/room-list.html", {"resources": resources})
-
