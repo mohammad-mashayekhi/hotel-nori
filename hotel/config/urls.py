@@ -10,6 +10,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('reserve/', include('reserve.urls')),
     path('account/', include('account.urls')),
+    path("coupon/", include("coupon.urls")),
     path('pages/terms', terms , name='terms'),
     path('pages/success_page_register', success_page_register , name='success_page_register'),
     path("zarinpal/", include("zarinpal.urls")),
