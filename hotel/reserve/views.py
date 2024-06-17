@@ -8,8 +8,8 @@ from django.db.models import Q, Sum
 from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
-from dateutil.parser import parse
 from datetime import timedelta
 from .models import Reservation, Resource
 from .forms import ReservationForm
@@ -76,119 +76,65 @@ def reserve_schedule(request):
 
 @login_required
 def add_reservation(request):
-    if request.method != "POST":
-        return JsonResponse({"success": False})
 
-    # Extract POST data
-    data = request.POST
-    title = data.get("title")
-    start = parse(data.get("start"), fuzzy=True)
+    new_reservation_data = ReservationForm(data=request.POST)
 
-    start = datetime_combine(start, "12:00")
-    end = parse(data.get("end"), fuzzy=True)
-    end = datetime_combine(end, "14:00")
-    resource_id = data.get("resourceId")
-    author = request.user
-    status = data.get("status")
-    cleaning = data.get("cleaning") == "true"
-    more_capacity = data.get("more_capacity")
-    paid = data.get("paid") == "true"
-    price = data.get("price")
-    user_mobile_number = (
-        data.get("user")
-        if request.user.user_status != "verified"
-        else request.user.mobile_number
-    )
+    if new_reservation_data.is_valid():
+        reservation = new_reservation_data.save(commit=False)
 
-    # Check if user is authorized
-    if not is_admin(request.user) and author != request.user:
-        raise PermissionDenied
+        # if user is not normal user it can reserve for another user but if it is not it can reserve for itself
+        if request.user.user_status != "verified":
+            reservation.author = request.user
+            User = get_user_model()
+            user_mobile_number = request.POST.get("mobile_number")
+            user, created = User.objects.get_or_create(
+                mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
+            )
+            reservation.user = user
+        else:
+            reservation.user = request.user
+            reservation.author = request.user
+        # if user wnats cleaning we have to add one day to the reservation
+        if reservation.cleaning:
+            reservation.end += timedelta(days=1)
 
-    # Fetch resource
-    try:
-        resource = Resource.objects.get(id=resource_id)
-    except Resource.DoesNotExist:
-        return JsonResponse({"success": False, "error": "Invalid resource ID"})
+        reservation.save()
+        try:
+            # Convert and format dates
+            # jalali_start = jdatetime.datetime.fromgregorian(datetime=new_reservation_data)
+            # jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
+            # formatted_start = jalali_start.strftime("%Y/%m/%d")
+            # formatted_end = jalali_end.strftime("%Y/%m/%d")
 
-    # Check for overlapping reservations
-    overlapping_reservations = Reservation.objects.filter(
-        resource=resource,
-        status__in=["pending_payment", "confirmed"],
-    ).exclude(Q(end__lte=start) | Q(start__gte=end))
+            # # Send message
+            # message_key = "reserve-room-test" if paid else "reserve-room-not-paid"
+            # send_message_accept_reserve(
+            #     user_username, resource, formatted_start, formatted_end, message=message_key
+            # )
+            messages.add_message(request, messages.SUCCESS,message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
+            return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    else:
+        print("-----------------------------------")
+        for field in new_reservation_data:
+            if field.errors:
+                print(field.errors, field.label)
+                messages.add_message(request, level= messages.ERROR, message=field.errors,extra_tags=field.label)
+        if new_reservation_data.non_field_errors():
+            print(new_reservation_data.non_field_errors())
+            print("------------------------------------")
+            messages.add_message(request, level=messages.ERROR, message=new_reservation_data.non_field_errors())
+        return JsonResponse({"success": False}, status=400)
 
-    if overlapping_reservations.exists():
-        return JsonResponse({"success": False, "error": "Overlapping reservation"})
 
-    # Handle special case of "closetime"
-    if status == "closetime":
-        Reservation.objects.create(
-            title="زمان تعطیلی",
-            start=start,
-            end=end,
-            resource=resource,
-            author=author,
-            user=author,
-            status="closetime",
-            cleaning=False,
-        )
-        return JsonResponse({"success": True})
 
-    # Get or create user
-    User = get_user_model()
-    user, created = User.objects.get_or_create(
-        mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
-    )
 
-    # Handle cleaning reservation
-    if cleaning:
-        Reservation.objects.create(
-            title="نظافت",
-            start=end,
-            end=end + timedelta(days=1),
-            resource=resource,
-            author=author,
-            user=user,
-            status="pending_payment",
-            cleaning=cleaning,
-            more_capacity=more_capacity,
-            paid=paid,
-            total_pay=price,
-        )
-
-    # Create reservation
-
-    new_reservation = Reservation.objects.create(
-        title=title,
-        start=start,
-        end=end,
-        resource=resource,
-        author=author,
-        user=user,
-        status=status,
-        cleaning=cleaning,
-        more_capacity=more_capacity,
-        paid=paid,
-        total_pay=price,
-    )
-
-    try:
-        # Convert and format dates
-        jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
-        jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
-        formatted_start = jalali_start.strftime("%Y/%m/%d")
-        formatted_end = jalali_end.strftime("%Y/%m/%d")
-
-        # # Send message
-        # message_key = "reserve-room-test" if paid else "reserve-room-not-paid"
-        # send_message_accept_reserve(
-        #     user_username, resource, formatted_start, formatted_end, message=message_key
-        # )
-
-        return JsonResponse({"success": True, "reservation_id": new_reservation.reserve_id})
-    except Exception as e:
-        print(e)
-        return JsonResponse({"success": False, "error": str(e)}, status=500)
-
+@require_POST
+def update_reservation(request,reserve_id):
+    reservation = Reservation.objects.get(reserve_id=reserve_id)
+    new_reservation_data = request.POST
 
 @login_required
 def get_reservation_info(request):

@@ -183,6 +183,12 @@
   margin: 20px;
   font-weight: bold;
 }
+
+.custom-toast-container {
+        position: fixed !important;
+        left: 20px;
+        z-index: 1050;
+    }
 </style>
 {% endblock %}
 
@@ -252,11 +258,25 @@
       </div>
     </div>
   </div>
+  <div >
+    {% if messages %}
+        <div class="toast-container custom-toast-container" >
+            {% for message in messages %}
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">{{ message.tags }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+            <hr>
+        </div>
+    {% endif %}
+</div>  
 </div>   
-
-<!-- / Content -->
-<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/moment-jalaali/build/moment-jalaali.min.js"></script>
 <script>
 // Define the status-to-color mapping
 
@@ -348,6 +368,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
     var totalCost = differenceInDays * matchingResource.price;
 
     $('#event-pay').text(`مبلغ نهایی: ${totalCost} تومان`);
+    
 
     popup.open();
     popup.setOptions({
@@ -359,15 +380,15 @@ function createAddPopup(elm, resourceId, tempEvent) {
                 keyCode: 'enter',
                 handler: function () {
                     var reservtime = datepickerreserve.getVal();
-                    var startreserve = reservtime[0];
-                    var endreserve = reservtime[1];
+                    const startreserve = new Date(reservtime[0]);
+                    const endreserve = new Date(reservtime[1]);
                     deleteEvent = false;
                     addReservation({
                         title: $('#event-title').val(),
-                        user: $('#event-user').val(),
-                        start: startreserve,
-                        end: endreserve,
-                        resourceId: $('#event-resource').val(),
+                        mobile_number: $('#event-user').val(),
+                        start: startreserve.toISOString(),
+                        end: endreserve.toISOString(),
+                        resource: $('#event-resource').val(),
                         {% if request.user.user_status != "verified" %}
                         status: $('#event-status').val(),
                         {% else %}
@@ -376,7 +397,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
                         cleaning: $('#event-cleaning').prop('checked'),
                         more_capacity: $('#event-more-capacity').val(),
                         paid: $('#event-paid').prop('checked'),
-                        price: totalCost
+                        total_pay: totalCost
                     });
                     popup.close();
                 },
@@ -390,21 +411,21 @@ function createAddPopup(elm, resourceId, tempEvent) {
     
     document.getElementById('event-pay').addEventListener('click', async function () {
         var reservtime = datepickerreserve.getVal();
-        var startreserve = reservtime[0];
-        var endreserve = reservtime[1];
+        const startreserve = new Date(reservtime[0]);
+        const endreserve = new Date(reservtime[1]);
         deleteEvent = false;
         try {
             const reservationId = await addReservation({
                 title: $('#event-title').val(),
-                user: $('#event-user').val(),
-                start: startreserve,
-                end: endreserve,
-                resourceId: $('#event-resource').val(),
+                mobile_number: $('#event-user').val(),
+                start: startreserve.toISOString(),
+                end: endreserve.toISOString(),
+                resource: $('#event-resource').val(),
                 status: $('#event-status').val(),
                 cleaning: $('#event-cleaning').prop('checked'),
                 more_capacity: $('#event-more-capacity').val(),
                 paid: $('#event-paid').prop('checked'),
-                price: totalCost
+                total_pay: totalCost
             });
             console.log('Reservation added successfully with ID:', reservationId);
             window.location.href ="/reserve/bill/" + reservationId + "/"; // Redirect to purchase settings
@@ -428,17 +449,15 @@ function addReservation(data) {
             success: function (response) {
                 if (response.success) {
                     myCalendar.refresh();
-                    alert('رزرو با موفقیت اضافه شد!');
                     resolve(response.reservation_id);
+                    location.reload(true);
                 } else {
-                    alert('خطا در اضافه کردن رزرو!');
-                    console.log("add error", response);
                     reject(null);
                 }
             },
             error: function () {
-                alert('خطا در ارسال درخواست!');
                 reject(null);
+                location.reload(true);
             }
         });
     });
@@ -550,7 +569,6 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     },
     onEventCreated: function (args) {
         resourceId = args.event.resource;
-        popup.close();
         tempEvent = args.event;
         createAddPopup(args.target, resourceId, tempEvent);
     },
@@ -627,6 +645,19 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
     }
 });
 </script>
+
+    
+<!-- Include Bootstrap JS for Toast -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, { delay: 1000000000 });
+        });
+        toastList.forEach(toast => toast.show());
+    });
+</script>
+    
 {% endblock %}
 
 
@@ -643,6 +674,10 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
 {% endblock %}
 
 {% block page-js %}
+        
 <script src="{% static 'js/app-calendar-events.js' %}"></script>
 <script src="{% static 'js/app-calendar.js' %}"></script>
+<!-- / Content -->
+<script src="https://cdn.jsdelivr.net/npm/moment/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment-jalaali/build/moment-jalaali.min.js"></script>
 {% endblock %}
