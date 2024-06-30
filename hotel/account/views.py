@@ -346,7 +346,7 @@ def add_reservation(request):
     return JsonResponse({"success": False})
 
 
-@require_POST
+# @require_POST
 @login_required
 def cancel_reservation(request):
     # دریافت شناسه رزرو از درخواست POST
