@@ -10,7 +10,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.db.models import Count, Q, Sum
-from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.shortcuts import get_object_or_404, redirect, render,reverse
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -21,7 +21,8 @@ from .decorators import (is_admin, is_admin_level_one, is_admin_level_two,
 from .forms import (CustomUserCreationForm, OTPValidationForm, PhoneNumberForm,
                     Userprofile, UserProfileEditForm, UserProfileEditFormUser)
 from .utils import ( otp_generator, send_otp_sms, validate_otp)
-from reserve.models import Resource
+from reserve.models import Resource,Reservation
+from django.http import JsonResponse
 
 @login_required
 def update_profile(request):
@@ -545,14 +546,3 @@ def convert_to_western_numerals(persian_number):
         "۹": "9",
     }
     return "".join(persian_to_western.get(char, char) for char in persian_number)
-
-
-#   '<div class="m-1 p-1 mbsc-button-mycalendar md-custom-range-view-controls">' +
-#         '<div mbsc-calendar-today></div>' +
-#         '</div>' +
-#         '<div id="custom-date-range" style="text-align:center;">' +
-#         '<button mbsc-button data-variant="flat" class="m-1 p-1 mbsc-button-mycalendar mbsc-calendar-button">' +
-#         '<span id="custom-date-range-text" class="mbsc-calendar-title-rtl">انتخاب تاریخ روز شروع و پایان</span>' +
-#         '</button>' +
-#         '</div>' +
-#         '<span type="text" id="datetime-picker" name="datetime-picker">'

@@ -3,6 +3,7 @@
 {% load jformat %}
 {% load reserve_tags %}
 {% block vendors-css %}
+{% load humanizelib %}
 {% endblock %}    
 
 
@@ -115,7 +116,7 @@
                 </div>
                 <div class="ms-3">
                   <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{{ total_income }}</h5>
+                    <h5 class="mb-0">{{ total_income|intcomma }}</h5>
     {#                <div#}
     {#                  class="mdi mdi-chevron-down text-success mdi-24px"#}
     {#                ></div>#}
@@ -154,9 +155,7 @@
 {% endif %}
     <!-- Invoice List Table -->
     <div class="card">
-        <h4 class="fw-bold py-3 mb-4">
-            <span class="text-muted fw-light">لیست /</span> رزروها
-        </h4>
+        <div class="card-body">
         <div class="card-datatable table-responsive">
             <label for="min-price"> حداقل قیمت : </label>
             <input type="number" id="min-price" placeholder="حداقل قیمت را وارد کنید">
@@ -172,47 +171,48 @@
                 <option value="نظافت">نظافت</option>
             </select>
             <br>
-          <table id="TableofR">
-            <thead>
+          <table style="text-align-last:center;"  class="table table-striped text-center" id="TableofR">
+            <thead class="table-light">
               <tr>
-                <th>شناسه رزرو</th>
-                <th>تاریخ شروع</th>
-                <th>تاریخ پایان</th>
-                <th>عنوان</th>
-                <th>ایجاد کننده</th>
-                <th>کاربر</th>
-                <th>پرداخت شده</th>
-                <th>شناسه پرداخت</th>
-                <th>اتاق</th>
-                <th>وضعیت</th>
-                <th>نظافت</th>
-                <th>ظرفیت بیشتر</th>
-                <th>مبلغ کل</th>
+                <th class="th">شناسه رزرو</th>
+                <th class="th">تاریخ شروع</th>
+                <th class="th">تاریخ پایان</th>
+                <th class="th">عنوان</th>
+                <th class="th">ایجاد کننده</th>
+                <th class="th">کاربر</th>
+                <th class="th">پرداخت شده</th>
+                <th class="th">شناسه پرداخت</th>
+                <th class="th">اتاق</th>
+                <th class="th">وضعیت</th>
+                <th class="th">نظافت</th>
+                <th class="th">ظرفیت بیشتر</th>
+                <th class="th">مبلغ کل</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="table-body">
               {% for r in reservations%}
                 <tr>
                   <td>{{ r.reserve_id }}</td>
                   <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
                   <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'reserve:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
-                  <td>{{ r.author.full_name }}</td>
-                  <td>{{ r.user.full_name }}</td>
+                  <td>{{ r.author }}</td>
+                  <td>{{ r.user }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
                   <td>{% render_payment_id r.payment_id %}</td>
                   <td>{{ r.resource.name }}</td>
                   <td>{{ r.get_status_display }}</td>
                   <td>{% render_boolean_icon r.cleaning %}</td>
                   <td>{{ r.more_capacity }}</td>
-                  <td>{{ r.total_pay }}</td>
+                  <td>{{ r.total_pay|intcomma  }}</td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 {% endblock %}
 
 {% block vondors-js %}
@@ -234,6 +234,19 @@
             url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
         }
     });
+    var table = $('#datatable').DataTable({
+                paging: false,
+                dom: 'lrtip', // remove the default search box
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 380
+            });
+
         // Create the range filtering function
     $.fn.dataTable.ext.search.push(
         function(settings, data, dataIndex) {
@@ -260,8 +273,6 @@
     $('#min-price, #max-price').on('keyup', function() {
         table.draw();
     });
-
-
 } );
 </script>
 {% endblock %}

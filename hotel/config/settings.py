@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'config',
     'zarinpal',
     'coupon',
+    'django_humanize',
+
 ]
 
 MIDDLEWARE = [
@@ -135,6 +137,8 @@ elif platform.system() == 'Linux':
 TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = False
 

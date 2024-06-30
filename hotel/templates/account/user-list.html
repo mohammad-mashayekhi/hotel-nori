@@ -50,26 +50,25 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
 {#        <div class="col-md-4 user_status"></div>#}
 {#      </div>#}
 {#    </div>#}
+<div class="card-body">
+
     <div class="card-datatable table-responsive">
-        <h4 class="fw-bold py-3 mb-4">
-            <span class="text-muted fw-light">لیست /</span> کاربر ها
-        </h4>
-      <table id="UserTable" class="datatables-users table">
-        <thead class="table-light">
+      <table id="UserTable" class="table table-striped text-center datatables-users table">
+        <thead style="text-align-last:center;"  class="table-light">
           <tr>
-            <th></th>
-            <th></th>
-            <th>نام</th>
-            <th>نام‌خانوادگی</th>
-            <th>نقش کاربر</th>
-            <th>شماره موبایل</th>
-            <th>کدملی</th>
-            <th>تاریخ تولد</th>
-            <th>جنسیت</th>
-            <th>ویرایش</th>
+            <th class="th"></th>
+            <th class="th"></th>
+            <th class="th">نام</th>
+            <th class="th">نام‌خانوادگی</th>
+            <th class="th">نقش کاربر</th>
+            <th class="th">شماره موبایل</th>
+            <th class="th">کدملی</th>
+            <th class="th">تاریخ تولد</th>
+            <th class="th">جنسیت</th>
+            <th class="th">ویرایش</th>
           </tr>
         </thead>
-        <tbody id="table-body">
+        <tbody class="table-body" id="table-body">
           {% for u in users %}
           <tr>
             <td></td>
@@ -81,12 +80,14 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
             <td>{{ u.national_code }}</td>
             <td>{{ u.birth_date }}</td>
             <td>{{ u.gender }}</td>
-            <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
+            <td><a href="{% url 'account:edit_user' u.id %}"><i
+              class="mdi mdi-pencil"></i></a></td>
           </tr>
           {% endfor %}        
         </tbody>
       </table>
     </div>
+  </div>
     <!-- Offcanvas to add new user -->
     <div
       class="offcanvas offcanvas-end"
