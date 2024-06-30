@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+جزئیات خرید موفق
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">جزئیات خرید موفق</h3>
+        </div>
+        {% if status %}
+        <div class="card-body">
+            <p>خرید شما با موفقیت انجام شد. جزئیات خرید شما به شرح زیر است:</p>
+            <ul>
+                <li>شماره خرید: {{ RefID }}</li>
+                <li>مبلغ: {{ amount }}</li>
+            </ul>
+            <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+        </div>
+        {% elif not status %}
+        <p>خرید شما متاسفانه انجام نشد. جزئیات خطا به شرح زیر است:</p>
+            <ul>
+                <li>کد خطا: {{ code }}</li>
+                <li>توضیحات: {{ description  }}</li>
+
+            </ul>
+        {% elif NOK %}
+        <p>خرید شما موفقیت امیز نبوده است یا کاربر از پرداخت منصرف شده است.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

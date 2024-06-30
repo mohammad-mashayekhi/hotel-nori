@@ -109,7 +109,7 @@
 
         <ul class="menu-inner py-1">
           <!-- Dashboards -->
-        {% if request.user.user_status != "normal" %}
+        {% if request.user.user_status != "verified" %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">ادمین</span>
           </li>
@@ -119,8 +119,8 @@
               <div>حساب کاربری</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
-            <a href="{% url 'account:bill' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:bill' %} active {% endif %}">
+            <a href="{% url 'reserve:bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
@@ -131,14 +131,14 @@
               <div>کاربران</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:calendar' %} active {% endif %}">
-            <a href="{% url 'account:calendar' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:reserve_schedule' %} active {% endif %}">
+            <a href="{% url 'reserve:reserve_schedule' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-calendar-blank-outline"></i>
               <div>جدول رزرو</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
-            <a href="{% url 'account:rooms' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:rooms' %} active {% endif %}">
+            <a href="{% url 'reserve:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
             </a>
@@ -153,20 +153,20 @@
               <div>حساب کاربری</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:calendar' %} active {% endif %}">
-            <a href="{% url 'account:calendar' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:reserve_schedule' %} active {% endif %}">
+            <a href="{% url 'reserve:reserve_schedule' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-calendar-blank-outline"></i>
               <div>جدول رزرو</div>
             </a>
           </li>
-          <li class="menu-item{% if request.resolver_match.view_name == 'account:bill' %} active {% endif %}">
-            <a href="{% url 'account:user_bill' %}" class="menu-link ">
+          <li class="menu-item{% if request.resolver_match.view_name == 'reserve:bill' %} active {% endif %}">
+            <a href="{% url 'reserve:bill' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-file-document-outline"></i>
               <div>صورت حساب</div>
             </a>
           </li>
-          <li class="menu-item {% if request.resolver_match.view_name == 'account:rooms' %} active {% endif %}">
-            <a href="{% url 'account:rooms' %}" class="menu-link ">
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:rooms' %} active {% endif %}">
+            <a href="{% url 'reserve:rooms' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
               <div>اتاق‌ها</div>
             </a>
@@ -504,7 +504,7 @@
         <!-- Content wrapper -->
         <div class="content-wrapper">
           <!-- Content -->
-          {% block contant %}
+          {% block content %}
           {% endblock %}
           <!-- / Content -->
 

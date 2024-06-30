@@ -2,66 +2,36 @@ import json
 import secrets
 from datetime import date, datetime, timedelta
 import jdatetime
-from dateutil.parser import parse
-from django.contrib.auth import authenticate, get_user_model, authenticate, logout, login as auth_login
-from django.contrib.auth.decorators import (
-    PermissionDenied,
-    login_required,
-    user_passes_test,
-)
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.shortcuts import render, redirect, reverse
-from django.urls import reverse_lazy
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.utils import timezone
+from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import logout, login as auth_login
+from django.contrib.auth.decorators import (PermissionDenied, login_required,
+                                            user_passes_test)
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.db.models import Count, Q, Sum
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404, redirect, render, reverse
+from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from kavenegar import *
-
 from account.models import Userprofile
-from reserve.forms import ReservationForm
-from reserve.models import Reservation, Resource
-
-from .decorators import (
-    is_admin,
-    is_admin_level_one,
-    is_admin_level_two,
-    is_verified_user,
-)
-from .forms import (
-    CustomUserCreationForm,
-    Userprofile,
-    UserProfileEditForm,
-    UserProfileEditFormUser,
-    OTPValidationForm,
-    PhoneNumberForm
-)
-
-from .utils import (
-    otp_generator,
-    send_message_accept_reserve,
-    convert_to_western_numerals,
-    validate_otp,
-    send_otp_sms
-)
-
+from .decorators import (is_admin, is_admin_level_one, is_admin_level_two,
+                         is_verified_user)
+from .forms import (CustomUserCreationForm, OTPValidationForm, PhoneNumberForm,
+                    Userprofile, UserProfileEditForm, UserProfileEditFormUser)
+from .utils import ( otp_generator, send_otp_sms, validate_otp)
+from reserve.models import Resource
 
 @login_required
-def account(request):
+def update_profile(request):
     if request.method == "POST":
         form = UserProfileEditFormUser(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("account:dashboard")
-        # اضافه کردن کد برای نمایش ارورها در صورتی که فرم نامعتبر باشد
         else:
             errors = form.errors.values()
-            # انجام هر عملیات مربوط به نمایش ارورها، مانند چاپ آنها در کنسول یا ارسال به تمپلیت برای نمایش به کاربر
             return render(request, "account/dashboard.html", {"errors": errors})
     else:
         form = UserProfileEditFormUser(instance=request.user)
@@ -70,7 +40,7 @@ def account(request):
 
 
 @user_passes_test(is_admin)
-def edit_user(request, user_id):
+def edit_user_profile(request, user_id):
     user = Userprofile.objects.get(id=user_id)
     if request.method == "POST":
         form = UserProfileEditForm(request.POST, instance=user)
@@ -84,55 +54,6 @@ def edit_user(request, user_id):
         form = UserProfileEditForm(instance=user)
 
     return render(request, "account/edit-user.html", {"form": form})
-
-
-@login_required
-def bill(request):
-    if is_admin(request.user):
-        all_users = get_user_model().objects.all()
-
-        total_customers = all_users.count()
-
-        total_income = Reservation.objects.aggregate(total_income=Sum("total_pay"))[
-            "total_income"
-        ]
-
-        total_reservations = Reservation.objects.count()
-
-        total_cancellation = Reservation.objects.filter(status="canceled").count()
-
-        total_purchase = Reservation.objects.filter(paid=True).count()
-
-        reservations = Reservation.objects.all().order_by("-id")
-
-        context = {
-            "users": all_users,
-            "total_cancellation": total_cancellation,
-            "total_purchase": total_purchase,
-            "total_customers": total_customers,
-            "total_income": total_income,
-            "total_reservations": total_reservations,
-            "reserve": reservations,
-        }
-    else:
-        reservations = Reservation.objects.filter(user=request.user)
-        context = {"reservations": reservations}
-    return render(request, "account/bill/app-invoice-list.html", context=context)
-
-
-def bill_print(request, reserve_id):
-    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-    return render(request, "account/bill/billprint.html", {"reserve": reservation})
-
-
-@login_required
-def bill_detail(request, reserve_id):
-    reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-
-    if not is_admin(request.user) and reservation.user != request.user:
-        raise PermissionDenied
-
-    return render(request, "account/bill/billdetail.html", {"reservation": reservation})
 
 
 @login_required
@@ -503,24 +424,30 @@ def logout_user(request):
 
 
 def password_reset_request(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = PhoneNumberForm(request.POST)
         if form.is_valid():
             try:
-                user = Userprofile.objects.get(mobile_number=form.cleaned_data['phone_number'])
+                user = Userprofile.objects.get(
+                    mobile_number=form.cleaned_data["phone_number"]
+                )
                 otp = otp_generator()
                 print(otp)
                 user.otp = otp
-                user.otp_expiry = timezone.now() + timedelta(minutes=10)  # Set OTP expiry time
+                user.otp_expiry = datetime.now() + timedelta(
+                    minutes=10
+                )  # Set OTP expiry time
                 user.save()
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 send_otp_sms(user.mobile_number, otp)
-                return redirect(reverse("account:otp_validation", kwargs={"uidb64": uid}))
+                return redirect(
+                    reverse("account:otp_validation", kwargs={"uidb64": uid})
+                )
             except Userprofile.DoesNotExist:
                 form.add_error("phone_number", "شماره نا معتبر هست")
     else:
         form = PhoneNumberForm()
-    return render(request, 'account/password_reset_request.html', {'form': form})
+    return render(request, "account/password_reset_request.html", {"form": form})
 
 
 def otp_validation(request, uidb64=None):
@@ -528,21 +455,33 @@ def otp_validation(request, uidb64=None):
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Userprofile.objects.get(pk=uid)
     except (Userprofile.DoesNotExist, ValueError):
-        return render(request, 'account/otp_validation.html', context={"invalid_uidb64": True})
+        return render(
+            request, "account/otp_validation.html", context={"invalid_uidb64": True}
+        )
 
-    if request.method == 'POST':
-        form = OTPValidationForm(user_otp=user.otp, otp_expiry=user.otp_expiry,data=request.POST)
+    if request.method == "POST":
+        form = OTPValidationForm(
+            user_otp=user.otp, otp_expiry=user.otp_expiry, data=request.POST
+        )
         if form.is_valid():
             token = PasswordResetTokenGenerator().make_token(user)
-            print(token)
-            return redirect(reverse("account:password_reset_set", kwargs={"uidb64": uidb64, "token":token}))
+            return redirect(
+                reverse(
+                    "account:password_reset_set",
+                    kwargs={"uidb64": uidb64, "token": token},
+                )
+            )
     else:
         form = OTPValidationForm()
-    return render(request, 'account/otp_validation.html', {'form': form, 'phone_number': user.mobile_number})
+    return render(
+        request,
+        "account/otp_validation.html",
+        {"form": form, "phone_number": user.mobile_number},
+    )
 
 
 class PasswordResetSetView(PasswordResetConfirmView):
-    template_name = 'account/password_reset_set.html'
+    template_name = "account/password_reset_set.html"
     success_url = reverse_lazy("home")
 
 

@@ -50,10 +50,11 @@ INSTALLED_APPS = [
     'django_jalali',
     'notification',
     'reserve',
-    'room',
     'transaction',
     'account',
     'config',
+    'zarinpal',
+    'coupon',
 ]
 
 MIDDLEWARE = [
@@ -135,14 +136,14 @@ TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = 'static/'
 # STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'assets'),)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'assets'),]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -153,5 +154,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = reverse_lazy("account:login")
-
 AUTH_USER_MODEL = 'account.UserProfile'
+
+MERCHANT = "0ae87b99-948e-4126-bb14-cccd29891c80"
+SANDBOX = True

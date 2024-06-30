@@ -27,6 +27,31 @@
 import secrets
 from kavenegar import *
 
+def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
+    API = "464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D"
+    TEMPLATE = message
+    RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
+    TOKEN = room_id
+    TOKEN2 = enter_date
+    TOKEN3 = exit_date
+    TYPE = "sms"
+    try:
+        api = KavenegarAPI(API)
+        params = {
+            "receptor": RECEPTOR,
+            "template": TEMPLATE,
+            "token": TOKEN,
+            "token2": TOKEN2,
+            "token3": TOKEN3,
+            "type": TYPE,
+        }
+        response = api.verify_lookup(params)
+        print(response)
+    except APIException as e:
+        print(e)
+    except HTTPException as e:
+        print(e)
+
 def send_otp_sms(phone_number, otp_code):
     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
     TEMPLATE = 'otpzemz'
@@ -54,32 +79,6 @@ def validate_otp(user, otp):
         return True
     return False
 
-def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, message):
-    API = "464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D"
-    TEMPLATE = message
-    RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
-    TOKEN = room_id
-    TOKEN2 = enter_date
-    TOKEN3 = exit_date
-    TYPE = "sms"
-    try:
-        api = KavenegarAPI(API)
-        params = {
-            "receptor": RECEPTOR,
-            "template": TEMPLATE,
-            "token": TOKEN,
-            "token2": TOKEN2,
-            "token3": TOKEN3,
-            "type": TYPE,
-        }
-        response = api.verify_lookup(params)
-        print(response)
-    except APIException as e:
-        print(e)
-    except HTTPException as e:
-        print(e)
-
-
 def convert_to_western_numerals(persian_number):
     persian_to_western = {
         "۰": "0",
@@ -98,5 +97,5 @@ def convert_to_western_numerals(persian_number):
 
 def otp_generator():
     otp_num = secrets.randbelow(99999)
-    formatted_number = f"{otp_num:06}"  # if number is 123 it will be like 00123
+    formatted_number = f"{otp_num:05}"  # if number is 123 it will be like 00123
     return formatted_number

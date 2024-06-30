@@ -1,0 +1,92 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block vendors-css %}
+
+{% endblock %}
+
+{% block page-css %}
+<link
+rel="stylesheet"
+href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"
+/>
+<link
+rel="stylesheet"
+href="{% static 'vendor/libs/node-waves/node-waves.css' %}"
+/>
+<link
+rel="stylesheet"
+href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"
+/>
+{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y" style="text-align:center;">
+    <div class="row mb-5">
+      {% for r in resources %}
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+              <a href="{% url 'reserve:reserve_schedule' %}">
+                <h3 class="card-title">{{r.name}}</h3>
+                {% if r.img %}
+                <img
+                    class="img-fluid d-flex mx-auto my-4 rounded"
+                    src="{{r.img.url}}"
+                    alt="Card image cap"
+                />
+                {% else %}
+                <img
+                    class="img-fluid d-flex mx-auto my-4 rounded"
+                    src="asdasd"
+                    alt="Card image cap"
+                />
+                {% endif %}
+                <div class="row">
+                  <div class="col-4">
+                      <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                      <span>ظرفیت</span> <!-- متن مورد نظر -->
+                  </div>
+                  <div class="col-4">
+                      <i class="fas fa-cog"></i> <!-- آیکون مورد نظر -->
+                      <span>متراژ</span> <!-- متن مورد نظر -->
+                  </div>
+                  <div class="col-4">
+                      <i class="fas fa-cog "></i> <!-- آیکون مورد نظر -->
+                      <span>{{r.number_bed}} تخت</span> <!-- متن مورد نظر -->
+                  </div>
+              </div>
+                <div class="row">
+                    <div class="col-4">
+                        <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                        <span>{{r.capacity}} نفر</span> <!-- متن مورد نظر -->
+                    </div>
+                    <div class="col-4">
+                      <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                        <span>{{r.number_area}} متر</span> <!-- متن مورد نظر -->
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-users"></i> <!-- آیکون مورد نظر -->
+                          <span>{{r.number_pad}} تشک</span> <!-- متن مورد نظر -->
+                      </div>
+                </div>
+              </a>
+            </div>
+        </div>
+    </div>
+    
+    {% endfor %}
+  </div> 
+</div>   
+
+{% endblock %}
+
+
+      {% block vondors-js %}
+      <script src="{% static 'vendor/libs/masonry/masonry.js' %}"></script>
+      {% endblock %}
+      
+      {% block page-js %}
+      
+      {% endblock %}
+      

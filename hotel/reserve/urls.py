@@ -5,9 +5,13 @@ from . import views
 app_name = 'reserve'
 
 urlpatterns = [
-    # path('calendar/', views.calendar_view, name='calendar'),
+    path("reserve_schedule/", views.reserve_schedule, name="reserve_schedule"),
+    path("get_reservation_info/", views.get_reservation_info, name="get_reservation_info"),
+    path("add_reservation/", views.add_reservation, name="add_reservation"),
+    path("remove_reservation/<reservation_id>", views.cancel_reservation, name="remove_reservation"),
+    path("bill/", views.list_of_bills, name="bill"),
+    path("bill/<str:reserve_id>/", views.bill_detail, name="billdetail"),
+    path("bill/print/<str:reserve_id>/", views.bill_print, name="billprint"),
+    path("rooms/", views.rooms, name="rooms"),
 
-    # path('create/', views.create_reservation, name='create_reservation'),  # مسیر ایجاد رزرو
-    # path('<int:reservation_id>/', views.view_reservation, name='view_reservation'),  # مسیر نمایش جزئیات رزرو با استفاده از شناسه
-    # مسایل دیگر...
 ]

@@ -1,6 +1,6 @@
 {% extends 'account/base-login.html' %}
 {% load static %}
-{% block contant %}
+{% block content %}
 
 
 
@@ -22,28 +22,43 @@
           <div class="w-px-400 mx-auto pt-5 pt-lg-0">
             <form class="mb-3" method="POST">
               {% csrf_token %}
-              {{ form.errors }}
               <div class="form-floating form-floating-outline mb-3">
-                  <input type="text" class="form-control" id="id_username" name="username" placeholder="نام کاربری خود را وارد کنید" autofocus>
-                  <label for="username">شماره همراه</label>
+                  <input type="text" {% if form.mobile_number.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_mobile_number" name="mobile_number" placeholder="شماره تلفن همراه خود را وارد کنید" autofocus>
+                  <label for="username">شماره  تلفن همراه</label>
+                  {% if form.mobile_number.errors %}
+                       {% for error in form.mobile_number.errors %}
+                           <p class="error errorlist">{{ error }}</p>
+                       {% endfor %}
+                  {% endif  %}                  
+                  <p>{{ form.mobile_number.help_text }}</p>
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="input-group input-group-merge">
                     <div class="form-floating form-floating-outline">
-                      <input type="password" id="id_password1" class="form-control" name="password1" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                      <label for="id_password1">رمز عبور</label>
+                      <input type="password" id="id_password1" {% if form.password1.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %} name="password1" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                      <label for="id_password1">گذرواژه</label>
                     </div>
-                    <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                   </div>
+                    {% if form.password1.errors %}
+                        {% for error in form.password1.errors %}
+                            
+                            <p class="error errorlist">{{ error }}</p>
+                        {% endfor %}
+                    {% endif  %}                          
+                   <p>{{ form.password1.help_text }}</p>
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="input-group input-group-merge">
                     <div class="form-floating form-floating-outline">
-                      <input type="password" id="id_password2" class="form-control" name="password2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                      <label for="id_password2">تکرار رمز عبور</label>
+                      <input type="password" id="id_password2" {% if form.password2.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %} name="password2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+                      <label for="id_password2">تکرار گذرواژه</label>
                     </div>
-                    <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
                   </div>
+                    {% if form.password2.errors %}
+                       {% for error in form.password2.errors %}
+                           <p class="error errorlist">{{ error }}</p>
+                       {% endfor %}
+                    {% endif  %}                
                 </div>
                 <div class="mb-3">
                   <div class="form-check">
@@ -52,6 +67,11 @@
                     من موافقم با 
                       <a href="{% url 'terms' %}"> سیاست حریم خصوصی و قوانین</a>
                     </label>
+                    {% if form.terms.errors %}
+                       {% for error in form.terms.errors %}
+                           <p class="error errorlist">{{ error }}</p>
+                       {% endfor %}
+                    {% endif  %}                
                   </div>
                 </div>
               <button type="submit" class="btn btn-primary d-grid w-100">
@@ -78,57 +98,57 @@
   
 
     <!-- Register -->
-    <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-5 px-4 py-4">
-        <div class="w-px-400 mx-auto pt-5 pt-lg-0">
-          <h4 class="mb-2 fw-semibold">لطفا برای استفاده از امکانات ثبت نام کنید</h4>  
-          <form class="mb-3" method="POST">
-            {% csrf_token %}
-            {{ form.errors }}
-            <div class="form-floating form-floating-outline mb-3">
-                <input type="text" class="form-control" id="id_username" name="username" placeholder="نام کاربری خود را وارد کنید" autofocus>
-                <label for="username">شماره همراه</label>
-              </div>
-              <div class="mb-3 form-password-toggle">
-                <div class="input-group input-group-merge">
-                  <div class="form-floating form-floating-outline">
-                    <input type="password" id="id_password1" class="form-control" name="password1" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                    <label for="id_password1">رمز عبور</label>
-                  </div>
-                  <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
-                </div>
-              </div>
-              <div class="mb-3 form-password-toggle">
-                <div class="input-group input-group-merge">
-                  <div class="form-floating form-floating-outline">
-                    <input type="password" id="id_password2" class="form-control" name="password2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                    <label for="id_password2">تکرار رمز عبور</label>
-                  </div>
-                  <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="id_terms" name="terms">
-                  <label class="form-check-label" for="terms-conditions">
-                  من موافقم با 
-                    <a href="{% url 'terms' %}"> سیاست حریم خصوصی و قوانین</a>
-                  </label>
-                </div>
-              </div>
-            <button type="submit" class="btn btn-primary d-grid w-100">
-              عضویت
-            </button>
-          </form>
-          
-        
-          <p class="text-center mt-2">
-            <span>حساب کاربری دارید؟</span>
-            <a href="{% url 'account:login' %}">
-              <span>وارد شوید</span>
-            </a>
-          </p>
-        </div>
-      </div>
+{#    <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-5 px-4 py-4">#}
+{#        <div class="w-px-400 mx-auto pt-5 pt-lg-0">#}
+{#          <h4 class="mb-2 fw-semibold">لطفا برای استفاده از امکانات ثبت نام کنید</h4>  #}
+{#          <form class="mb-3" method="POST">#}
+{#            {% csrf_token %}#}
+{#            {{ form.errors }}#}
+{#            <div class="form-floating form-floating-outline mb-3">#}
+{#                <input type="text" class="form-control" id="id_username" name="username" placeholder="نام کاربری خود را وارد کنید" autofocus>#}
+{#                <label for="username">شماره همراه</label>#}
+{#              </div>#}
+{#              <div class="mb-3 form-password-toggle">#}
+{#                <div class="input-group input-group-merge">#}
+{#                  <div class="form-floating form-floating-outline">#}
+{#                    <input type="password" id="id_password1" class="form-control" name="password1" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />#}
+{#                    <label for="id_password1">رمز عبور</label>#}
+{#                  </div>#}
+{#                  <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>#}
+{#                </div>#}
+{#              </div>#}
+{#              <div class="mb-3 form-password-toggle">#}
+{#                <div class="input-group input-group-merge">#}
+{#                  <div class="form-floating form-floating-outline">#}
+{#                    <input type="password" id="id_password2" class="form-control" name="password2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />#}
+{#                    <label for="id_password2">تکرار رمز عبور</label>#}
+{#                  </div>#}
+{#                  <span class="input-group-text cursor-pointer"><i class="mdi mdi-eye-off-outline"></i></span>#}
+{#                </div>#}
+{#              </div>#}
+{#              <div class="mb-3">#}
+{#                <div class="form-check">#}
+{#                  <input class="form-check-input" type="checkbox" id="id_terms" name="terms">#}
+{#                  <label class="form-check-label" for="terms-conditions">#}
+{#                  من موافقم با #}
+{#                    <a href="{% url 'terms' %}"> سیاست حریم خصوصی و قوانین</a>#}
+{#                  </label>#}
+{#                </div>#}
+{#              </div>#}
+{#            <button type="submit" class="btn btn-primary d-grid w-100">#}
+{#              عضویت#}
+{#            </button>#}
+{#          </form>#}
+{#          #}
+{#        #}
+{#          <p class="text-center mt-2">#}
+{#            <span>حساب کاربری دارید؟</span>#}
+{#            <a href="{% url 'account:login' %}">#}
+{#              <span>وارد شوید</span>#}
+{#            </a>#}
+{#          </p>#}
+{#        </div>#}
+{#      </div>#}
       <!-- /Register -->
     </div>
   </div>  

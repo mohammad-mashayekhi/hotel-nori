@@ -13,3 +13,11 @@ def render_boolean_icon(boolean_value):
         icon_html = '&#10005;'  # Replace with Cross symbol if boolean was False
 
     return mark_safe(icon_html)
+
+
+@register.simple_tag
+def render_payment_id(payment_id):
+    if payment_id:
+        return payment_id
+    else:
+        return "پرداخت نشده"
