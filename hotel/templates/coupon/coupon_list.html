@@ -1,0 +1,172 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load jformat %}
+{% block vendors-css %}
+{% endblock %}
+{% block page-css %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"/>
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}"
+    />
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+      <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-primary rounded">
+                    <div class="mdi mdi-account-outline mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0">{{ coupons | length  }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-danger">8.1%</small>#}
+                  </div>
+                  <small class="text-muted"> کل کدتخفیف ها ها</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="avatar">
+                  <div class="avatar-initial bg-label-warning rounded">
+                    <div class="mdi mdi-poll mdi-24px"></div>
+                  </div>
+                </div>
+                <div class="ms-3">
+                  <div class="d-flex align-items-center">
+                    <h5 class="mb-0"> {{ valid_coupons }}</h5>
+    {#                <div#}
+    {#                  class="mdi mdi-chevron-up text-success mdi-24px"#}
+    {#                ></div>#}
+    {#                <small class="text-success">18.2%</small>#}
+                  </div>
+                  <small class="text-muted">کد تخفیف های فعال</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- Invoice List Table -->
+    <div class="card">
+        <h4 class="fw-bold py-3 mb-4">
+            <span class="text-muted fw-light">لیست /</span> کدتخفیف
+        </h4>
+        <div class="d-flex justify-content-first mb-3">
+            <a href="{% url 'coupon:create' %}" class="btn btn-primary">
+                <i class="mdi mdi-plus-circle-outline"></i> یک کد تخفیف جدید بسازید
+            </a>
+        </div>
+        <div class="card-datatable table-responsive">
+            <table id="coupon_table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">نام</th>
+                        <th scope="col">کد</th>
+                        <th scope="col">معتبر از</th>
+                        <th scope="col">معتبر تا</th>
+                        <th scope="col">درصد تخقیف</th>
+                        <th scope="col">فعال هست</th>
+                        <th scope="col">حذف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coupon in coupons %}
+                    <tr data-id="{{ coupon.uuid }}">
+                        <td><a href="{% url 'coupon:update' coupon.uuid %}" >{{ coupon.name }}</a></td>
+                        <td>{{ coupon.code }}</td>
+                        <td>{{ coupon.valid_from | jformat:' %Y/%m/%d' }}</td>
+                        <td>{{ coupon.valid_to  | jformat:' %Y/%m/%d' }}</td>
+                        <td>{{ coupon.discount }}%</td>
+                        <td>{{ coupon.is_active }}</td>
+                        <td>
+                            <button class="btn btn-danger delete-coupon" data-id="{{ coupon.uuid }}">
+                                <i class="mdi mdi-delete"></i>
+                            </button>
+                        </td>                    
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+  </div>
+</div>    
+{% endblock %}
+{% block page-js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>    
+    <script>
+    $(document).ready( function () {
+    var table = $('#coupon_table').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
+        }
+    });
+        
+} );
+    
+$(document).ready(function() {
+    $('.delete-coupon').on('click', function() {
+        if (confirm('Are you sure you want to delete this coupon?')) {
+            var button = $(this);
+            var uuid = button.data('id');
+            
+            $.ajax({
+                type: 'POST',
+                url: '{% url "coupon:delete" %}',
+                data: {
+                    'uuid': uuid,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        button.closest('tr').remove();
+                    } else {
+                        alert('Failed to delete coupon.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        }
+    });
+});
+
+    
+</script>
+{% endblock %}
