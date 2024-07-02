@@ -289,7 +289,7 @@ mobiscroll.setOptions({
 var reservationData = {{ reservation_data|safe }};
 var resourceData = {{ resource_data|safe }};
 var invalidreservation = {{ closed_time_data|safe }};
-console.log(reservationData,invalidreservation) 
+console.log(reservationData,invalidreservation)
 const statusColorMapping = {
   pending_payment: '#4A827C',
   confirmed: '#D1A975',
@@ -385,7 +385,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
                     deleteEvent = false;
                     addReservation({
                         title: $('#event-title').val(),
-                        mobile_number: $('#event-user').val(),
+                        {% if request.user.user_status == "verified" %}
+                            mobile_number: "{{request.user.mobile_number}}",
+                        {% else %}
+                           mobile_number: $('#event-user').val(),
+                        {% endif %}
                         start: startreserve.toISOString(),
                         end: endreserve.toISOString(),
                         resource: $('#event-resource').val(),
@@ -417,7 +421,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
         try {
             const reservationId = await addReservation({
                 title: $('#event-title').val(),
-                mobile_number: $('#event-user').val(),
+                {% if request.user.user_status != "verified" %}
+                    mobile_number: {{request.user.mobile_number }},
+                {% else %}
+                    mobile_number: $('#event-user').val(),
+                {% endif %}                
                 start: startreserve.toISOString(),
                 end: endreserve.toISOString(),
                 resource: $('#event-resource').val(),
@@ -463,10 +471,22 @@ function addReservation(data) {
     });
 }
 
+
 function createEditPopup(args, resourceId) {
     var ev = args.event;
-    tempEvent = args.event;
+    
+    var matchingResource = resourceData.find(resource => resource.id === resourceId);
+    
+    firstday = ev.start;
+    lastday = ev.end;
+    datepickerreserve.setVal([firstday, lastday]);
 
+    var oneDay = 24 * 60 * 60 * 1000;
+    var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
+    var totalCost = differenceInDays * matchingResource.price;
+
+    $('#event-pay').text(`مبلغ نهایی: ${totalCost} تومان`);
+    
     deleteButton.style.display = 'block';
     deleteEvent = false;
     restoreEvent = true;
@@ -475,14 +495,40 @@ function createEditPopup(args, resourceId) {
         headerText: 'مشخصات رزرو',
         buttons: [
             'cancel',
-            {
-                text: 'ویرایش',
-                keyCode: 'enter',
-                handler: function () {
-                    popup.close();
-                },
-                cssClass: 'mbsc-popup-button-primary'
-            }
+            {#{#}
+            {#    text: 'ویرایش',#}
+            {#    keyCode: 'enter',#}
+            {#    handler: function () {#}
+            {#        var reservtime = datepickerreserve.getVal();#}
+            {#        const startreserve = new Date(reservtime[0]);#}
+            {#        const endreserve = new Date(reservtime[1]);#}
+            {#        #}
+            {#        deleteEvent = false;#}
+            {#        updateReservation({#}
+            {#            title: $('#event-title').val(),#}
+            {#            {% if request.user.user_status == "verified" %}#}
+            {#                mobile_number: "{{request.user.mobile_number}}",#}
+            {#            {% else %}#}
+            {#                mobile_number: $('#event-user').val(),#}
+            {#            {% endif %}#}
+            {#            start: startreserve.toISOString(),#}
+            {#            end: endreserve.toISOString(),#}
+            {#            resource: $('#event-resource').val(),#}
+            {#            {% if request.user.user_status != "verified" %}#}
+            {#            status: $('#event-status').val(),#}
+            {#            {% else %}#}
+            {#            status: "pending_payment",#}
+            {#            {% endif %}#}
+            {#            cleaning: $('#event-cleaning').prop('checked'),#}
+            {#            more_capacity: $('#event-more-capacity').val(),#}
+            {#            paid: $('#event-paid').prop('checked'),#}
+            {#            price: totalCost#}
+            {#        },ev.reserve_id);#}
+            {#        #}
+            {#        popup.close();#}
+            {#    },                #}
+            {#    cssClass: 'mbsc-popup-button-primary'#}
+            {##}
         ],
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
@@ -490,6 +536,25 @@ function createEditPopup(args, resourceId) {
 
     fetchReservationInfo(ev.reserve_id);
 }
+
+{#function updateReservation(data,reserve_id) {#}
+{#        $.ajax({#}
+{#            url: 'reserve/update_reservation/' + reserve_id + "/",#}
+{#            method: 'POST',#}
+{#            data: {#}
+{#                csrfmiddlewaretoken: '{{ csrf_token }}',#}
+{#                ...data#}
+{#            },#}
+{#            success: function (response) {#}
+{#                if (response.success) {#}
+{#                    myCalendar.refresh();#}
+{#                    location.reload(true);#}
+{#                } else {#}
+{#                    console.log("add error", response);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{##}
 
 function fetchReservationInfo(reservation_id) {
     $.ajax({
@@ -511,7 +576,7 @@ function fillPopupWithData(data) {
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
     $('#event-buffer').prop('checked', data.bufferAfter);
-    $('#event-user').val(data.user);
+    $('#event-user').val(data.mobile_number);
     $('#start-input').val(data.start);
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
@@ -563,8 +628,9 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     },
     onEventClick: function (args) {
         tempEvent = args.event;
+        resourceId = args.event.resource;
         if (!popup.isVisible()) {
-            createEditPopup(args);
+            createEditPopup(args, resourceId);
         }
     },
     onEventCreated: function (args) {

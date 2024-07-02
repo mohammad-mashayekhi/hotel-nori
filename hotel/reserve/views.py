@@ -78,7 +78,6 @@ def reserve_schedule(request):
 def add_reservation(request):
 
     new_reservation_data = ReservationForm(data=request.POST)
-
     if new_reservation_data.is_valid():
         reservation = new_reservation_data.save(commit=False)
 
@@ -86,7 +85,7 @@ def add_reservation(request):
         if request.user.user_status != "verified":
             reservation.author = request.user
             User = get_user_model()
-            user_mobile_number = request.POST.get("mobile_number")
+            user_mobile_number = new_reservation_data.cleaned_data["mobile_number"]
             user, created = User.objects.get_or_create(
                 mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
             )
@@ -117,24 +116,70 @@ def add_reservation(request):
             print(e)
             return JsonResponse({"success": False, "error": str(e)}, status=500)
     else:
-        print("-----------------------------------")
         for field in new_reservation_data:
             if field.errors:
                 print(field.errors, field.label)
                 messages.add_message(request, level= messages.ERROR, message=field.errors,extra_tags=field.label)
         if new_reservation_data.non_field_errors():
-            print(new_reservation_data.non_field_errors())
-            print("------------------------------------")
             messages.add_message(request, level=messages.ERROR, message=new_reservation_data.non_field_errors())
         return JsonResponse({"success": False}, status=400)
 
 
+# @require_POST
+# def update_reservation(request, reserve_id):
+#     reservation = Reservation.objects.get(reserve_id=reserve_id)
+#     print(request.POST)
+#     update_reservation_data = ReservationForm(data=request.POST, instance=reservation)
+#     if update_reservation_data.is_valid():
+#         reservation = update_reservation_data.save(commit=False)
+#         if update_reservation_data.has_changed():
+#             print("Changed fields:", update_reservation_data.changed_data)
+#             initial_mobile_number = reservation.user.mobile_number
+#             cleaned_mobile_number = update_reservation_data.cleaned_data.get("mobile_number")
+#             print("Initial mobile number:", repr(initial_mobile_number))
+#             print("Cleaned mobile number:", repr(cleaned_mobile_number))
+#
+#             if "mobile_number" in update_reservation_data.changed_data :
+#                 # if user is not normal user it can reserve for another user but if it is not it can reserve for itself
+#
+#                 if request.user.user_status != "verified":
+#                     reservation.author = request.user
+#                     User = get_user_model()
+#                     user_mobile_number = update_reservation_data.cleaned_data.get("mobile_number")
+#                     user, created = User.objects.get_or_create(
+#                         mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
+#                     )
+#                     reservation.user = user
+#                 else:
+#                     reservation.user = request.user
+#                     reservation.author = request.user
+#             '''
+#             it checks if the reservation and end changed at the same time or not
+#             if it is if cleaning is enabled it add one day to end_date for cleanign
+#             else it checks if cleaning is enabled or disabled and change the end_Date based on it
+#             '''
+#             if "cleaning" in update_reservation_data.changed_data:
+#                 if "end" in update_reservation_data.changed_data:
+#                     if reservation.cleaning:
+#                         reservation.end += timedelta(days=1)
+#                 else:
+#                     if reservation.cleaning:
+#                         reservation.end += timedelta(days=1)
+#                     else:
+#                         reservation.end -= timedelta(days=1)
+#
+#         reservation.save()
+#
+#         return JsonResponse(data={"status": "created"},status=201)
+#     else:
+#         for field in update_reservation_data:
+#             if field.errors:
+#                 messages.add_message(request, level= messages.ERROR, message=field.errors,extra_tags=field.label)
+#         if update_reservation_data.non_field_errors():
+#             messages.add_message(request, level=messages.ERROR, message=update_reservation_data.non_field_errors())
+#         return JsonResponse({"success": False}, status=400)
 
 
-@require_POST
-def update_reservation(request,reserve_id):
-    reservation = Reservation.objects.get(reserve_id=reserve_id)
-    new_reservation_data = request.POST
 
 @login_required
 def get_reservation_info(request):
@@ -150,12 +195,12 @@ def get_reservation_info(request):
 
             reservation_data = {
                 "title": reservation.title,
-                "start": reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
-                "end": reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
+                "start": reservation.start.isoformat(),
+                "end": reservation.end.isoformat(),
                 "status": reservation.status,
                 "cleaning": reservation.cleaning,
                 "resources": reservation.resource.id,
-                "user": reservation.user.username,  # نام کاربر
+                "mobile_number": reservation.user.mobile_number,  # نام کاربر
                 "capacity": reservation.resource.capacity,
                 "morecapacity": reservation.more_capacity,
                 "paid": reservation.paid,
@@ -248,9 +293,9 @@ def bill_detail(request, reserve_id):
 
     if request.session.get("coupon"):
         coupon = Coupon.objects.get(id=request.session.get("coupon"))
-        dicount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
+        discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
         total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
-        context.update({"coupon": coupon, "dicount": dicount, "total_pay_with_discount": total_pay_with_discount})
+        context.update({"coupon": coupon, "discount": discount, "total_pay_with_discount": total_pay_with_discount})
     return render(request, "reserve/bill/billdetail.html", context=context)
 
 
