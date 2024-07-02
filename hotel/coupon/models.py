@@ -1,10 +1,13 @@
+import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.conf import settings
+from django.utils.text import slugify
 
 
 class Coupon(models.Model):
     name = models.CharField(max_length=10)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     code = models.CharField(max_length=6)
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     valid_from = models.DateField()
@@ -21,3 +24,8 @@ class Coupon(models.Model):
 
     def get_total_pay_with_discount(self, price):
         return price - self.get_discount(price)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
