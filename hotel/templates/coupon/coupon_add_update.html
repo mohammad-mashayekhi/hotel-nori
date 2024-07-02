@@ -1,0 +1,97 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+
+{% block page-css %}
+    <link rel="stylesheet" href="{% static 'datepicker/css/persianDatepicker-default.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+    {% if form.instance.name == "" %}
+        <h2>ساخت کد تخفیف</h2>
+    {% else %}    
+        <h2>ویرایش کد تخفیف</h2>
+    {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">اسم کد تخفیف</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_code">کد تخفیف</label>
+                {{ form.code }}
+            </div>
+            <div class="form-group">
+                <label for="id_users">کاربران شامل کد تخفیف :</label>
+                {{ form.users }}
+            </div>
+            <div class="form-group">
+                <label for="id_valid_from">معتبر از</label>
+                {{ form.valid_from }}
+            </div>
+            <div class="form-group">
+                <label for="id_valid_to">معتبر تا</label>
+                {{ form.valid_to }}
+            </div>
+            <div class="form-group">
+                <label for="id_discount"> کد تخفیف :</label>
+                {{ form.discount }}
+            </div>
+            <div class="form-group form-check">
+                {{ form.is_active }}
+                <label class="form-check-label" for="id_is_active">کد تخفیف فعال هست</label>
+            </div>
+            <input type="text" id="input1" />
+            <span id="span1"></span>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block page-js %}
+    <script src="{% static 'datepicker/js/jquery-1.10.1.min.js' %}"></script>
+    <script src="{% static 'datepicker/js/persian-date.min.js' %}"></script>
+    <script src="{% static 'datepicker/js/persianDatepicker.min.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        var startDateInput = $('#valid_from');
+        var endDateInput = $('#valid_to');
+        
+        startDateInput.persianDatepicker({
+            formatDate: "YYYY/MM/DD",
+            onSelect: function(unixDate) {
+                    var selectedDate = persianDate(unixDate);
+                    console.log(selectedDate)
+                    endDateInput.persianDatepicker({
+                        startDate: selectedDate,
+                        onSelect: function(unixDate) {
+                            var startDate = startDateInput.val();
+                            var endDate = endDateInput.val();
+                            console.log("Selected date range:", startDate, "to", endDate);
+                        }
+                    })
+            }
+            
+        });
+
+        endDateInput.persianDatepicker({
+            format: 'YYYY/MM/DD',
+            calendar: {
+                persian: {
+                    locale: 'fa'
+                }
+            }
+        });
+    });
+</script>
+{#    <script>#}
+{#    $(function() {#}
+{#        var startDateInput = $('#valid_from');#}
+{#        var endDateInput = $('#valid_to');#}
+{#        startDateInput.persianDatepicker();#}
+{#        endDateInput.persianDatepicker();#}
+{#    })   #}
+{#    </script>    #}
+{% endblock %}

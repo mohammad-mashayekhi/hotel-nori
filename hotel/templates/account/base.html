@@ -143,6 +143,12 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+          <li class="menu-item {% if request.resolver_match.view_name == 'coupon:list' %} active {% endif %}">
+            <a href="{% url 'coupon:list' %}" class="menu-link ">
+            <i class="menu-icon tf-icons mdi mdi-ticket-percent-outline"></i>     
+              <div>کد تخفیف ها</div>
+            </a>
+          </li>            
         {% else %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">کاربر</span>
