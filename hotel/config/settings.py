@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'config',
     'zarinpal',
     'coupon',
+    'django_select2',
 ]
 
 MIDDLEWARE = [

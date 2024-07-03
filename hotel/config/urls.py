@@ -12,6 +12,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path("coupon/", include("coupon.urls")),
     path('pages/terms', terms , name='terms'),
+    path("select2/", include("django_select2.urls")),
     path('pages/success_page_register', success_page_register , name='success_page_register'),
     path("zarinpal/", include("zarinpal.urls")),
 ]
