@@ -105,10 +105,10 @@
  padding-right:0px;
 }
 .mbsc-timeline-column, .mbsc-timeline-header-column{
- width: 48px;
+ width: 100px;
 }
 .mbsc-timeline-event-background{
-  height: 36px !important;
+  height: 42px !important;
 }
 @media (min-width: 769px) {
 .mbsc-timeline-resource-title{
@@ -229,7 +229,7 @@
                 </div>
                 <div class="mbsc-button-group">
                   <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
-                  <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">مبلغ نهایی</button>
+                  <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">پرداخت</button>
                   <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
                 </div>
               </div>
@@ -336,6 +336,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchingResource.price_per_person);
 
+    
     firstday = tempEvent.start;
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
@@ -344,9 +345,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
     var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
     var totalCost = differenceInDays * matchingResource.price;
 
-    $('#event-pay').text(`مبلغ نهایی: ${totalCost} تومان`);
     
-
     popup.open();
     popup.setOptions({
         headerText: 'افزودن رزرو',
@@ -389,6 +388,24 @@ function createAddPopup(elm, resourceId, tempEvent) {
         anchor: elm,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
+
+
+    var eventResourceSelect = document.getElementById('event-resource');
+    
+    eventResourceSelect.addEventListener('change', function () {
+        var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
+        var resourceId = parseInt(selectedOption.value);
+        
+        var matchedResource = resourceData.find(resource => resource.id === resourceId);
+        $('#event-resource').val(resourceId);
+        $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
+        $('#event-price').text(matchedResource.price);
+        $('#event-cleaning').prop('checked', true);
+        $('#event-more-capacity').val(0);
+        $('#event-paid').prop('checked', false);
+        $('#event-price-per-person').text(matchedResource.price_per_person);
+      });
+ 
     
     document.getElementById('event-pay').addEventListener('click', async function () {
         var reservtime = datepickerreserve.getVal();
@@ -572,7 +589,6 @@ function fillPopupWithData(data) {
 
 var now = new Date();
 var yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-
 var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     locale: mobiscroll.localeFa,
     clickToCreate: 'double',
