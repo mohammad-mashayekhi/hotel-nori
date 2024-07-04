@@ -86,7 +86,8 @@ def verify(request):
             reservation.paid = True
             reservation.status = "confirmed"
             reservation.payment_id = response['RefID']
-            request.session.pop('coupon')
+            if request.session.get("coupon"):
+                request.session.pop('coupon')
             reservation.save()
 
             data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
