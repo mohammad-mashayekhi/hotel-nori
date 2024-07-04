@@ -1,6 +1,7 @@
 {% extends 'account/base.html' %}
 {% load static %}
 {% load jformat %}
+{% load reserve_tags %}
 {% block vendors-css %}
 <!-- Vendors CSS -->
 <!--suppress SpellCheckingInspection -->
@@ -35,36 +36,44 @@
         </div>
         <hr class="my-0">
         <div class="card-body">
-          <div class="d-flex justify-content-between flex-wrap">
+          <div class="d-flex justify-content-around flex-wrap">
             <div class="my-3">
               <h6 class="pb-2" lang="fa">فاکتور به:</h6>
               <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
               <p class="mb-1" lang="fa"> کدملی: {{ reservation.user.national_code }}</p>
               <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
             </div>
-            <div class="my-3">
-              <h6 class="pb-2" lang="fa" style="">بیل به:</h6>
+            <div class="px-5 my-3">
+              <h6 class="pb-2" lang="fa" style="">مشخصات رزور:</h6>
               <table>
                 <tbody>
                   <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">مجموع به علت:</td>
-                    <td lang="fa" style="">$12،110.55</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">کد روزر</td>
+                    <td lang="fa" style="">{{ reservation.reserve_id }}</td>
                   </tr>
                   <tr>
-                    <td class="pe-3 fw-medium" lang="fa">نام بانک:</td>
-                    <td lang="fa" style="">بانک امریکایی</td>
+                    <td class="pe-3 fw-medium" lang="fa"> وضعیت </td>
+                    <td lang="fa" style="">{{ reservation.get_status_display }}</td>
                   </tr>
                   <tr>
-                    <td class="pe-3 fw-medium" lang="fa">کشور:</td>
-                    <td lang="fa" style="">ایالات متحده</td>
+                    <td class="pe-3 fw-medium" lang="fa">اتاق:</td>
+                    <td lang="fa" style="">{{ reservation.resource.name }}</td>
                   </tr>
                   <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">ایبان:</td>
-                    <td lang="fa" style="">دانلود: ETD95476213874685.000</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">شروع:</td>
+                    <td lang="fa" style="">{{ reservation.start  | jformat:'%Y/%m/%d' }}</td>
                   </tr>
                   <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">کد سوئیفت:</td>
-                    <td lang="fa">BR91905 (برزیلی)</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">پایین:</td>
+                    <td lang="fa">{{ reservation.end  | jformat:'%Y/%m/%d' }}</td>
+                  </tr>
+                  <tr>
+                    <td class="pe-3 fw-medium" lang="fa" style="">هزینه کل:</td>
+                    <td lang="fa">{{ reservation.total_pay }}</td>
+                  </tr>
+                  <tr>
+                    <td class="pe-3 fw-medium" lang="fa" style="">نظافت:</td>
+                    <td lang="fa">{% render_boolean_icon reservation.cleaning  %}</td>
                   </tr>
                 </tbody>
               </table>
@@ -72,7 +81,7 @@
           </div>
           <hr>
           <div class="d-flex justify-content-between flex-wrap">
-            <div class="my-3">
+            <div class=" my-3">
                 <form action="/coupon/apply/" method="post">
                   {% csrf_token %}
                   <div class="form-floating form-floating-outline mb-4">
@@ -83,7 +92,7 @@
                   <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa">اعمال کد تخفیف</button>
               </form>
             </div>
-            <div class="my-3">
+            <div class="px-5  my-3">
                 {% if coupon %}
                       <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
                       <table>
@@ -98,11 +107,11 @@
                           </tr>
                           <tr>
                             <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به تومان:</td>
-                            <td lang="fa" style="">{{ discount }} تومان</td>
+                            <td lang="fa" style="">{{ discount }} تومان </td>
                           </tr>
                           <tr>
                             <td class="pe-3 fw-medium" lang="fa" style="">مقدار  کل با تخفیف:</td>
-                            <td lang="fa" style="">{{ total_pay_with_discount }}</td>
+                            <td lang="fa" style=""> {{ total_pay_with_discount }} تومان </td>
                           </tr>
                         </tbody>
                       </table>
@@ -115,30 +124,6 @@
               {% endif %}    
             </div>    
           </div>
-        </div>
-        <div class="table-responsive">
-          <table class="table m-0">
-            <thead class="table-light border-top">
-              <tr>
-                <th lang="fa">شماره رزور</th>
-                <th lang="fa"> وضعیت </th>
-                <th lang="fa" style=""> هزینه کل</th>
-                <th lang="fa">نام اتاق</th>
-                <th lang="fa">شروع</th>
-                <th lang="fa">پایان</th>  
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="text-nowrap" lang="fa">{{ reservation.reserve_id }}</td>
-                <td class="text-nowrap" lang="fa">{{ reservation.get_status_display }}</td>
-                <td lang="fa" style="">{{ reservation.total_pay }}</td>
-                <td lang="fa">{{ reservation.resource.name }}</td>
-                  <td>{{ reservation.start  | jformat:'%Y/%m/%d' }}</td>
-                  <td>{{ reservation.end  | jformat:'%Y/%m/%d' }}</td>                
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <div class="card-body">
@@ -249,7 +234,7 @@
       </div>
       <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
         <p class="mb-0" lang="fa"> {{ coupon.discount }}  درصد تخفیف :</p>
-        <p class="fw-bold mb-0" lang="fa">{{ dicount }}</p>
+        <p class="fw-bold mb-0" lang="fa">{{ discount }}</p>
       </div>      
       <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
         <p class="mb-0" lang="fa">: مقدار کل با تخفیف</p>
