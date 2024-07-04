@@ -341,11 +341,6 @@ function createAddPopup(elm, resourceId, tempEvent) {
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
 
-    var oneDay = 24 * 60 * 60 * 1000;
-    var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
-    var totalCost = differenceInDays * matchingResource.price;
-
-    
     popup.open();
     popup.setOptions({
         headerText: 'افزودن رزرو',
@@ -377,7 +372,6 @@ function createAddPopup(elm, resourceId, tempEvent) {
                         cleaning: $('#event-cleaning').prop('checked'),
                         more_capacity: $('#event-more-capacity').val(),
                         paid: $('#event-paid').prop('checked'),
-                        total_pay: totalCost
                     });
                     popup.close();
                 },
@@ -474,12 +468,7 @@ function createEditPopup(args, resourceId) {
     firstday = ev.start;
     lastday = ev.end;
     datepickerreserve.setVal([firstday, lastday]);
-
-    var oneDay = 24 * 60 * 60 * 1000;
-    var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
-    var totalCost = differenceInDays * matchingResource.price;
-
-    $('#event-pay').text(`مبلغ نهایی: ${totalCost} تومان`);
+    
     
     deleteButton.style.display = 'block';
     deleteEvent = false;
@@ -580,7 +569,6 @@ function fillPopupWithData(data) {
     $('#event-paid').prop('checked', data.paid);
     $('#event-price').text(data.price);
     $('#event-price-per-person').text(data.price_per_person);
-    $('#event-pay').text(`مبلغ نهایی: ${data.totalCost} تومان`);
 
     firstday = data.start;
     lastday = data.end;

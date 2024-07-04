@@ -34,6 +34,15 @@ class ReservationForm(forms.ModelForm):
             'total_pay': 'مبلغ کل'
         }
 
+    def clean_total_pay(self):
+        start = self.cleaned_data['start']
+        end = self.cleaned_data['end']
+        resource = self.cleaned_data['resource']
+        total_days = end - start
+        # The addition of 2 is to ensure that both the start and end dates are counted
+        total_pay = (total_days.days + 2) * resource.price
+        return total_pay
+
     def clean(self):
         data = super().clean()
         data["start"] = data["start"].replace(hour=12, minute=0, second=0,tzinfo=None)
