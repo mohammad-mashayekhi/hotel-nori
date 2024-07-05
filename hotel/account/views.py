@@ -98,7 +98,7 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.username = form.cleaned_data["username"]
+            user.username = form.cleaned_data["mobile_number"]
             user.user_status = "normal"  # تنظیم وضعیت به عادی
             user.save()
             # اعتبارسنجی تایید شرایط و قوانین
