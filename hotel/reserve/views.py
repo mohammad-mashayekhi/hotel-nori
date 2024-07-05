@@ -275,7 +275,7 @@ def list_of_bills(request):
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
 
-    return render(request, "reserve/bill/billprint.html", {"reserve": reservation})
+    return render(request, "reserve/bill/billprint.html", {"reservation": reservation})
 
 
 @login_required
