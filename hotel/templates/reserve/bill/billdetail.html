@@ -121,7 +121,7 @@
                             <li class="{{ message.tags }}">{{ message }}</li>
                       {% endfor %}
                   </ul>
-              {% endif %}    
+              {% endif %}
             </div>    
           </div>
         </div>
@@ -232,6 +232,7 @@
         <p class="mb-0" lang="fa">مبلغ پرداختی :</p>
         <p class="fw-bold mb-0" lang="fa">{{ reservation.total_pay }}</p>
       </div>
+      {% if coupon %}  
       <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
         <p class="mb-0" lang="fa"> {{ coupon.discount }}  درصد تخفیف :</p>
         <p class="fw-bold mb-0" lang="fa">{{ discount }}</p>
@@ -239,7 +240,8 @@
       <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
         <p class="mb-0" lang="fa">: مقدار کل با تخفیف</p>
         <p class="fw-bold mb-0" lang="fa">{{ total_pay_with_discount }}</p>
-      </div>            
+      </div>
+      {% endif %}    
       <div  >  
           <form action="{% url 'zarinpal:request' %}" method="post">
               {% csrf_token %}
