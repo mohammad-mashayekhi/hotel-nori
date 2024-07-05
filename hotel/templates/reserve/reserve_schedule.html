@@ -29,13 +29,6 @@
 .room1.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
-.room2{
- border-bottom: 4px solid #135D66 !important;
- min-height: 52px !important;
-}
-.room2.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
 .room3{
  border-bottom: 4px solid #77B0AA !important;
  min-height: 52px !important;
@@ -43,25 +36,11 @@
 .room3.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
-.room4{
- border-bottom: 4px solid #58A399 !important;
- min-height: 52px !important;
-}
-.room4.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
 .room5{
  border-bottom: 4px solid #ADBC9F !important;
  min-height: 52px !important;
 }
 .room5.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room6{
- border-bottom: 4px solid #A8CD9F !important;
- min-height: 52px !important;
-}
-.room6.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
 .room7{
@@ -126,10 +105,10 @@
  padding-right:0px;
 }
 .mbsc-timeline-column, .mbsc-timeline-header-column{
- width: 48px;
+ width: 100px;
 }
 .mbsc-timeline-event-background{
-  height: 36px !important;
+  height: 42px !important;
 }
 @media (min-width: 769px) {
 .mbsc-timeline-resource-title{
@@ -250,7 +229,7 @@
                 </div>
                 <div class="mbsc-button-group">
                   <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
-                  <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">مبلغ نهایی</button>
+                  <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">پرداخت</button>
                   <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
                 </div>
               </div>
@@ -289,7 +268,6 @@ mobiscroll.setOptions({
 var reservationData = {{ reservation_data|safe }};
 var resourceData = {{ resource_data|safe }};
 var invalidreservation = {{ closed_time_data|safe }};
-console.log(reservationData,invalidreservation) 
 const statusColorMapping = {
   pending_payment: '#4A827C',
   confirmed: '#D1A975',
@@ -300,7 +278,7 @@ function addColorToReservations(reservations, statusColorMapping) {
   return reservations.map(reservation => {
     const color = statusColorMapping[reservation.status] || '#000000'; // Provide a default color if status is not in the mapping
      
-    return { ...reservation, color: color };
+    return { ...reservation, color: color, cssClass: 'md-lunch-break-class mbsc-flex ' };
   });
 }
 
@@ -309,13 +287,12 @@ const reservations_with_css = addColorToReservations(reservationData, statusColo
 
 function addCssClassToReservations(reservations) {
   return reservations.map(reservation => {
-    return { ...reservation, cssClass: 'md-lunch-break-class mbsc-flex' };
+    return { ...reservation, cssClass: `md-lunch-break-class mbsc-flex room${reservation.id}` };
   });
 }
 
 const resourceData_with_css = addCssClassToReservations(resourceData);
 const invalidreservation_with_css = addCssClassToReservations(invalidreservation);
-console.log(reservations_with_css,resourceData_with_css)
 
 var popup, oldEvent, tempEvent = {}, deleteEvent;
 var startcalendar = '2024-04-20';
@@ -359,22 +336,17 @@ function createAddPopup(elm, resourceId, tempEvent) {
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchingResource.price_per_person);
 
+    
     firstday = tempEvent.start;
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
-
-    var oneDay = 24 * 60 * 60 * 1000;
-    var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
-    var totalCost = differenceInDays * matchingResource.price;
-
-    $('#event-pay').text(`مبلغ نهایی: ${totalCost} تومان`);
-    
 
     popup.open();
     popup.setOptions({
         headerText: 'افزودن رزرو',
         buttons: [
             'cancel',
+            {% if request.user.user_status != "verified" %}
             {
                 text: 'ذخیره',
                 keyCode: 'enter',
@@ -385,7 +357,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
                     deleteEvent = false;
                     addReservation({
                         title: $('#event-title').val(),
-                        mobile_number: $('#event-user').val(),
+                        {% if request.user.user_status == "verified" %}
+                            mobile_number: "{{request.user.mobile_number}}",
+                        {% else %}
+                           mobile_number: $('#event-user').val(),
+                        {% endif %}
                         start: startreserve.toISOString(),
                         end: endreserve.toISOString(),
                         resource: $('#event-resource').val(),
@@ -397,17 +373,35 @@ function createAddPopup(elm, resourceId, tempEvent) {
                         cleaning: $('#event-cleaning').prop('checked'),
                         more_capacity: $('#event-more-capacity').val(),
                         paid: $('#event-paid').prop('checked'),
-                        total_pay: totalCost
                     });
                     popup.close();
                 },
                 
                 cssClass: 'mbsc-popup-button-primary'
             },
+            {% endif %}
         ],
         anchor: elm,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
+
+
+    var eventResourceSelect = document.getElementById('event-resource');
+    
+    eventResourceSelect.addEventListener('change', function () {
+        var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
+        var resourceId = parseInt(selectedOption.value);
+        
+        var matchedResource = resourceData.find(resource => resource.id === resourceId);
+        $('#event-resource').val(resourceId);
+        $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
+        $('#event-price').text(matchedResource.price);
+        $('#event-cleaning').prop('checked', true);
+        $('#event-more-capacity').val(0);
+        $('#event-paid').prop('checked', false);
+        $('#event-price-per-person').text(matchedResource.price_per_person);
+      });
+ 
     
     document.getElementById('event-pay').addEventListener('click', async function () {
         var reservtime = datepickerreserve.getVal();
@@ -417,7 +411,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
         try {
             const reservationId = await addReservation({
                 title: $('#event-title').val(),
-                mobile_number: $('#event-user').val(),
+                {% if request.user.user_status != "verified" %}
+                    mobile_number: {{request.user.mobile_number }},
+                {% else %}
+                    mobile_number: $('#event-user').val(),
+                {% endif %}                
                 start: startreserve.toISOString(),
                 end: endreserve.toISOString(),
                 resource: $('#event-resource').val(),
@@ -463,10 +461,17 @@ function addReservation(data) {
     });
 }
 
+
 function createEditPopup(args, resourceId) {
     var ev = args.event;
-    tempEvent = args.event;
-
+    
+    var matchingResource = resourceData.find(resource => resource.id === resourceId);
+    
+    firstday = ev.start;
+    lastday = ev.end;
+    datepickerreserve.setVal([firstday, lastday]);
+    
+    
     deleteButton.style.display = 'block';
     deleteEvent = false;
     restoreEvent = true;
@@ -475,14 +480,40 @@ function createEditPopup(args, resourceId) {
         headerText: 'مشخصات رزرو',
         buttons: [
             'cancel',
-            {
-                text: 'ویرایش',
-                keyCode: 'enter',
-                handler: function () {
-                    popup.close();
-                },
-                cssClass: 'mbsc-popup-button-primary'
-            }
+            {#{#}
+            {#    text: 'ویرایش',#}
+            {#    keyCode: 'enter',#}
+            {#    handler: function () {#}
+            {#        var reservtime = datepickerreserve.getVal();#}
+            {#        const startreserve = new Date(reservtime[0]);#}
+            {#        const endreserve = new Date(reservtime[1]);#}
+            {#        #}
+            {#        deleteEvent = false;#}
+            {#        updateReservation({#}
+            {#            title: $('#event-title').val(),#}
+            {#            {% if request.user.user_status == "verified" %}#}
+            {#                mobile_number: "{{request.user.mobile_number}}",#}
+            {#            {% else %}#}
+            {#                mobile_number: $('#event-user').val(),#}
+            {#            {% endif %}#}
+            {#            start: startreserve.toISOString(),#}
+            {#            end: endreserve.toISOString(),#}
+            {#            resource: $('#event-resource').val(),#}
+            {#            {% if request.user.user_status != "verified" %}#}
+            {#            status: $('#event-status').val(),#}
+            {#            {% else %}#}
+            {#            status: "pending_payment",#}
+            {#            {% endif %}#}
+            {#            cleaning: $('#event-cleaning').prop('checked'),#}
+            {#            more_capacity: $('#event-more-capacity').val(),#}
+            {#            paid: $('#event-paid').prop('checked'),#}
+            {#            price: totalCost#}
+            {#        },ev.reserve_id);#}
+            {#        #}
+            {#        popup.close();#}
+            {#    },                #}
+            {#    cssClass: 'mbsc-popup-button-primary'#}
+            {##}
         ],
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
@@ -490,6 +521,25 @@ function createEditPopup(args, resourceId) {
 
     fetchReservationInfo(ev.reserve_id);
 }
+
+{#function updateReservation(data,reserve_id) {#}
+{#        $.ajax({#}
+{#            url: 'reserve/update_reservation/' + reserve_id + "/",#}
+{#            method: 'POST',#}
+{#            data: {#}
+{#                csrfmiddlewaretoken: '{{ csrf_token }}',#}
+{#                ...data#}
+{#            },#}
+{#            success: function (response) {#}
+{#                if (response.success) {#}
+{#                    myCalendar.refresh();#}
+{#                    location.reload(true);#}
+{#                } else {#}
+{#                    console.log("add error", response);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{##}
 
 function fetchReservationInfo(reservation_id) {
     $.ajax({
@@ -511,7 +561,7 @@ function fillPopupWithData(data) {
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
     $('#event-buffer').prop('checked', data.bufferAfter);
-    $('#event-user').val(data.user);
+    $('#event-user').val(data.mobile_number);
     $('#start-input').val(data.start);
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
@@ -521,7 +571,6 @@ function fillPopupWithData(data) {
     $('#event-paid').prop('checked', data.paid);
     $('#event-price').text(data.price);
     $('#event-price-per-person').text(data.price_per_person);
-    $('#event-pay').text(`مبلغ نهایی: ${data.totalCost} تومان`);
 
     firstday = data.start;
     lastday = data.end;
@@ -530,7 +579,6 @@ function fillPopupWithData(data) {
 
 var now = new Date();
 var yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-
 var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     locale: mobiscroll.localeFa,
     clickToCreate: 'double',
@@ -563,8 +611,9 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     },
     onEventClick: function (args) {
         tempEvent = args.event;
+        resourceId = args.event.resource;
         if (!popup.isVisible()) {
-            createEditPopup(args);
+            createEditPopup(args, resourceId);
         }
     },
     onEventCreated: function (args) {

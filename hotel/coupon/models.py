@@ -24,8 +24,3 @@ class Coupon(models.Model):
 
     def get_total_pay_with_discount(self, price):
         return price - self.get_discount(price)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)

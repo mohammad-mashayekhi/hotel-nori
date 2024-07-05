@@ -6,6 +6,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import redirect
 from reserve.models import Reservation
+from coupon.models import Coupon
 from .utils import get_payment_status_description
 
 if settings.SANDBOX:
@@ -24,9 +25,14 @@ CallbackURL = 'http://127.0.0.1:8000/zarinpal/verify/'
 
 def send_request(request):
     reservation = get_object_or_404(Reservation, reserve_id=request.POST.get('order_id'))
+    if request.session.get("coupon"):
+        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+        amount = coupon.get_total_pay_with_discount(reservation.total_pay)
+    else:
+        amount = reservation.total_pay
     data = {
         "MerchantID": settings.MERCHANT,
-        "Amount": reservation.total_pay,
+        "Amount": float(amount),
         "Description": request.POST["description"],
         "Phone": request.user.mobile_number,
         "order_id": request.POST["order_id"],
@@ -60,10 +66,14 @@ def send_request(request):
 def verify(request):
     order_id = request.session["order_id"]
     reservation = get_object_or_404(Reservation, reserve_id=order_id)
-
+    if request.session.get("coupon"):
+        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+        amount = coupon.get_total_pay_with_discount(reservation.total_pay)
+    else:
+        amount = reservation.total_pay
     data = {
         "MerchantID": settings.MERCHANT,
-        "Amount": reservation.total_pay,
+        "Amount": float(amount),
         "Authority": request.GET["Authority"],
     }
     data = json.dumps(data)
@@ -74,8 +84,12 @@ def verify(request):
         response = response.json()
         if response['Status'] == 100 or response['Status'] == 101:
             reservation.paid = True
+            reservation.status = "confirmed"
             reservation.payment_id = response['RefID']
+            if request.session.get("coupon"):
+                request.session.pop('coupon')
             reservation.save()
+
             data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
             return render(request, "zarinpal/purchase_status.html", context=data)
         else:

@@ -34,18 +34,33 @@ class ReservationForm(forms.ModelForm):
             'total_pay': 'مبلغ کل'
         }
 
+    def clean_total_pay(self):
+        start = self.cleaned_data['start']
+        end = self.cleaned_data['end']
+        resource = self.cleaned_data['resource']
+        total_days = end - start
+        # The addition of 2 is to ensure that both the start and end dates are counted
+        total_pay = (total_days.days + 2) * resource.price
+        return total_pay
+
     def clean(self):
-        data = self.cleaned_data
+        data = super().clean()
         data["start"] = data["start"].replace(hour=12, minute=0, second=0,tzinfo=None)
         data["end"] = data["end"].replace(hour=14, minute=0, second=0, tzinfo=None)
 
         # Check for overlapping reservations
-        overlapping_reservations = Reservation.objects.filter(
-            resource_id=data["resource"],
-            status__in=["pending_payment", "confirmed"],
-        ).exclude(Q(end__lte=data['start']) | Q(start__gte=data['end']))
+        if self.instance:
+            overlapping_reservations = Reservation.objects.filter(
+                resource_id=data["resource"],
+                status__in=["pending_payment", "confirmed"],
+            ).exclude(Q(end__lte=data['start']) | Q(start__gte=data['end']) | Q(reserve_id=self.instance.reserve_id))
+        else:
+            overlapping_reservations = Reservation.objects.filter(
+                resource_id=data["resource"],
+                status__in=["pending_payment", "confirmed"],
+            ).exclude(Q(end__lte=data['start']) | Q(start__gte=data['end']))
 
         if overlapping_reservations.exists():
-            return forms.ValidationError("sometihng went wrong")
+            raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
         return data
 

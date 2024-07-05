@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'coupon',
     'django_humanize',
 
+    'django_select2',
 ]
 
 MIDDLEWARE = [
