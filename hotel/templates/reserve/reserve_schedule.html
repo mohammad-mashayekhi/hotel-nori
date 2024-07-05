@@ -336,7 +336,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchingResource.price_per_person);
 
-    
+
     firstday = tempEvent.start;
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
@@ -387,11 +387,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
 
 
     var eventResourceSelect = document.getElementById('event-resource');
-    
+
     eventResourceSelect.addEventListener('change', function () {
         var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
         var resourceId = parseInt(selectedOption.value);
-        
+
         var matchedResource = resourceData.find(resource => resource.id === resourceId);
         $('#event-resource').val(resourceId);
         $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
@@ -401,7 +401,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
         $('#event-paid').prop('checked', false);
         $('#event-price-per-person').text(matchedResource.price_per_person);
       });
- 
+
     
     document.getElementById('event-pay').addEventListener('click', async function () {
         var reservtime = datepickerreserve.getVal();
@@ -470,7 +470,7 @@ function createEditPopup(args, resourceId) {
     firstday = ev.start;
     lastday = ev.end;
     datepickerreserve.setVal([firstday, lastday]);
-    
+
     
     deleteButton.style.display = 'block';
     deleteEvent = false;
@@ -518,8 +518,9 @@ function createEditPopup(args, resourceId) {
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
-
+    console.log(resourceId)
     fetchReservationInfo(ev.reserve_id);
+    
 }
 
 {#function updateReservation(data,reserve_id) {#}
@@ -559,6 +560,7 @@ function fetchReservationInfo(reservation_id) {
 function fillPopupWithData(data) {
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
+    
     $('#event-buffer').val(data.bufferAfter);
     $('#event-buffer').prop('checked', data.bufferAfter);
     $('#event-user').val(data.mobile_number);
@@ -664,6 +666,7 @@ deleteButton.addEventListener('click', function () {
         method: 'GET',
         success: function (response) {
             console.log(response)
+            location.reload(true);
             popup.close();
         },
         error: function (response) {

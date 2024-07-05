@@ -223,9 +223,12 @@ def cancel_reservation(request, reservation_id):
         if not is_admin(request.user) and reservation.user != request.user:
             raise PermissionDenied
 
-        # تغییر حالت رزرو به کنسل شده
-        reservation.status = "cancelled"
-        reservation.save()
+        if reservation.status != "confirmed":
+            # تغییر حالت رزرو به کنسل شده
+            reservation.status = "cancelled"
+            reservation.save()
+        else:
+            messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
     except Reservation.DoesNotExist:
