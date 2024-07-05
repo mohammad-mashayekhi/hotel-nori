@@ -245,7 +245,7 @@ def list_of_bills(request):
 
         total_customers = all_users.count()
 
-        total_income = Reservation.objects.aggregate(total_income=Sum("total_pay"))[
+        total_income = Reservation.objects.filter(paid=True).aggregate(total_income=Sum("total_pay"))[
             "total_income"
         ]
 
