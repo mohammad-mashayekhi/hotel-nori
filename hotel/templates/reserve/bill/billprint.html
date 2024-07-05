@@ -1,4 +1,6 @@
 {% load static %}
+{% load jformat %}
+{% load reserve_tags %}
 <!DOCTYPE html>
 <html
   lang="en"
@@ -151,7 +153,7 @@
           </p>
         </div>
         <div>
-          <h4>صورتحساب #3492</h4>
+          <h4>#{{ reservation.reserve_id}}  صورتحساب </h4>
           <div class="mb-2">
             <span>تاریخ صدور:</span>
             <span class="fw-semibold">25 فروردین 1402</span>
@@ -163,121 +165,54 @@
         </div>
       </div>
 
-      <hr />
+      <hr/>
 
-      <div class="row d-flex justify-content-between mb-4">
-        <div class="col-sm-6 w-50">
-          <h6>صورتحساب به:</h6>
-          <p class="mb-1">تونی استارک</p>
-          <p class="mb-1">شرکت صنایع استارک</p>
-          <p class="mb-1">پارک علم و فناوری، اتاق 43</p>
-          <p class="mb-1">718-986-6062</p>
-          <p class="mb-0">example@gmail.com</p>
-        </div>
-        <div class="col-sm-6 w-50">
-          <h6>قبض به:</h6>
-          <table class="lh-2">
-            <tbody>
-              <tr>
-                <td class="pe-3">مجموع سررسید:</td>
-                <td>12,000,000 تومان</td>
-              </tr>
-              <tr>
-                <td class="pe-3">نام بانک:</td>
-                <td>بانک آمریکا</td>
-              </tr>
-              <tr>
-                <td class="pe-3">کشور:</td>
-                <td>ایالات متحده</td>
-              </tr>
-              <tr>
-                <td class="pe-3">IBAN:</td>
-                <td>ETD95476213874685</td>
-              </tr>
-              <tr>
-                <td class="pe-3">کد SWIFT:</td>
-                <td>BR91905</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+<div class="d-flex justify-content-around flex-wrap">
+            <div class="my-3">
+              <h6 class="pb-2" lang="fa">:فاکتور به</h6>
+              <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
+              <p class="mb-1" lang="fa"> کدملی: {{ reservation.user.national_code }}</p>
+              <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
+            </div>
+            <div class="px-5 my-3">
+              <h6 class="pb-2" lang="fa" style="">:مشخصات رزور</h6>
+              <table>
+                <tbody>
+                  <tr>
+                    <td lang="fa" style="">{{ reservation.reserve_id }}</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">:کد روزر</td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa" style="">{{ reservation.get_status_display }}</td>
+                    <td class="pe-3 fw-medium" lang="fa">:وضعیت </td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa" style="">{{ reservation.resource.name }}</td>
+                    <td class="pe-3 fw-medium" lang="fa">:اتاق</td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa" style="">{{ reservation.start  | jformat:'%Y/%m/%d' }}</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">:شروع</td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa">{{ reservation.end  | jformat:'%Y/%m/%d' }}</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">:پایین</td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa">{{ reservation.total_pay }}</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">:هزینه کل</td>  
+                  </tr>
+                  <tr>
+                    <td lang="fa">{% render_boolean_icon reservation.cleaning  %}</td>
+                    <td class="pe-3 fw-medium" lang="fa" style="">:نظافت</td>  
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-      <div class="table-responsive">
-        <table class="table border-top m-0">
-          <thead>
-            <tr>
-              <th>مورد</th>
-              <th>شرح</th>
-              <th>هزینه</th>
-              <th>تعداد</th>
-              <th>قیمت</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>32,000 تومان</td>
-              <td>1</td>
-              <td>32,000 تومان</td>
-            </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>22,000 تومان</td>
-              <td>1</td>
-              <td>22,000 تومان</td>
-            </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>17,000 تومان</td>
-              <td>2</td>
-              <td>34,000 تومان</td>
-            </tr>
-            <tr>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>لورم ایپسوم متن ساختگی</td>
-              <td>66,000 تومان</td>
-              <td>1</td>
-              <td>66,000 تومان</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="align-top px-4 py-3">
-                <p class="mb-2">
-                  <span class="me-1 fw-bold">فروشنده:</span>
-                  <span>استیو راجرز</span>
-                </p>
-                <span>با تشکر از کسب و کار شما</span>
-              </td>
-              <td class="text-end px-4 py-3">
-                <p class="mb-2">جمع جزء:</p>
-                <p class="mb-2">تخفیف:</p>
-                <p class="mb-2">مالیات:</p>
-                <p class="mb-0">جمع کل:</p>
-              </td>
-              <td class="px-4 py-3">
-                <p class="fw-semibold mb-2">154,000 تومان</p>
-                <p class="fw-semibold mb-2">0 تومان</p>
-                <p class="fw-semibold mb-2">50,000 تومان</p>
-                <p class="fw-semibold mb-0">204,000 تومان</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
-      <div class="row">
-        <div class="col-12 lh-1-85 mt-3">
-          <span class="fw-semibold">یادداشت:</span>
-          <span
-            >لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و
-            مجله</span
-          >
-        </div>
-      </div>
+
     </div>
 
     <!-- / Content -->
