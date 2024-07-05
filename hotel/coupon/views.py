@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from .models import Coupon
 from .forms import CouponForm
+from reserve.models import Reservation
 
 
 def create_coupon(request):
@@ -47,10 +48,11 @@ def coupon_list(request):
 def apply(request):
     coupon = request.POST.get("coupon")
     reservation_id = request.POST.get("reservation_id")
+    reservation = Reservation.objects.get(reserve_id=reservation_id)
     try:
         coupon = Coupon.objects.get(
             code=coupon,
-            users__id=request.user.id,
+            users__id=reservation.user.id,
             valid_from__lte=datetime.datetime.now(),
             valid_to__gte=datetime.datetime.now(),
             is_active=True,

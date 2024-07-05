@@ -87,6 +87,8 @@ def verify(request):
             reservation.status = "confirmed"
             reservation.payment_id = response['RefID']
             if request.session.get("coupon"):
+                coupon.users.remove(reservation.user)
+                coupon.save()
                 request.session.pop('coupon')
             reservation.save()
 
