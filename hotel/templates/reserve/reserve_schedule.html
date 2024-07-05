@@ -346,6 +346,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
         headerText: 'افزودن رزرو',
         buttons: [
             'cancel',
+            {% if request.user.user_status != "verified" %}
             {
                 text: 'ذخیره',
                 keyCode: 'enter',
@@ -378,6 +379,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
                 
                 cssClass: 'mbsc-popup-button-primary'
             },
+            {% endif %}
         ],
         anchor: elm,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
