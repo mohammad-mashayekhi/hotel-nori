@@ -76,8 +76,7 @@ def reserve_schedule(request):
 
 @login_required
 def add_reservation(request):
-
-    new_reservation_data = ReservationForm(data=request.POST)
+    new_reservation_data = ReservationForm(data=request.POST, user=request.user)
     if new_reservation_data.is_valid():
         reservation = new_reservation_data.save(commit=False)
 

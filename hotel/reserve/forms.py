@@ -6,7 +6,12 @@ from .models import Reservation, Resource
 
 
 class ReservationForm(forms.ModelForm):
-    mobile_number = forms.CharField(label="شماره تلفن", validators=[RegexValidator(r'^09\d{9}$', message="شماره وارد شده معتبر نمی باشد")])
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.fields['status'].required = False
+
+    mobile_number = forms.CharField(label="شماره تلفن", validators=[RegexValidator(r'^09\d{9}$', message="شماره وارد شده معتبر نمی باشد")], required=False)
     resource = forms.ModelChoiceField(
         queryset=Resource.objects.all(),
         label=("اتاق"),
@@ -33,6 +38,24 @@ class ReservationForm(forms.ModelForm):
             'paid': 'پرداخت شده',
             'total_pay': 'مبلغ کل'
         }
+
+    def clean_mobile_number(self):
+        if self.user.user_status == "verified":
+            return self.user.mobile_number
+        else:
+            if self.cleaned_data['mobile_number']:
+                return self.cleaned_data['mobile_number']
+            else:
+                raise forms.ValidationError("این فیلد لازم است")
+
+    def clean_status(self):
+        if self.user.user_status == "verified":
+            return 'pending_payment'
+        else:
+            if self.cleaned_data['status']:
+                return self.cleaned_data['status']
+            else:
+                raise forms.ValidationError("این فیلد لازم است")
 
     def clean_total_pay(self):
         start = self.cleaned_data['start']

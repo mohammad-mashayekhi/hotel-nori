@@ -357,19 +357,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
                     deleteEvent = false;
                     addReservation({
                         title: $('#event-title').val(),
-                        {% if request.user.user_status == "verified" %}
-                            mobile_number: "{{request.user.mobile_number}}",
-                        {% else %}
-                           mobile_number: $('#event-user').val(),
-                        {% endif %}
+                        mobile_number: $('#event-user').val(),
                         start: startreserve.toISOString(),
                         end: endreserve.toISOString(),
                         resource: $('#event-resource').val(),
-                        {% if request.user.user_status != "verified" %}
                         status: $('#event-status').val(),
-                        {% else %}
-                        status: "pending_payment",
-                        {% endif %}
                         cleaning: $('#event-cleaning').prop('checked'),
                         more_capacity: $('#event-more-capacity').val(),
                         paid: $('#event-paid').prop('checked'),
@@ -412,18 +404,17 @@ function createAddPopup(elm, resourceId, tempEvent) {
             const reservationId = await addReservation({
                 title: $('#event-title').val(),
                 {% if request.user.user_status != "verified" %}
-                    mobile_number: {{request.user.mobile_number }},
-                {% else %}
                     mobile_number: $('#event-user').val(),
                 {% endif %}                
                 start: startreserve.toISOString(),
                 end: endreserve.toISOString(),
                 resource: $('#event-resource').val(),
-                status: $('#event-status').val(),
+                {% if request.user.user_status != 'verified' %}
+                    status: $('#event-status').val(),
+                {% endif %}
                 cleaning: $('#event-cleaning').prop('checked'),
                 more_capacity: $('#event-more-capacity').val(),
-                paid: $('#event-paid').prop('checked'),
-                total_pay: totalCost
+                paid: $('#event-paid').prop('checked')
             });
             console.log('Reservation added successfully with ID:', reservationId);
             window.location.href ="/reserve/bill/" + reservationId + "/"; // Redirect to purchase settings
