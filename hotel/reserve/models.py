@@ -3,7 +3,7 @@ from django.conf import settings
 from shortuuid.django_fields import ShortUUIDField
 from django.utils import timezone
 from jalali_date import datetime2jalali, date2jalali
-from zarinpal.models import Payment
+
 
 
 class Reservation(models.Model):

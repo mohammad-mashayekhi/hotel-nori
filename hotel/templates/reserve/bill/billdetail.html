@@ -80,6 +80,7 @@
             </div>
           </div>
           <hr>
+        {% if not reservation.payment %}
           <div class="d-flex justify-content-between flex-wrap">
             <div class=" my-3">
                 <form action="/coupon/apply/" method="post">
@@ -124,11 +125,42 @@
               {% endif %}
             </div>    
           </div>
+        {% endif %}
         </div>
 
         <div class="card-body">
           <div class="row">
             <div class="col-12">
+              {% if reservation.payment %}
+                  {% with payment=reservation.payment %}
+                    <table id="TableofPayments" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>شماره کارت</th>
+                            <th>شناسه مرجع</th>
+                            <th>تاریخ پرداخت</th>
+                            <th>مبلغ پرداختی</th>
+                            <th>تخفیف</th>
+                            <th>کاربر</th>
+                            <th>پرداخت توسط کارمند</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td>{{ payment.card_number }}</td>
+                                <td>{{ payment.refrence_id }}</td>
+                                <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
+                                <td>{{ payment.cost_paid }}</td>
+                                <td>{{ payment.discount }}</td>
+                                <td>{{ payment.user.get_full_name }}</td>
+                                <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                   {% endwith %}
+              {% else %}
+                <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
+              {% endif %}  
             </div>
           </div>
         </div>
