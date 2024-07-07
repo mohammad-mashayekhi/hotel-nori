@@ -23,14 +23,15 @@ def create_coupon(request):
 
 def update_coupon(request, uuid):
     coupon = Coupon.objects.get(uuid=uuid)
-    form = CouponForm(request.POST, instance=coupon)
     if request.method == "POST":
+        form = CouponForm(request.POST, instance=coupon)
         if form.is_valid():
             form.save()
             return redirect("coupon:list")
         else:
             return render(request, "coupon/coupon_add_update.html", {"form": form})
     else:
+        form = CouponForm(instance=coupon)
         return render(request, "coupon/coupon_add_update.html", {"form": form})
 
 
