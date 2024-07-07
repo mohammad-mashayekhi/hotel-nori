@@ -11,7 +11,13 @@ class Payment(models.Model):
     reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE)
     payment_date = models.DateField(auto_now_add=True)
     cost_paid = models.DecimalField(max_digits=256, decimal_places=3)
-    discount = models.DecimalField(max_digits=256, decimal_places=3)
+    discount = models.DecimalField(max_digits=256, decimal_places=3, default=0)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
-    paid_by_stuff = models.BooleanField(default=False)
+
+    @property
+    def paid_by_stuff(self):
+        if self.user.user_status != "verified":
+            return True
+        else:
+            return False
 
