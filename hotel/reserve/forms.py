@@ -68,8 +68,8 @@ class ReservationForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
-        data["start"] = data["start"].replace(hour=12, minute=0, second=0,tzinfo=None)
-        data["end"] = data["end"].replace(hour=14, minute=0, second=0, tzinfo=None)
+        data["start"] = data["start"].replace(hour=14, minute=0, second=0,tzinfo=None)
+        data["end"] = data["end"].replace(hour=12, minute=0, second=0, tzinfo=None)
 
         # Check for overlapping reservations
         if self.instance:
