@@ -105,10 +105,10 @@
  padding-right:0px;
 }
 .mbsc-timeline-column, .mbsc-timeline-header-column{
- width: 100px;
+ width: 42px;
 }
 .mbsc-timeline-event-background{
-  height: 42px !important;
+  height: 32px !important;
 }
 @media (min-width: 769px) {
 .mbsc-timeline-resource-title{
@@ -269,8 +269,8 @@ var reservationData = {{ reservation_data|safe }};
 var resourceData = {{ resource_data|safe }};
 var invalidreservation = {{ closed_time_data|safe }};
 const statusColorMapping = {
-  pending_payment: '#4A827C',
-  confirmed: '#D1A975',
+  pending_payment: '#fcd200',
+  confirmed: '#72fc00',
   cleaning: '#DD5746',  
 };
 // Call the function and update the reservations array to add css color for calendar 
@@ -336,7 +336,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchingResource.price_per_person);
 
-    
+
     firstday = tempEvent.start;
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
@@ -357,19 +357,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
                     deleteEvent = false;
                     addReservation({
                         title: $('#event-title').val(),
-                        {% if request.user.user_status == "verified" %}
-                            mobile_number: "{{request.user.mobile_number}}",
-                        {% else %}
-                           mobile_number: $('#event-user').val(),
-                        {% endif %}
+                        mobile_number: $('#event-user').val(),
                         start: startreserve.toISOString(),
                         end: endreserve.toISOString(),
                         resource: $('#event-resource').val(),
-                        {% if request.user.user_status != "verified" %}
                         status: $('#event-status').val(),
-                        {% else %}
-                        status: "pending_payment",
-                        {% endif %}
                         cleaning: $('#event-cleaning').prop('checked'),
                         more_capacity: $('#event-more-capacity').val(),
                         paid: $('#event-paid').prop('checked'),
@@ -387,11 +379,11 @@ function createAddPopup(elm, resourceId, tempEvent) {
 
 
     var eventResourceSelect = document.getElementById('event-resource');
-    
+
     eventResourceSelect.addEventListener('change', function () {
         var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
         var resourceId = parseInt(selectedOption.value);
-        
+
         var matchedResource = resourceData.find(resource => resource.id === resourceId);
         $('#event-resource').val(resourceId);
         $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
@@ -401,7 +393,7 @@ function createAddPopup(elm, resourceId, tempEvent) {
         $('#event-paid').prop('checked', false);
         $('#event-price-per-person').text(matchedResource.price_per_person);
       });
- 
+
     
     document.getElementById('event-pay').addEventListener('click', async function () {
         var reservtime = datepickerreserve.getVal();
@@ -412,18 +404,17 @@ function createAddPopup(elm, resourceId, tempEvent) {
             const reservationId = await addReservation({
                 title: $('#event-title').val(),
                 {% if request.user.user_status != "verified" %}
-                    mobile_number: {{request.user.mobile_number }},
-                {% else %}
                     mobile_number: $('#event-user').val(),
                 {% endif %}                
                 start: startreserve.toISOString(),
                 end: endreserve.toISOString(),
                 resource: $('#event-resource').val(),
-                status: $('#event-status').val(),
+                {% if request.user.user_status != 'verified' %}
+                    status: $('#event-status').val(),
+                {% endif %}
                 cleaning: $('#event-cleaning').prop('checked'),
                 more_capacity: $('#event-more-capacity').val(),
-                paid: $('#event-paid').prop('checked'),
-                total_pay: totalCost
+                paid: $('#event-paid').prop('checked')
             });
             console.log('Reservation added successfully with ID:', reservationId);
             window.location.href ="/reserve/bill/" + reservationId + "/"; // Redirect to purchase settings
@@ -470,7 +461,7 @@ function createEditPopup(args, resourceId) {
     firstday = ev.start;
     lastday = ev.end;
     datepickerreserve.setVal([firstday, lastday]);
-    
+
     
     deleteButton.style.display = 'block';
     deleteEvent = false;
@@ -518,8 +509,9 @@ function createEditPopup(args, resourceId) {
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
-
+    console.log(resourceId)
     fetchReservationInfo(ev.reserve_id);
+    
 }
 
 {#function updateReservation(data,reserve_id) {#}
@@ -559,6 +551,7 @@ function fetchReservationInfo(reservation_id) {
 function fillPopupWithData(data) {
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
+    
     $('#event-buffer').val(data.bufferAfter);
     $('#event-buffer').prop('checked', data.bufferAfter);
     $('#event-user').val(data.mobile_number);
@@ -664,6 +657,7 @@ deleteButton.addEventListener('click', function () {
         method: 'GET',
         success: function (response) {
             console.log(response)
+            location.reload(true);
             popup.close();
         },
         error: function (response) {

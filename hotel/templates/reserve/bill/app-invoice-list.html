@@ -116,7 +116,7 @@
                 </div>
                 <div class="ms-3">
                   <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{{ total_income|intcomma }}</h5>
+                    <h5 class="mb-0">{% if total_income %}{{ total_income }}{% else %} 0 {% endif %}</h5>
     {#                <div#}
     {#                  class="mdi mdi-chevron-down text-success mdi-24px"#}
     {#                ></div>#}
@@ -196,8 +196,8 @@
                   <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
                   <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'reserve:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
-                  <td>{{ r.author }}</td>
-                  <td>{{ r.user }}</td>
+                  <td>{{ r.author.get_full_name }}</td>
+                  <td>{{ r.user.get_full_name }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
                   <td>{% render_payment_id r.payment_id %}</td>
                   <td>{{ r.resource.name }}</td>
@@ -266,7 +266,7 @@
 
     $('#status-filter').on('change', function() {
         var value = $(this).val();
-        table.column(7).search(value).draw();
+        table.column(9).search(value).draw();
     });
 
     // Re-draw the table whenever the input values change

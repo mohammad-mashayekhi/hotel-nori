@@ -76,8 +76,7 @@ def reserve_schedule(request):
 
 @login_required
 def add_reservation(request):
-
-    new_reservation_data = ReservationForm(data=request.POST)
+    new_reservation_data = ReservationForm(data=request.POST, user=request.user)
     if new_reservation_data.is_valid():
         reservation = new_reservation_data.save(commit=False)
 
@@ -223,9 +222,12 @@ def cancel_reservation(request, reservation_id):
         if not is_admin(request.user) and reservation.user != request.user:
             raise PermissionDenied
 
-        # تغییر حالت رزرو به کنسل شده
-        reservation.status = "cancelled"
-        reservation.save()
+        if reservation.status != "confirmed":
+            # تغییر حالت رزرو به کنسل شده
+            reservation.status = "cancelled"
+            reservation.save()
+        else:
+            messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
     except Reservation.DoesNotExist:
@@ -245,7 +247,7 @@ def list_of_bills(request):
 
         total_customers = all_users.count()
 
-        total_income = Reservation.objects.aggregate(total_income=Sum("total_pay"))[
+        total_income = Reservation.objects.filter(paid=True).aggregate(total_income=Sum("total_pay"))[
             "total_income"
         ]
 
@@ -275,7 +277,7 @@ def list_of_bills(request):
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
 
-    return render(request, "reserve/bill/billprint.html", {"reserve": reservation})
+    return render(request, "reserve/bill/billprint.html", {"reservation": reservation})
 
 
 @login_required

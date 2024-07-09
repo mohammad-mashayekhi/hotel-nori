@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_POST
 from .models import Coupon
 from .forms import CouponForm
+from reserve.models import Reservation
 
 
 def create_coupon(request):
@@ -22,14 +23,15 @@ def create_coupon(request):
 
 def update_coupon(request, uuid):
     coupon = Coupon.objects.get(uuid=uuid)
-    form = CouponForm(request.POST, instance=coupon)
     if request.method == "POST":
+        form = CouponForm(request.POST, instance=coupon)
         if form.is_valid():
             form.save()
             return redirect("coupon:list")
         else:
             return render(request, "coupon/coupon_add_update.html", {"form": form})
     else:
+        form = CouponForm(instance=coupon)
         return render(request, "coupon/coupon_add_update.html", {"form": form})
 
 
@@ -47,10 +49,11 @@ def coupon_list(request):
 def apply(request):
     coupon = request.POST.get("coupon")
     reservation_id = request.POST.get("reservation_id")
+    reservation = Reservation.objects.get(reserve_id=reservation_id)
     try:
         coupon = Coupon.objects.get(
             code=coupon,
-            users__id=request.user.id,
+            users__id=reservation.user.id,
             valid_from__lte=datetime.datetime.now(),
             valid_to__gte=datetime.datetime.now(),
             is_active=True,

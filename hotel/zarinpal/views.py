@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from reserve.models import Reservation
 from coupon.models import Coupon
 from .utils import get_payment_status_description
-
+from .models import Payment
 if settings.SANDBOX:
     sandbox = 'sandbox'
 else:
@@ -82,14 +82,26 @@ def verify(request):
     if request.GET.get("Status") == "OK":
         response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
         response = response.json()
+        print(response)
         if response['Status'] == 100 or response['Status'] == 101:
+            payment = Payment(card_number=response.get('CardPan', "502229******5995"),
+                              refrence_id=response['RefID'],
+                              cost_paid=amount,
+                              reservation=reservation,
+                              user=request.user,
+                              )
+
             reservation.paid = True
             reservation.status = "confirmed"
-            reservation.payment_id = response['RefID']
+
             if request.session.get("coupon"):
+                discount = coupon.get_discount(reservation.total_pay)
+                payment.discount = discount
+                coupon.users.remove(reservation.user)
+                coupon.save()
                 request.session.pop('coupon')
             reservation.save()
-
+            payment.save()
             data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
             return render(request, "zarinpal/purchase_status.html", context=data)
         else:
