@@ -1,4 +1,5 @@
 import datetime
+import jdatetime
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
@@ -31,7 +32,15 @@ def update_coupon(request, uuid):
         else:
             return render(request, "coupon/coupon_add_update.html", {"form": form})
     else:
-        form = CouponForm(instance=coupon)
+        # Convert Gregorian dates to Jalali before passing to the form
+        jalali_start_date = jdatetime.date.fromgregorian(date=coupon.valid_from).strftime("%Y/%m/%d")
+        jalali_end_date = jdatetime.date.fromgregorian(date=coupon.valid_to).strftime("%Y/%m/%d")
+
+        initial_data = {
+            'valid_from': jalali_start_date,
+            'valid_to': jalali_end_date,
+        }
+        form = CouponForm(instance=coupon, initial=initial_data)
         return render(request, "coupon/coupon_add_update.html", {"form": form})
 
 
