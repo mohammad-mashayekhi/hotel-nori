@@ -25,7 +25,7 @@ def date_formatter(date):
 @login_required
 def reserve_schedule(request):
     reservations = Reservation.objects.filter(
-        Q(status="confirmed") | Q(status="pending_payment")
+        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
     )
 
     if not is_admin(request.user):
@@ -92,9 +92,18 @@ def add_reservation(request):
         else:
             reservation.user = request.user
             reservation.author = request.user
-        # if user wnats cleaning we have to add one day to the reservation
+
         if reservation.cleaning:
-            reservation.end += timedelta(days=1)
+            cleaning = Reservation(
+                title=f"{reservation.title} نظافت رزور",
+                status="cleaning",
+                start=reservation.end + timedelta(hours=2),
+                end=reservation.end + timedelta(days=1),
+                resource=reservation.resource,
+                author=reservation.author,
+                user=reservation.user,
+            )
+            cleaning.save()
 
         reservation.save()
         try:
@@ -226,6 +235,9 @@ def cancel_reservation(request, reservation_id):
             # تغییر حالت رزرو به کنسل شده
             reservation.status = "cancelled"
             reservation.save()
+            if reservation.cleaning:
+                cleaning = Reservation.objects.get(user=reservation.user,author=reservation.author,start=reservation.end + timedelta(hours=2), end=reservation.end + timedelta(days=1), status="cleaning")
+                cleaning.delete()
         else:
             messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
