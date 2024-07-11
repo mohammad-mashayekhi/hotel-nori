@@ -153,19 +153,25 @@
           <h4>#{{ reservation.reserve_id}}  صورتحساب </h4>
           <div class="mb-2">
             <span>تاریخ صدور:</span>
-            <span class="fw-semibold">25 فروردین 1402</span>
+            <span class="fw-semibold">{{ reservation.created_at | jformat:' %Y/%m/%d' }}</span>
           </div>
+<<<<<<< HEAD
           <div len="293">
             <div class="mb-1">
               <font lang="fa"><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
             </div>
+=======
+          <div>
+            <span>تاریخ سررسید:</span>
+            <span class="fw-semibold">{{ reservation.payment.payment_date | jformat:' %Y/%m/%d' }}</span>
+>>>>>>> origin/yaser
           </div>
         </div>
       </div>
 
       <hr/>
 
-<div class="d-flex justify-content-around flex-wrap">
+      <div class="d-flex justify-content-around flex-wrap">
             <div class="my-3">
               <h6 class="pb-2" lang="fa">:فاکتور به</h6>
               <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
@@ -208,6 +214,44 @@
               </table>
             </div>
           </div>
+      
+     <hr/>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              {% if reservation.payment %}
+                  {% with payment=reservation.payment %}
+                    <table id="TableofPayments" class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>شماره کارت</th>
+                            <th>شناسه مرجع</th>
+                            <th>تاریخ پرداخت</th>
+                            <th>مبلغ پرداختی</th>
+                            <th>تخفیف</th>
+                            <th>کاربر</th>
+                            <th>پرداخت توسط کارمند</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr>
+                                <td>{{ payment.card_number }}</td>
+                                <td>{{ payment.refrence_id }}</td>
+                                <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
+                                <td>{{ payment.cost_paid }}</td>
+                                <td>{{ payment.discount }}</td>
+                                <td>{{ payment.user.get_full_name }}</td>
+                                <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                   {% endwith %}
+              {% else %}
+                <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
+              {% endif %}  
+            </div>
+          </div>
+        </div>   
 
 
 

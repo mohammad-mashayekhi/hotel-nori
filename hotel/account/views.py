@@ -24,18 +24,26 @@ from .utils import ( otp_generator, send_otp_sms, validate_otp)
 from reserve.models import Resource,Reservation
 from django.http import JsonResponse
 
+User = get_user_model()
+
+
 @login_required
 def update_profile(request):
+    user = request.user
+    initial_data = {}
+
     if request.method == "POST":
-        form = UserProfileEditFormUser(request.POST, instance=request.user)
+        form = UserProfileEditFormUser(request.POST, instance=user)
         if form.is_valid():
             form.save()
             return redirect("account:dashboard")
         else:
-            errors = form.errors.values()
-            return render(request, "account/dashboard.html", {"errors": errors})
+            return render(request, "account/dashboard.html", {"form": form})
     else:
-        form = UserProfileEditFormUser(instance=request.user)
+        # convert birth_date from gregorian to jalali  date when is it not None
+        if user.birth_date:
+            initial_data["birth_date"] = jdatetime.date.fromgregorian(date=user.birth_date).strftime("%Y/%m/%d")
+        form = UserProfileEditFormUser(instance=user)
 
     return render(request, "account/dashboard.html", {"form": form})
 
@@ -43,16 +51,19 @@ def update_profile(request):
 @user_passes_test(is_admin)
 def edit_user_profile(request, user_id):
     user = Userprofile.objects.get(id=user_id)
+    initial_data = {}
     if request.method == "POST":
         form = UserProfileEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
-            all_users = get_user_model().objects.all()
-            return render(request, "account/user-list.html", {"users": all_users})
+            return render(request, "account/edit-user.html", {"form": form})
         else:
             return render(request, "account/edit-user.html", {"form": form})
     else:
-        form = UserProfileEditForm(instance=user)
+        # convert birth_date from gregorian to jalali  date when is it not None
+        if user.birth_date:
+            initial_data["birth_date"] = jdatetime.date.fromgregorian(date=user.birth_date).strftime("%Y/%m/%d")
+        form = UserProfileEditForm(instance=user, initial=initial_data)
 
     return render(request, "account/edit-user.html", {"form": form})
 
@@ -60,8 +71,11 @@ def edit_user_profile(request, user_id):
 @login_required
 @user_passes_test(is_admin)
 def users(request):
-    user = get_user_model()
-    all_users = user.objects.all()
+    if request.user.user_status == "admin_level_b":
+        all_users = User.objects.filter(user_status="verified")
+    elif request.user.user_status == "admin_level_a":
+        all_users = User.objects.all()
+
     context = {
         "users": all_users,
     }

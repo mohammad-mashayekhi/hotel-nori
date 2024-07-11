@@ -1,13 +1,24 @@
+import jdatetime
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from django.forms.widgets import DateInput, Select
+from django.forms.widgets import DateInput, Select, TextInput
 from django.contrib.auth.forms import UserCreationForm
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from .models import Userprofile
 from .utils import validate_otp
 
+
 class UserProfileEditForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({"class": "form-control"})
+            field.widget.attrs.pop("autofocus", None)
+
+    birth_date = forms.CharField(widget=DateInput(attrs={'id': 'id_birth_date'}))
+
     class Meta:
         model = Userprofile
         fields = [
@@ -21,17 +32,17 @@ class UserProfileEditForm(forms.ModelForm):
             "birth_date",
             "user_status",
         ]
-        widgets = {
-            "gender": Select(choices=[("male", "مرد"), ("female", "زن")]),
-            "birth_date": DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date",
-                    "data-mddatetimepicker": "true",
-                    "data-placement": "auto",
-                }
-            ),
-        }
+
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        try:
+            birth_date = jdatetime.datetime.strptime(birth_date, "%Y/%m/%d").togregorian()
+        except ValueError:
+            raise forms.ValidationError("تاریخ معتبر نمی باشد")
+        return birth_date
+
+
+class UserProfileEditFormUser(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,8 +50,8 @@ class UserProfileEditForm(forms.ModelForm):
             field.widget.attrs.update({"class": "form-control"})
             field.widget.attrs.pop("autofocus", None)
 
+    birth_date = forms.CharField(widget=DateInput(attrs={'id': 'id_birth_date'}))
 
-class UserProfileEditFormUser(forms.ModelForm):
     class Meta:
         model = Userprofile
         fields = [
@@ -53,22 +64,8 @@ class UserProfileEditFormUser(forms.ModelForm):
             "birth_date",
         ]
         widgets = {
-            "gender": Select(choices=[("male", "مرد"), ("female", "زن")]),
-            "birth_date": DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date",
-                    "data-mddatetimepicker": "true",
-                    "data-placement": "auto",
-                }
-            ),
+            "gender": Select(choices=[("male", "مرد"), ("female", "زن")])
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({"class": "form-control"})
-            field.widget.attrs.pop("autofocus", None)
 
 
 class CustomUserCreationForm(UserCreationForm):

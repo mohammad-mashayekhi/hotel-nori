@@ -1,6 +1,6 @@
 {% extends 'account/base.html' %}
 {% load static %}
-
+{% load jformat %}
 {% block vendors-css %}
 <!-- Vendors CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
@@ -75,13 +75,12 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
             <td></td>
             <td>{{ u.first_name }}</td>
             <td>{{ u.last_name }}</td>
-            <td>{{ u.get_user_status_display_persian }}</td>          
-            <td>{{ u.mobile_number }}</td>
+            <td>{{ u.get_user_status_display}}</td>          
+            <td>{{ au.mobile_number }}</td>
             <td>{{ u.national_code }}</td>
-            <td>{{ u.birth_date }}</td>
-            <td>{{ u.gender }}</td>
-            <td><a href="{% url 'account:edit_user' u.id %}"><i
-              class="mdi mdi-pencil"></i></a></td>
+            <td>{{ u.birth_date |  jformat:' %Y/%m/%d' }}</td>
+            <td>{{ u.get_gender_display }}</td>
+            <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
           </tr>
           {% endfor %}        
         </tbody>

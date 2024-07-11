@@ -38,6 +38,11 @@ USER_STATUS_CHOICES = [
     ("admin_level_b", "کاربر ادمین سطح b"),
 ]
 
+GENDER_CHOICES = [
+    ("male", "مرد"),
+    ("female", "زن"),
+]
+
 
 class Userprofile(AbstractUser):
     username = None
@@ -46,7 +51,7 @@ class Userprofile(AbstractUser):
     national_code = models.CharField(max_length=20, blank=True, null=True)
     otp = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(99999)])
     otp_expiry = models.DateTimeField(blank=True, null=True)
-    gender = models.CharField(max_length=10, blank=True, null=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     birth_date = models.DateField(blank=True, null=True)
     user_status = models.CharField(
         max_length=20,

@@ -5,7 +5,6 @@ from django.utils import timezone
 from jalali_date import datetime2jalali, date2jalali
 
 
-
 class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
         ('pending_payment', 'در انتظار پرداخت'),  # در انتظار پرداخت
@@ -13,6 +12,7 @@ class Reservation(models.Model):
         ('onlocalpay', 'پرداخت حضوری'),              # تایید شده و پرداخت حضوری
         ('canceled', 'کنسل شده'),                # لغو شده
         ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
+        ("cleaning", 'زمان نظافت')
     ]
     reserve_id = ShortUUIDField(unique=True, length=5, max_length=9, alphabet="abcdefgh12345")
     start = models.DateTimeField(null=True)

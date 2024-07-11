@@ -1,6 +1,13 @@
 {% extends 'account/base.html' %}
 {% load static %}
 
+
+{% block page-css %}
+    <link rel="stylesheet" href="{% static 'vendor/css/pages/cards-statistics.css' %}" />
+    <link rel="stylesheet" href="{% static 'datepicker/css/persianDatepicker-default.css' %}">
+    {{ form.media.css }}
+{% endblock %}
+
 {% block vendors-css %}
 <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
@@ -9,10 +16,6 @@
 <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/apex-charts/apex-charts.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/swiper/swiper.css' %}" />
-{% endblock %}
-
-{% block page-css %}
-<link rel="stylesheet" href="{% static 'vendor/css/pages/cards-statistics.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -30,6 +33,8 @@
                       <div class="form-floating form-floating-outline">
                         {{form.first_name}}
                           <label for="firstName">نام</label>
+                      </div>
+                      <div class="errorlist error" id="id_firstname_error">
                           {% if form.first_name.errors %}
                               {% for error in form.first_name.errors %}
                                   <div class="text-danger">{{ error }}</div>
@@ -41,6 +46,8 @@
                       <div class="form-floating form-floating-outline">
                         {{form.last_name}}
                           <label for="lastName">نام خانوادگی</label>
+                      </div>
+                      <div class="errorlist error" id="id_last_name_error">  
                           {% if form.last_name.errors %}
                               {% for error in form.last_name.errors %}
                                   <div class="text-danger">{{ error }}</div>
@@ -52,16 +59,21 @@
                     <div class="form-floating form-floating-outline">
                       {{form.email}}
                         <label for="mobileNumber">ایمیل</label>
-                        {% if form.email.errors %}
-                            {% for error in form.email.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                            {% endfor %}
-                        {% endif %}
                     </div>
-                </div>                  <div class="col-md-6">
+                      <div class="errorlist error" id="id_email_error">
+                            {% if form.email.errors %}
+                                {% for error in form.email.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                      </div>  
+                </div>                  
+                  <div class="col-md-6">
                       <div class="form-floating form-floating-outline">
-                        {{form.mobile_number}}
-                          <label for="mobileNumber">شماره تلفن همراه</label>
+                          {{form.mobile_number}}
+                          <label for="id_mobile_number">شماره تلفن همراه</label>
+                      </div>
+                      <div class="errorlist error" id="id_mobile_number_error">
                           {% if form.mobile_number.errors %}
                               {% for error in form.mobile_number.errors %}
                                   <div class="text-danger">{{ error }}</div>
@@ -73,56 +85,66 @@
                       <div class="form-floating form-floating-outline">
                         {{form.card_number}}
                         <label for="cardNumber">شماره کارت</label>
-                          {% if form.card_number.errors %}
-                              {% for error in form.card_number.errors %}
-                                  <div class="text-danger">{{ error }}</div>
-                              {% endfor %}
-                          {% endif %}
                       </div>
+                          <div class="errorlist error" id="id_card_number_error">
+                              {% if form.card_number.errors %}
+                                  {% for error in form.card_number.errors %}
+                                      <div class="text-danger">{{ error }}</div>
+                                  {% endfor %}
+                              {% endif %}
+                          </div>                      
                   </div>
                   <div class="col-md-6">
                       <div class="form-floating form-floating-outline">
                         {{form.national_code}}
                         <label for="nationalCode">کد ملی</label>
-                          {% if form.national_code.errors %}
-                              {% for error in form.national_code.errors %}
-                                  <div class="text-danger">{{ error }}</div>
-                              {% endfor %}
-                          {% endif %}
                       </div>
+                          <div class="errorlist error" id="id_national_error">
+                              {% if form.national_code.errors %}
+                                  {% for error in form.national_code.errors %}
+                                      <div class="text-danger">{{ error }}</div>
+                                  {% endfor %}
+                              {% endif %}
+                          </div>                      
                   </div>
                   <div class="col-md-6">
                       <div class="form-floating form-floating-outline">
                         {{form.gender}}
                           <label for="gender">جنسیت</label>
-                          {% if form.gender.errors %}
-                              {% for error in form.gender.errors %}
-                                  <div class="text-danger">{{ error }}</div>
-                              {% endfor %}
-                          {% endif %}
                       </div>
+                      <div class="errorlist error" id="id_gender_error">
+                              {% if form.gender.errors %}
+                                  {% for error in form.gender.errors %}
+                                      <div class="text-danger">{{ error }}</div>
+                                  {% endfor %}
+                              {% endif %}
+                      </div>                      
                   </div>
                   <div class="col-md-6">
                       <div class="form-floating form-floating-outline">
                         {{form.birth_date}}
                           <label for="birthDate">تاریخ تولد</label>
-                          {% if form.birth_date.errors %}
-                              {% for error in form.birth_date.errors %}
-                                  <div class="text-danger">{{ error }}</div>
-                              {% endfor %}
-                          {% endif %}
                       </div>
+                      <div class="errorlist error" id="id_birth_date_error">
+                              {% if form.birth_date.errors %}
+                                  {% for error in form.birth_date.errors %}
+                                      <div class="text-danger">{{ error }}</div>
+                                  {% endfor %}
+                              {% endif %}
+                      </div>                      
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating form-floating-outline">
                       {{form.user_status}}
                         <label for="userStatus">وضعیت کاربر</label>
-                        {% if form.user_status.errors %}
-                            {% for error in form.user_status.errors %}
-                                <div class="text-danger">{{ error }}</div>
-                            {% endfor %}
-                        {% endif %}
                     </div>
+                       <div class="errorlist error" id="id_birth_date_error">
+                            {% if form.user_status.errors %}
+                                {% for error in form.user_status.errors %}
+                                    <div class="text-danger">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                       </div>                      
                 </div>
               </div>
               <div class="mt-4">
@@ -131,7 +153,39 @@
               </div>
           </form>
       </div>
-      
+          <script>
+                // Disable default invalid event and add custom validation
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.getElementById('editProfileForm');
+                    const fields = form.querySelectorAll('input, select, textarea'); // Include all form fields
+        
+                    fields.forEach(function(field) {
+                        console.log(field)
+                        field.addEventListener('invalid', function(event) {
+                            event.preventDefault(); // Prevent default invalid error
+                            const div = document.getElementById(field.id + '_error');
+                            if (!div.querySelector('p')) {
+                                if (div) {
+                                    const p = document.createElement('p');
+                                    p.textContent = 'این فیلد لازم است';
+                                    div.appendChild(p);
+                                    div.style.display = 'block';
+                                }
+                            }    
+                        });
+        
+                        // Reset error message on input
+                        field.addEventListener('input', function(event) {
+                            const errorMessage = document.getElementById(field.id + '_error')
+                            if (errorMessage){
+                                console.log(errorMessage.style.display)
+                                errorMessage.style.display = "none"
+                            }
+                        });
+                        
+                    });
+                 });    
+    </script>
         <!-- /Account -->
       </div>
     </div>
@@ -146,5 +200,17 @@
 {% endblock %}
 
 {% block page-js %}
-<script src="{% static 'js/dashboards-ecommerce.js' %}"></script>
+    <script src="{% static 'js/dashboards-ecommerce.js' %}"></script>
+    <script src="{% static 'datepicker/js/jquery-1.10.1.min.js' %}"></script>
+    <script src="{% static 'datepicker/js/persian-date.min.js' %}"></script>
+    <script src="{% static 'datepicker/js/persianDatepicker.min.js' %}"></script>
+    <script>
+    
+    $(document).ready(function() {
+        var startDateInput = $('#id_birth_date');
+        startDateInput.persianDatepicker();
+        endDateInput.persianDatepicker();
+    });
+</script>
+{{ form.media.js }}
 {% endblock %}
