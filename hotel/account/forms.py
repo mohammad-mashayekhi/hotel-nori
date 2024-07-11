@@ -32,9 +32,6 @@ class UserProfileEditForm(forms.ModelForm):
             "birth_date",
             "user_status",
         ]
-        widgets = {
-            "gender": Select(choices=[("male", "مرد"), ("female", "زن")]),
-        }
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
