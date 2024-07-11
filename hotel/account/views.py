@@ -22,6 +22,8 @@ from .forms import (CustomUserCreationForm, OTPValidationForm, PhoneNumberForm,
                     Userprofile, UserProfileEditForm, UserProfileEditFormUser)
 from .utils import ( otp_generator, send_otp_sms, validate_otp)
 
+User = get_user_model()
+
 
 @login_required
 def update_profile(request):
@@ -67,8 +69,11 @@ def edit_user_profile(request, user_id):
 @login_required
 @user_passes_test(is_admin)
 def users(request):
-    user = get_user_model()
-    all_users = user.objects.all()
+    if request.user.user_status == "admin_level_b":
+        all_users = User.objects.filter(user_status="verified")
+    elif request.user.user_status == "admin_level_a":
+        all_users = User.objects.all()
+
     context = {
         "users": all_users,
     }
