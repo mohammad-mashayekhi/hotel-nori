@@ -117,12 +117,14 @@
                     event.preventDefault(); // Prevent default invalid error
                     const div = document.getElementById(field.id + '_error');
                     if (div) {
-                        const p = document.createElement('p');
-                        p.textContent = 'این فیلد لازم است';    
-                        div.appendChild(p);
-                        console.log(div)
+                        if (!div.querySelector('p')) {
+                            const p = document.createElement('p');
+                            p.textContent = 'این فیلد لازم است';
+                            div.appendChild(p);
+                            div.style.display = 'block';
+                        }    
+                        
                     }
-                    console.log(p)
                 });
 
                 // Reset error message on input
