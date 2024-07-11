@@ -172,13 +172,14 @@
     <div class="col-xl-3 col-md-4 col-12 invoice-actions">
       <div class="card">
         <div class="card-body">
-          <button class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" lang="fa"> دانلود </button>
+        {% if reservation.status == "confirmed" %}
           <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
              href="{% url 'reserve:billprint' reservation.reserve_id %}" lang="fa"> چاپ </a>
-        {% if request.user.uesr_status == "admin_level_2" %}
-          <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect"
-             lang="fa"> ویرایش فاکتور </a>
         {% endif %}
+{#        {% if request.user.uesr_status == "admin_level_2" %}#}
+{#          <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect"#}
+{#             lang="fa"> ویرایش فاکتور </a>#}
+{#        {% endif %}#}
         {% if reservation.status == "pending_payment" %}
               <div>  
                       <form action="{% url 'zarinpal:request' %}" method="post">
