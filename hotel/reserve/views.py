@@ -50,7 +50,7 @@ def reserve_schedule(request):
     resources = Resource.objects.all()
     resource_data = list(
         resources.values(
-            "id", "name", "capacity", "price", "price_per_person", "max_capacity"
+            "id", "name", "cssClass", "capacity", "price", "price_per_person", "max_capacity"
         )
     )
 
@@ -62,6 +62,7 @@ def reserve_schedule(request):
     for reservation in closed_time_data:
         reservation["start"] = date_formatter(reservation["start"])
         reservation["end"] = date_formatter(reservation["end"])
+        reservation["cssClass"] = 'md-lunch-break-class mbsc-flex'
 
     context = {
 
@@ -108,8 +109,8 @@ def add_reservation(request):
         reservation.save()
         try:
             # Convert and format dates
-            # jalali_start = jdatetime.datetime.fromgregorian(datetime=new_reservation_data)
-            # jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
+            # jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+            # jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
             # formatted_start = jalali_start.strftime("%Y/%m/%d")
             # formatted_end = jalali_end.strftime("%Y/%m/%d")
 
@@ -186,7 +187,6 @@ def add_reservation(request):
 #         if update_reservation_data.non_field_errors():
 #             messages.add_message(request, level=messages.ERROR, message=update_reservation_data.non_field_errors())
 #         return JsonResponse({"success": False}, status=400)
-
 
 
 @login_required

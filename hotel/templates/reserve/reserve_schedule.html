@@ -29,6 +29,13 @@
 .room1.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
+.room2{
+ border-bottom: 4px solid #135D66 !important;
+ min-height: 52px !important;
+}
+.room2.mbsc-timeline-resource {
+  background:  rgba(246, 231, 203, 0.7);
+}
 .room3{
  border-bottom: 4px solid #77B0AA !important;
  min-height: 52px !important;
@@ -36,11 +43,25 @@
 .room3.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
+.room4{
+ border-bottom: 4px solid #58A399 !important;
+ min-height: 52px !important;
+}
+.room4.mbsc-timeline-resource {
+  background:  rgba(246, 231, 203, 0.7);
+}
 .room5{
  border-bottom: 4px solid #ADBC9F !important;
  min-height: 52px !important;
 }
 .room5.mbsc-timeline-resource {
+  background:  rgba(246, 231, 203, 0.7);
+}
+.room6{
+ border-bottom: 4px solid #A8CD9F !important;
+ min-height: 52px !important;
+}
+.room6.mbsc-timeline-resource {
   background:  rgba(246, 231, 203, 0.7);
 }
 .room7{
@@ -85,6 +106,7 @@
 .room12.mbsc-timeline-resource {
   background: rgba(246, 231, 203, 0.7);
 }
+
 .mbsc-timeline-header .mbsc-flex .mbsc-ios .mbsc-rtl{
   background: rgba(246, 231, 203, 0.7) !important;
   font-weight: bold;
@@ -268,31 +290,8 @@ mobiscroll.setOptions({
 var reservationData = {{ reservation_data|safe }};
 var resourceData = {{ resource_data|safe }};
 var invalidreservation = {{ closed_time_data|safe }};
-const statusColorMapping = {
-  pending_payment: '#fcd200',
-  confirmed: '#72fc00',
-  cleaning: '#DD5746',  
-};
-// Call the function and update the reservations array to add css color for calendar 
-function addColorToReservations(reservations, statusColorMapping) {
-  return reservations.map(reservation => {
-    const color = statusColorMapping[reservation.status] || '#000000'; // Provide a default color if status is not in the mapping
-     
-    return { ...reservation, color: color, cssClass: 'md-lunch-break-class mbsc-flex ' };
-  });
-}
 
-// Call the function and update the reservations array to add css class for calendar 
-const reservations_with_css = addColorToReservations(reservationData, statusColorMapping);
 
-function addCssClassToReservations(reservations) {
-  return reservations.map(reservation => {
-    return { ...reservation, cssClass: `md-lunch-break-class mbsc-flex room${reservation.id}` };
-  });
-}
-
-const resourceData_with_css = addCssClassToReservations(resourceData);
-const invalidreservation_with_css = addCssClassToReservations(invalidreservation);
 
 var popup, oldEvent, tempEvent = {}, deleteEvent;
 var startcalendar = '2024-04-20';
@@ -585,9 +584,9 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
             size: 30
         }
     },
-    invalid: invalidreservation_with_css,
-    data: reservations_with_css,
-    resources: resourceData_with_css,
+    invalid: invalidreservation,
+    data: reservationData,
+    resources: resourceData,
     renderHeader: function () {
         return `
             <div class="mbsc-form-control-wrapper mbsc-bt-cotrol-today">
