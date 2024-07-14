@@ -50,7 +50,7 @@ def reserve_schedule(request):
     resources = Resource.objects.all()
     resource_data = list(
         resources.values(
-            "id", "name", "capacity", "price", "price_per_person", "max_capacity"
+            "id", "name", "cssClass", "capacity", "price", "price_per_person", "max_capacity"
         )
     )
 
@@ -58,15 +58,22 @@ def reserve_schedule(request):
     for reservation in reservation_data:
         reservation["start"] = date_formatter(reservation["start"])
         reservation["end"] = date_formatter(reservation["end"])
+        if reservation["status"] == 'confirmed':
+            reservation["color"] = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
+        elif reservation["status"] == 'pending_payment':
+            reservation["color"] = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
+        elif reservation["status"] == 'cleaning':
+            reservation["color"] = '#DD5746'  # رنگ زرد برای رزروهای نظافت
 
     for reservation in closed_time_data:
         reservation["start"] = date_formatter(reservation["start"])
         reservation["end"] = date_formatter(reservation["end"])
+        reservation["cssClass"] = 'md-lunch-break-class mbsc-flex'
 
     context = {
-
         "reservation_data": json.dumps(reservation_data),
         "resource_data": json.dumps(resource_data),
+        "closed_time_data": json.dumps(closed_time_data),
         "closed_time_data": json.dumps(closed_time_data),
         "resources": resources,
         "reservations": reservations,
@@ -108,8 +115,8 @@ def add_reservation(request):
         reservation.save()
         try:
             # Convert and format dates
-            # jalali_start = jdatetime.datetime.fromgregorian(datetime=new_reservation_data)
-            # jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
+            # jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+            # jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
             # formatted_start = jalali_start.strftime("%Y/%m/%d")
             # formatted_end = jalali_end.strftime("%Y/%m/%d")
 
@@ -118,7 +125,7 @@ def add_reservation(request):
             # send_message_accept_reserve(
             #     user_username, resource, formatted_start, formatted_end, message=message_key
             # )
-            messages.add_message(request, messages.SUCCESS,message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
+            messages.add_message(request, messages.SUCCESS, message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
         except Exception as e:
             print(e)
@@ -188,7 +195,6 @@ def add_reservation(request):
 #         return JsonResponse({"success": False}, status=400)
 
 
-
 @login_required
 def get_reservation_info(request):
     if request.method == "GET" and "reservation_id" in request.GET:
@@ -239,6 +245,7 @@ def cancel_reservation(request, reservation_id):
                 cleaning = Reservation.objects.get(user=reservation.user,author=reservation.author,start=reservation.end + timedelta(hours=2), end=reservation.end + timedelta(days=1), status="cleaning")
                 cleaning.delete()
         else:
+            return JsonResponse({"success": False,"paid": True, "error": "Reservation not found"}, status=404)
             messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
