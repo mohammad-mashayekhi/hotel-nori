@@ -200,7 +200,7 @@
                   <td>{{ r.author.get_full_name }}</td>
                   <td>{{ r.user.get_full_name }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
-                  <td>{% render_payment_id r.payment_id %}</td>
+                  <td>{% render_payment_id r.payment.refrence_id %}</td>
                   <td>{{ r.resource.name }}</td>
                   <td>{{ r.get_status_display }}</td>
                   <td>{% render_boolean_icon r.cleaning %}</td>
