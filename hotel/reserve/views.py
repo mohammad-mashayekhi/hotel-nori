@@ -58,6 +58,12 @@ def reserve_schedule(request):
     for reservation in reservation_data:
         reservation["start"] = date_formatter(reservation["start"])
         reservation["end"] = date_formatter(reservation["end"])
+        if reservation["status"] == 'confirmed':
+            reservation["color"] = '#4A827C'  # رنگ سبز برای رزروهای تایید شده
+        elif reservation["status"] == 'pending_payment':
+            reservation["color"] = '#D1A975'  # رنگ زرد برای رزروهای در انتظار پرداخت
+        elif reservation["status"] == 'cleaning':
+            reservation["color"] = '#DD5746'  # رنگ زرد برای رزروهای نظافت
 
     for reservation in closed_time_data:
         reservation["start"] = date_formatter(reservation["start"])
@@ -65,9 +71,9 @@ def reserve_schedule(request):
         reservation["cssClass"] = 'md-lunch-break-class mbsc-flex'
 
     context = {
-
         "reservation_data": json.dumps(reservation_data),
         "resource_data": json.dumps(resource_data),
+        "closed_time_data": json.dumps(closed_time_data),
         "closed_time_data": json.dumps(closed_time_data),
         "resources": resources,
         "reservations": reservations,
@@ -119,7 +125,7 @@ def add_reservation(request):
             # send_message_accept_reserve(
             #     user_username, resource, formatted_start, formatted_end, message=message_key
             # )
-            messages.add_message(request, messages.SUCCESS,message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
+            messages.add_message(request, messages.SUCCESS, message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
         except Exception as e:
             print(e)
@@ -239,6 +245,7 @@ def cancel_reservation(request, reservation_id):
                 cleaning = Reservation.objects.get(user=reservation.user,author=reservation.author,start=reservation.end + timedelta(hours=2), end=reservation.end + timedelta(days=1), status="cleaning")
                 cleaning.delete()
         else:
+            return JsonResponse({"success": False,"paid": True, "error": "Reservation not found"}, status=404)
             messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
