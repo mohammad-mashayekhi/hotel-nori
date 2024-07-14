@@ -237,7 +237,7 @@ def cancel_reservation(request, reservation_id):
         if not is_admin(request.user) and reservation.user != request.user:
             raise PermissionDenied
 
-        if reservation.status != "confirmed":
+        if reservation.status != "confirmed" or request.user.user_status != "verified":
             # تغییر حالت رزرو به کنسل شده
             reservation.status = "cancelled"
             reservation.save()
@@ -245,8 +245,8 @@ def cancel_reservation(request, reservation_id):
                 cleaning = Reservation.objects.get(user=reservation.user,author=reservation.author,start=reservation.end + timedelta(hours=2), end=reservation.end + timedelta(days=1), status="cleaning")
                 cleaning.delete()
         else:
-            return JsonResponse({"success": False,"paid": True, "error": "Reservation not found"}, status=404)
-            messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
+            return JsonResponse({"success": False, "error": "Reservation is paid"}, status=403)
+            #messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
     except Reservation.DoesNotExist:

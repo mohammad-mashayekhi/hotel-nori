@@ -277,6 +277,7 @@
         </div>
     {% endif %}
 </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var toastElList = [].slice.call(document.querySelectorAll('.toast'))
@@ -494,6 +495,7 @@ function addReservation(data) {
             error: function () {
                 reject(null);
                 alert("خطا در ثبت رزور");
+                location.reload(true);
             }
         });
     });
@@ -719,10 +721,11 @@ deleteButton.addEventListener('click', function () {
         },
         error: function (response) {
             console.log(response)
-            if (response.paid){
+            if (response.status === 403){
                 alert("شما نمی توانید روزر پرداخت شده را لغو کنید")
             }
-            else{ alert('خطا در دریافت اطلاعات رزرو');
+            else{ 
+                alert('خطا در دریافت اطلاعات رزرو');
             }
                
         }
