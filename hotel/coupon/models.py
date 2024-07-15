@@ -12,9 +12,9 @@ class Coupon(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     valid_from = models.DateField()
     valid_to = models.DateField()
-    discount = models.DecimalField(max_digits=2, decimal_places=0,
+    discount = models.DecimalField(max_digits=3, decimal_places=0,
                                    validators=[MinValueValidator(1), MaxValueValidator(100)])
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name} from {self.valid_from} to {self.valid_to}"
