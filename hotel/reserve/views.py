@@ -120,6 +120,10 @@ def add_reservation(request):
             user, created = User.objects.get_or_create(
                 mobile_number=user_mobile_number
             )
+            if created:
+                user.set_password(user_mobile_number)
+                user.user_status = "verified"
+            user.save()
             reservation.user = user
         else:
             reservation.user = request.user
