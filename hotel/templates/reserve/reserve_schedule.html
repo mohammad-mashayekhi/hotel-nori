@@ -710,12 +710,12 @@ popup = mobiscroll.popup('#demo-add-popup', {
 
 deleteButton.addEventListener('click', function () {
     var deletedEvent = tempEvent;
-    myCalendar.removeEvent(tempEvent);
     $.ajax({
         url: 'reserve/remove_reservation/' + tempEvent.reserve_id,
         method: 'GET',
         success: function (response) {
             console.log(response)
+            myCalendar.removeEvent(tempEvent);
             location.reload(true);
             popup.close();
         },
