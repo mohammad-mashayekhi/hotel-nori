@@ -29,7 +29,7 @@
             </div>
             <div>
               <div class="mb-1">
-                <span lang="fa" style=""><span>تاریخ انتشار:</span> <span>{{reservation.get_created_at_dhamsi}}</span></span>
+                <span lang="fa" style=""><span>تاریخ انتشار:</span> <span>{{reservation.created_at | jformat:'%Y/%m/%d'}}</span></span>
               </div>
             </div>
           </div>
@@ -39,8 +39,12 @@
           <div class="d-flex justify-content-around flex-wrap">
             <div class="my-3">
               <h6 class="pb-2" lang="fa">فاکتور به:</h6>
+              {% if reservation.user.get_full_name %}  
               <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
+              {% endif %}  
+              {% if reservation.user.national_code %}  
               <p class="mb-1" lang="fa"> کدملی: {{ reservation.user.national_code }}</p>
+              {% endif %}
               <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
             </div>
             <div class="px-5 my-3">

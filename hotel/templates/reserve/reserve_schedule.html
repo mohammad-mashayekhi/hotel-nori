@@ -277,6 +277,7 @@
         </div>
     {% endif %}
 </div>
+</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var toastElList = [].slice.call(document.querySelectorAll('.toast'))
@@ -494,6 +495,7 @@ function addReservation(data) {
             error: function () {
                 reject(null);
                 alert("خطا در ثبت رزور");
+                location.reload(true);
             }
         });
     });
@@ -556,8 +558,11 @@ function createEditPopup(args, resourceId) {
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
-    console.log(resourceId)
     fetchReservationInfo(ev.reserve_id);
+
+    document.getElementById('event-pay').addEventListener('click',  function () {
+        window.location.href ="/reserve/bill/" + ev.reserve_id + "/"; // Redirect to purchase settings
+    });
     
 }
 
@@ -662,7 +667,7 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     onEventClick: function (args) {
         tempEvent = args.event;
         resourceId = args.event.resource;
-        if (!popup.isVisible()) {
+        if ((!popup.isVisible()) && args.event.reserve_id )  {
             createEditPopup(args, resourceId);
         }
     },
@@ -708,21 +713,22 @@ popup = mobiscroll.popup('#demo-add-popup', {
 
 deleteButton.addEventListener('click', function () {
     var deletedEvent = tempEvent;
-    myCalendar.removeEvent(tempEvent);
     $.ajax({
         url: 'reserve/remove_reservation/' + tempEvent.reserve_id,
         method: 'GET',
         success: function (response) {
             console.log(response)
+            myCalendar.removeEvent(tempEvent);
             location.reload(true);
             popup.close();
         },
         error: function (response) {
             console.log(response)
-            if (response.paid){
+            if (response.status === 403){
                 alert("شما نمی توانید روزر پرداخت شده را لغو کنید")
             }
-            else{ alert('خطا در دریافت اطلاعات رزرو');
+            else{
+                alert('خطا در دریافت اطلاعات رزرو');
             }
                
         }
