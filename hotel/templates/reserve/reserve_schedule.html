@@ -664,7 +664,7 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     onEventClick: function (args) {
         tempEvent = args.event;
         resourceId = args.event.resource;
-        if (!popup.isVisible()) {
+        if ((!popup.isVisible()) && args.event.reserve_id )  {
             createEditPopup(args, resourceId);
         }
     },
@@ -724,7 +724,7 @@ deleteButton.addEventListener('click', function () {
             if (response.status === 403){
                 alert("شما نمی توانید روزر پرداخت شده را لغو کنید")
             }
-            else{ 
+            else{
                 alert('خطا در دریافت اطلاعات رزرو');
             }
                

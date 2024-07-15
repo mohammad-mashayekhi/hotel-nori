@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.forms.models import model_to_dict
 from datetime import timedelta
 from .models import Reservation, Resource
 from .forms import ReservationForm
@@ -17,6 +18,7 @@ from .utils import get_reservation_color, datetime_combine, send_message_accept_
 from .models import Resource, Reservation
 from .decorators import is_admin
 from coupon.models import Coupon
+
 
 def date_formatter(date):
     return date.strftime("%Y-%m-%dT%H:%M")
@@ -29,19 +31,43 @@ def reserve_schedule(request):
     )
 
     if not is_admin(request.user):
-        reservations = reservations.filter(user=request.user)
-    reservation_data = list(
-        reservations.values(
-            "reserve_id",
-            "start",
-            "end",
-            "title",
-            "status",
-            "resource",
-            "cleaning",
-            "user",
+        reservation_data = list()
+        for reservation in reservations:
+            if reservation.user == request.user:
+                reservation_data.append(
+                    model_to_dict(reservation, fields=[
+                        "reserve_id",
+                        "start",
+                        "end",
+                        "title",
+                        "status",
+                        "resource",
+                        "cleaning",
+                        "user",
+                    ])
+                )
+            else:
+                reservation_dict = model_to_dict(reservation, fields={
+                    "start",
+                    "end",
+                    "status",
+                    "resource",
+                })
+                reservation_dict["title"] = "رزور شده"
+                reservation_data.append(reservation_dict)
+    else:
+        reservation_data = list(
+            reservations.values(
+                "reserve_id",
+                "start",
+                "end",
+                "title",
+                "status",
+                "resource",
+                "cleaning",
+                "user",
+            )
         )
-    )
     closed_time_data = list(
         Reservation.objects.filter(status="closetime").values(
             "reserve_id", "status", "start", "end", "title", "resource"
@@ -74,7 +100,6 @@ def reserve_schedule(request):
         "reservation_data": json.dumps(reservation_data),
         "resource_data": json.dumps(resource_data),
         "closed_time_data": json.dumps(closed_time_data),
-        "closed_time_data": json.dumps(closed_time_data),
         "resources": resources,
         "reservations": reservations,
     }
@@ -88,19 +113,19 @@ def add_reservation(request):
         reservation = new_reservation_data.save(commit=False)
 
         # if user is not normal user it can reserve for another user but if it is not it can reserve for itself
-        if request.user.user_status != "verified":
+        if request.user.user_status != "veified":
             reservation.author = request.user
             User = get_user_model()
             user_mobile_number = new_reservation_data.cleaned_data["mobile_number"]
             user, created = User.objects.get_or_create(
-                mobile_number=user_mobile_number, defaults={"password": user_mobile_number}
+                mobile_number=user_mobile_number
             )
             reservation.user = user
         else:
             reservation.user = request.user
             reservation.author = request.user
 
-        if reservation.cleaning:
+        if reservation.cleaning and reservation.status != "closetime":
             cleaning = Reservation(
                 title=f"{reservation.title} نظافت رزور",
                 status="cleaning",
@@ -125,7 +150,8 @@ def add_reservation(request):
             # send_message_accept_reserve(
             #     user_username, resource, formatted_start, formatted_end, message=message_key
             # )
-            messages.add_message(request, messages.SUCCESS, message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
+            messages.add_message(request, messages.SUCCESS,
+                                 message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
         except Exception as e:
             print(e)
@@ -134,7 +160,7 @@ def add_reservation(request):
         for field in new_reservation_data:
             if field.errors:
                 print(field.errors, field.label)
-                messages.add_message(request, level= messages.ERROR, message=field.errors,extra_tags=field.label)
+                messages.add_message(request, level=messages.ERROR, message=field.errors, extra_tags=field.label)
         if new_reservation_data.non_field_errors():
             messages.add_message(request, level=messages.ERROR, message=new_reservation_data.non_field_errors())
         return JsonResponse({"success": False}, status=400)
@@ -242,11 +268,13 @@ def cancel_reservation(request, reservation_id):
             reservation.status = "cancelled"
             reservation.save()
             if reservation.cleaning:
-                cleaning = Reservation.objects.get(user=reservation.user,author=reservation.author,start=reservation.end + timedelta(hours=2), end=reservation.end + timedelta(days=1), status="cleaning")
+                cleaning = Reservation.objects.get(user=reservation.user, author=reservation.author,
+                                                   start=reservation.end + timedelta(hours=2),
+                                                   end=reservation.end + timedelta(days=1), status="cleaning")
                 cleaning.delete()
         else:
             return JsonResponse({"success": False, "error": "Reservation is paid"}, status=403)
-            #messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
+            # messages.add_message(request, messages.ERROR, "امکان لغو رزور هنگامی که پول را پرداخته کرده اید نمی باشد")
 
         return JsonResponse({"success": True})
     except Reservation.DoesNotExist:
