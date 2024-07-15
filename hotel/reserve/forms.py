@@ -32,6 +32,8 @@ class ReservationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.user = user
         self.fields["status"].required = False
+        self.fields["title"].required = False
+
 
     mobile_number = forms.CharField(
         label="شماره تلفن",
@@ -82,16 +84,22 @@ class ReservationForm(forms.ModelForm):
         if self.user.user_status == "verified":
             return self.user.mobile_number
         else:
+            print(self.cleaned_data["status"])
             if self.cleaned_data["mobile_number"]:
                 return self.cleaned_data["mobile_number"]
+            elif self.cleaned_data["status"] == "closetime":
+                return self.user.mobile_number
             else:
                 raise forms.ValidationError("این فیلد لازم است")
+
 
     def clean_status(self):
         if self.user.user_status == "verified":
             return "pending_payment"
         else:
             if self.cleaned_data["status"]:
+                if self.cleaned_data["status"] == "closetime":
+                    self.cleaned_data["title"] = " زمان تعطیل"
                 return self.cleaned_data["status"]
             else:
                 raise forms.ValidationError("این فیلد لازم است")
