@@ -558,8 +558,11 @@ function createEditPopup(args, resourceId) {
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
-    console.log(resourceId)
     fetchReservationInfo(ev.reserve_id);
+
+    document.getElementById('event-pay').addEventListener('click',  function () {
+        window.location.href ="/reserve/bill/" + ev.reserve_id + "/"; // Redirect to purchase settings
+    });
     
 }
 
