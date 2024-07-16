@@ -30,6 +30,12 @@ def send_request(request):
         amount = coupon.get_total_pay_with_discount(reservation.total_pay)
     else:
         amount = reservation.total_pay
+    if amount == 0:
+
+        request.session["order_id"] = request.POST["order_id"]
+        url = reverse("zarinpal:verify")
+        return redirect(f"{url}?Status=OK")
+
     data = {
         "MerchantID": settings.MERCHANT,
         "Amount": float(amount),
@@ -71,25 +77,30 @@ def verify(request):
         amount = coupon.get_total_pay_with_discount(reservation.total_pay)
     else:
         amount = reservation.total_pay
-    data = {
-        "MerchantID": settings.MERCHANT,
-        "Amount": float(amount),
-        "Authority": request.GET["Authority"],
-    }
-    data = json.dumps(data)
-    # set content length by data
-    headers = {'content-type': 'application/json', 'content-length': str(len(data))}
+
+    if amount != 0:
+        data = {
+            "MerchantID": settings.MERCHANT,
+            "Amount": float(amount),
+            "Authority": request.GET["Authority"],
+        }
+        data = json.dumps(data)
+        # set content length by data
+        headers = {'content-type': 'application/json', 'content-length': str(len(data))}
+
     if request.GET.get("Status") == "OK":
-        response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
-        response = response.json()
-        print(response)
-        if response['Status'] == 100 or response['Status'] == 101:
-            payment = Payment(card_number=response.get('CardPan', "502229******5995"),
-                              refrence_id=response['RefID'],
-                              cost_paid=amount,
+        if amount != 0:
+            response = requests.post(ZP_API_VERIFY, data=data, headers=headers)
+            response = response.json()
+        if amount == 0 or response['Status'] == 100 or response['Status'] == 101:
+
+            payment = Payment(cost_paid=amount,
                               reservation=reservation,
                               user=request.user,
                               )
+            if amount != 0:
+                payment.card_number = response.get('CardPan', "502229******5995"),
+                payment.refrence_id = response['RefID']
 
             reservation.paid = True
             reservation.status = "confirmed"
@@ -100,9 +111,13 @@ def verify(request):
                 coupon.users.remove(reservation.user)
                 coupon.save()
                 request.session.pop('coupon')
+
             reservation.save()
             payment.save()
-            data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
+            if amount !=0:
+                data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
+            else:
+                data = {'status': True, 'RefID': "پرداخت رایگان بدون تراکنش بوده است", 'amount': reservation.total_pay, }
             return render(request, "zarinpal/purchase_status.html", context=data)
         else:
             code_desciption = get_payment_status_description(response["Status"])

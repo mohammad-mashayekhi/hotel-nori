@@ -21,19 +21,23 @@
             <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به لیست رزورها</a>
         </div>
         {% elif not status %}
-        <p>خرید شما متاسفانه انجام نشد. جزئیات خطا به شرح زیر است:</p>
-            <ul>
-                <li>کد خطا: {{ code }}</li>
-                <li>توضیحات: {{ description  }}</li>
-
-            </ul>
-            <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
-            <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+        <div class="card-body">    
+            <p>خرید شما متاسفانه انجام نشد. جزئیات خطا به شرح زیر است:</p>
+                <ul>
+                    <li>کد خطا: {{ code }}</li>
+                    <li>توضیحات: {{ description  }}</li>
+    
+                </ul>
+                <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+                <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+        </div>    
         {% elif NOK %}
-        <p>خرید شما موفقیت امیز نبوده است یا کاربر از پرداخت منصرف شده است.</p>
-            <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
-            <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به لیست رزور ها</a>            
-        {% endif %}
+        <div class="card-body">    
+            <p>خرید شما موفقیت امیز نبوده است یا کاربر از پرداخت منصرف شده است.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+                <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به لیست رزور ها</a>
+            {% endif %}
+        </div> 
     </div>
 </div>
 {% endblock %}
