@@ -20,4 +20,4 @@ def render_payment_id(payment_id):
     if payment_id:
         return payment_id
     else:
-        return "پرداخت نشده"
+        return "بدون شناسه پرداخت"
