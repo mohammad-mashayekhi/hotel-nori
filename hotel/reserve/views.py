@@ -26,6 +26,9 @@ def date_formatter(date):
 
 @login_required
 def reserve_schedule(request):
+    if request.user.user_status == "normal":
+        raise PermissionDenied("You are not allowed to")
+
     reservations = Reservation.objects.filter(
         Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
     )
@@ -108,6 +111,10 @@ def reserve_schedule(request):
 
 @login_required
 def add_reservation(request):
+
+    if request.user.user_status == "normal":
+        raise PermissionDenied("You are not allowed")
+
     new_reservation_data = ReservationForm(data=request.POST, user=request.user)
     if new_reservation_data.is_valid():
         reservation = new_reservation_data.save(commit=False)
@@ -125,7 +132,7 @@ def add_reservation(request):
                 user.user_status = "verified"
             user.save()
             reservation.user = user
-        else:
+        elif is_admin(request.user):
             reservation.user = request.user
             reservation.author = request.user
 
