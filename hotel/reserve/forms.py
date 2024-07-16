@@ -84,14 +84,12 @@ class ReservationForm(forms.ModelForm):
         if self.user.user_status == "verified":
             return self.user.mobile_number
         else:
-            print(self.cleaned_data["status"])
             if self.cleaned_data["mobile_number"]:
                 return self.cleaned_data["mobile_number"]
             elif self.cleaned_data["status"] == "closetime":
                 return self.user.mobile_number
             else:
                 raise forms.ValidationError("این فیلد لازم است")
-
 
     def clean_status(self):
         if self.user.user_status == "verified":
@@ -103,6 +101,12 @@ class ReservationForm(forms.ModelForm):
                 return self.cleaned_data["status"]
             else:
                 raise forms.ValidationError("این فیلد لازم است")
+
+    def clean_paid(self):
+        if self.cleaned_data["status"] == "confirmed":
+            return True
+        else:
+            return self.cleaned_data["paid"]
 
     def clean_start(self):
         start_date = self.cleaned_data["start"].replace(
@@ -143,7 +147,6 @@ class ReservationForm(forms.ModelForm):
 
     def clean(self):
         data = super().clean()
-
         # Check for overlapping reservations
         if overlap_checker(data, instance=self.instance):
             raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
