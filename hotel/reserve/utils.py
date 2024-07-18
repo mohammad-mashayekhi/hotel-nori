@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from kavenegar import *
 
 # def add_reminder_sms(request):
 #     reservation_id = request.POST.get('reservation_id')
@@ -59,10 +59,11 @@ def send_message_accept_reserve(phone_number, room_id, enter_date, exit_date, me
             "token2": TOKEN2,
             "token3": TOKEN3,
             "type": TYPE,
+            "debugmode": "enabled"
         }
         response = api.verify_lookup(params)
         print(response)
-    except APIException as e:
+    except Exception as e:
         print(e)
     except HTTPException as e:
         print(e)

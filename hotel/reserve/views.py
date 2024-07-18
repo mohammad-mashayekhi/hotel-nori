@@ -151,16 +151,16 @@ def add_reservation(request):
         reservation.save()
         try:
             # Convert and format dates
-            # jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
-            # jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
-            # formatted_start = jalali_start.strftime("%Y/%m/%d")
-            # formatted_end = jalali_end.strftime("%Y/%m/%d")
+            jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+            jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+            formatted_start = jalali_start.strftime("%Y/%m/%d")
+            formatted_end = jalali_end.strftime("%Y/%m/%d")
 
-            # # Send message
-            # message_key = "reserve-room-test" if reservation.paid else "reserve-room-not-paid"
-            # send_message_accept_reserve(
-            #     reservation.mobile_number, reservation.resource, formatted_start, formatted_end, message=message_key
-            # )
+            # Send message
+            message_key = "reserve-room-test" if reservation.paid else "reserve-room-not-paid"
+            send_message_accept_reserve(
+                reservation.user.mobile_number, reservation.resource, formatted_start, formatted_end, message=message_key
+            )
             messages.add_message(request, messages.SUCCESS,
                                  message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
