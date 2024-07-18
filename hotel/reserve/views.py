@@ -157,9 +157,9 @@ def add_reservation(request):
             # formatted_end = jalali_end.strftime("%Y/%m/%d")
 
             # # Send message
-            # message_key = "reserve-room-test" if paid else "reserve-room-not-paid"
+            # message_key = "reserve-room-test" if reservation.paid else "reserve-room-not-paid"
             # send_message_accept_reserve(
-            #     user_username, resource, formatted_start, formatted_end, message=message_key
+            #     reservation.mobile_number, reservation.resource, formatted_start, formatted_end, message=message_key
             # )
             messages.add_message(request, messages.SUCCESS,
                                  message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
