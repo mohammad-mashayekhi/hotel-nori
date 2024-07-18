@@ -16,7 +16,7 @@ from .models import Reservation, Resource
 from .forms import ReservationForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
-from .decorators import is_admin
+from .decorators import is_admin, user_authenticated_and_verified_required
 from coupon.models import Coupon
 
 
@@ -24,7 +24,7 @@ def date_formatter(date):
     return date.strftime("%Y-%m-%dT%H:%M")
 
 
-@login_required
+@user_authenticated_and_verified_required
 def reserve_schedule(request):
     if request.user.user_status == "normal":
         raise PermissionDenied("You are not allowed to")
@@ -109,7 +109,7 @@ def reserve_schedule(request):
     return render(request, "reserve/reserve_schedule.html", context)
 
 
-@login_required
+@user_authenticated_and_verified_required
 def add_reservation(request):
 
     if request.user.user_status == "normal":
@@ -232,7 +232,7 @@ def add_reservation(request):
 #         return JsonResponse({"success": False}, status=400)
 
 
-@login_required
+@user_authenticated_and_verified_required
 def get_reservation_info(request):
     if request.method == "GET" and "reservation_id" in request.GET:
         reservation_id = request.GET.get("reservation_id")
@@ -266,7 +266,7 @@ def get_reservation_info(request):
         return JsonResponse({"error": "Invalid request"}, status=400)
 
 
-@login_required
+@user_authenticated_and_verified_required
 def cancel_reservation(request, reservation_id):
     try:
         # یافتن رزرو مربوطه از پایگاه داده
@@ -298,7 +298,8 @@ def cancel_reservation(request, reservation_id):
         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
-@login_required
+
+@user_authenticated_and_verified_required
 def list_of_bills(request):
     if is_admin(request.user):
         all_users = get_user_model().objects.all()
@@ -332,13 +333,15 @@ def list_of_bills(request):
     return render(request, "reserve/bill/app-invoice-list.html", context=context)
 
 
+
+@user_authenticated_and_verified_required
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
 
     return render(request, "reserve/bill/billprint.html", {"reservation": reservation})
 
 
-@login_required
+@user_authenticated_and_verified_required
 def bill_detail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
 

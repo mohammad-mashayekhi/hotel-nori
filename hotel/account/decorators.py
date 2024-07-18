@@ -51,21 +51,22 @@ def is_admin_level_two(user):
 #     return wrapper
 #
 #
-# def user_authenticated_and_verified_required(view_func):
-#     @wraps(view_func)
-#     def wrapper(request, *args, **kwargs):
-#         if request.user.is_authenticated:
-#             if request.user.user_status == 'verified' or request.user.user_status == 'admin_level_1' or request.user.user_status == 'admin_level_2':
-#                 return view_func(request, *args, **kwargs)
-#             else:
-#                 messages.error(request, "برای دسترسی به این صفحه باید حساب کاربری خود را تایید کنید.")
-#                 return render(request,'account/dashboard.html')
-#         else:
-#             messages.error(request, "برای دسترسی به این صفحه باید وارد حساب کاربری خود شوید.")
-#             return render(request,'account/dashboard.html')
-#     return wrapper
-#
-#
+
+def user_authenticated_and_verified_required(view_func):
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if request.user.user_status == 'verified' or request.user.user_status == 'admin_level_a' or request.user.user_status == 'admin_level_b':
+                return view_func(request, *args, **kwargs)
+            else:
+                messages.error(request, "برای دسترسی به این صفحه باید حساب کاربری خود را تایید کنید.")
+                return render(request,'account/dashboard.html')
+        else:
+            messages.error(request, "برای دسترسی به این صفحه باید وارد حساب کاربری خود شوید.")
+            return render(request,'account/dashboard.html')
+    return wrapper
+
+
 def login_required(
     function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
 ):

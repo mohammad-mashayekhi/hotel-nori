@@ -1,6 +1,32 @@
 from datetime import datetime
 
 
+# def add_reminder_sms(request):
+#     reservation_id = request.POST.get('reservation_id')
+
+#     print(reservation_id)
+#     try:
+#         # یافتن رزرو مربوطه از پایگاه داده
+#         reservation = Reservation.objects.get(reserve_id=reservation_id)
+
+#         # Convert Gregorian date to Jalali date
+#         jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+#         jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+
+#         # Format the Jalali dates as needed
+#         formatted_start = jalali_start.strftime('%Y/%m/%d')
+#         formatted_end = jalali_end.strftime('%Y/%m/%d')
+
+#         send_message_accept_reserve('09106961316',reservation.resource,formatted_start,formatted_end,message='')
+#         return JsonResponse({'success': True})
+#     except Reservation.DoesNotExist:
+#         # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse({'success': False, 'error': 'Reservation not found'}, status=404)
+#     except Exception as e:
+#         print(e)
+#         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
 def get_reservation_color(status):
     colors = {
         "confirmed": "#4A827C",
