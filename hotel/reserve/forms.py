@@ -65,8 +65,8 @@ class ReservationForm(forms.ModelForm):
             "total_pay",
         ]
         widgets = {
-            "start": forms.DateInput(attrs={"class": "datepicker"}),
-            "end": forms.DateInput(attrs={"class": "datepicker"}),
+            "start": forms.DateInput(format=['%m/%d/%Y'],attrs={"class": "datepicker"},),
+            "end": forms.DateInput(format=['%m/%d/%Y'],attrs={"class": "datepicker"}),
         }
 
         labels = {
