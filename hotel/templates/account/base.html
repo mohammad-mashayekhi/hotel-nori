@@ -109,7 +109,7 @@
 
         <ul class="menu-inner py-1">
           <!-- Dashboards -->
-        {% if request.user.user_status != "verified" %}
+          {% if request.user.user_status == "admin_level_a" or request.user.user_status == "admin_level_b" %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">ادمین</span>
           </li>
@@ -143,13 +143,19 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:roomsprice' %} active {% endif %}">
+            <a href="{% url 'reserve:roomsprice' %}" class="menu-link ">
+              <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+              <div>قیمت اتاق‌ها</div>
+            </a>
+          </li>
           <li class="menu-item {% if request.resolver_match.view_name == 'coupon:list' %} active {% endif %}">
             <a href="{% url 'coupon:list' %}" class="menu-link ">
             <i class="menu-icon tf-icons mdi mdi-ticket-percent-outline"></i>     
               <div>کد تخفیف ها</div>
             </a>
           </li>            
-        {% else %}
+          {% elif request.user.user_status == "verified" %}
           <li class="menu-header fw-light mt-4">
             <span class="menu-header-text">کاربر</span>
           </li>
@@ -177,6 +183,13 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+        {% else %}
+        <li class="menu-item">
+          <a href="{% url 'home' %}" class="menu-link ">
+            <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+            <div>صفحه اصلی</div>
+          </a>
+        </li>
         {% endif %}
         </ul>
       </aside>

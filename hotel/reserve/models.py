@@ -67,16 +67,17 @@ class Reservation(models.Model):
 
 
 class Resource(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,blank=True, null=True)
     cssClass = models.CharField(max_length=7)
     capacity = models.IntegerField(blank=True, null=True)
     max_capacity = models.IntegerField(blank=True, null=True)
-    price = models.IntegerField( blank=True, null=True)
+    price = models.IntegerField( blank=True, null=True) # Regular price
+    peak_price = models.IntegerField(blank=True, null=True)  # Peak time price
     price_per_person = models.IntegerField( blank=True, null=True)
     number_area = models.IntegerField(blank=True, null=True)
     number_bed = models.IntegerField(blank=True, null=True)
     number_pad = models.IntegerField(blank=True, null=True)
-    status = models.BooleanField(default=True)  # True for active, False for inactive
+    status = models.BooleanField(default=True,blank=True, null=True)  # True for active, False for inactive
 
     img = models.ImageField(upload_to='image_room/' , null=True, blank=True)
 

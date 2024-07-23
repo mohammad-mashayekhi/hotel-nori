@@ -148,3 +148,35 @@ class ReservationForm(forms.ModelForm):
         if overlap_checker(data, instance=self.instance):
             raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
         return data
+
+
+from django import forms
+from .models import Resource
+from django.forms import modelformset_factory
+
+class ResourceForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ['name', 'price', 'peak_price', 'status']
+        labels = {
+            'name': 'نام',
+            'price': 'قیمت',
+            'peak_price': 'قیمت در زمان پیک',
+            'status': 'وضعیت',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control number-input'}),
+            'peak_price': forms.NumberInput(attrs={'class': 'form-control number-input'}),
+            'status': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        for field in ['name','price', 'peak_price']:
+            value = cleaned_data.get(field)
+            if value in [None, '']:  # Check if value is None or empty string
+                cleaned_data[field] = 0
+        return cleaned_data
+    
+ResourceFormSet = modelformset_factory(Resource, form=ResourceForm, extra=0)

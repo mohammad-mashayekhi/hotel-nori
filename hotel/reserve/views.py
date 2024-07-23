@@ -13,7 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.forms.models import model_to_dict
 from datetime import timedelta
 from .models import Reservation, Resource
-from .forms import ReservationForm
+from .forms import ReservationForm,ResourceForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
 from .decorators import is_admin
@@ -73,7 +73,10 @@ def reserve_schedule(request):
             "reserve_id", "status", "start", "end", "title", "resource"
         )
     )
-    resources = Resource.objects.all()
+    if not is_admin(request.user):
+        resources = Resource.objects.filter(status=True) 
+    else:  
+        resources = Resource.objects.all()
     resource_data = list(
         resources.values(
             "id", "name", "cssClass", "capacity", "price", "price_per_person", "max_capacity"
@@ -356,3 +359,23 @@ def bill_detail(request, reserve_id):
 def rooms(request):
     resources = Resource.objects.filter(status=True)
     return render(request, "reserve/room-list.html", {"resources": resources})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Resource
+from .forms import ResourceFormSet
+
+@login_required
+def roomsprice(request):
+    if request.method == 'POST':
+        formset = ResourceFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            return redirect('reserve:roomsprice')
+        else:
+            # Print formset errors to debug if formset is not valid
+            print(formset.errors)
+    else:
+        formset = ResourceFormSet(queryset=Resource.objects.all())
+
+    return render(request, "reserve/roomsprice.html", {"formset": formset})
