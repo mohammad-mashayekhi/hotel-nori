@@ -149,6 +149,12 @@
               <div>قیمت اتاق‌ها</div>
             </a>
           </li>
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:peaktime' %} active {% endif %}">
+            <a href="{% url 'reserve:peaktime' %}" class="menu-link ">
+              <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+              <div>زمان‌های پیک</div>
+            </a>
+          </li>
           <li class="menu-item {% if request.resolver_match.view_name == 'coupon:list' %} active {% endif %}">
             <a href="{% url 'coupon:list' %}" class="menu-link ">
             <i class="menu-icon tf-icons mdi mdi-ticket-percent-outline"></i>     

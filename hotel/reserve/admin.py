@@ -3,4 +3,5 @@ from .models import *
 
 admin.site.register(Reservation)
 admin.site.register(Resource)
+admin.site.register(Peaktime)
 

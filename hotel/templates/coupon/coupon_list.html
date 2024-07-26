@@ -81,49 +81,53 @@
           </div>
         </div>
       </div>
-    <!-- Invoice List Table -->
     <div class="card">
+      <div class="card-header">
         <h4 class="fw-bold py-3 mb-4">
             <span class="text-muted fw-light">لیست /</span> کدتخفیف
         </h4>
         <div class="d-flex justify-content-first mb-3">
-            <a href="{% url 'coupon:create' %}" class="btn btn-primary">
-                <i class="mdi mdi-plus-circle-outline"></i> یک کد تخفیف جدید بسازید
-            </a>
-        </div>
-        <div class="card-datatable table-responsive">
-            <table id="coupon_table" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">نام</th>
-                        <th scope="col">کد</th>
-                        <th scope="col">معتبر از</th>
-                        <th scope="col">معتبر تا</th>
-                        <th scope="col">درصد تخقیف</th>
-                        <th scope="col">فعال هست</th>
-                        <th scope="col">حذف</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for coupon in coupons %}
-                    <tr data-id="{{ coupon.uuid }}">
-                        <td><a href="{% url 'coupon:update' coupon.uuid %}" >{{ coupon.name }}</a></td>
-                        <td>{{ coupon.code }}</td>
-                        <td>{{ coupon.valid_from | jformat:' %Y/%m/%d' }}</td>
-                        <td>{{ coupon.valid_to  | jformat:' %Y/%m/%d' }}</td>
-                        <td>{{ coupon.discount }}%</td>
-                        <td>{% render_boolean_icon  coupon.is_active %}</td>
-                        <td>
-                            <button  class="btn btn-danger delete-coupon" data-id="{{ coupon.uuid }}">
-                                <i class="mdi mdi-delete"></i>
-                            </button>
-                        </td>                    
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+          <a href="{% url 'coupon:create' %}" class="btn btn-primary">
+              <i class="mdi mdi-plus-circle-outline"></i> یک کد تخفیف جدید بسازید
+          </a>
+      </div>
+      </div>
+        <div class="card-body">
+          
+          <div class="card-datatable table-responsive">
+              <table id="coupon_table" class="table table-striped">
+                  <thead>
+                      <tr>
+                          <th scope="col">نام</th>
+                          <th scope="col">کد</th>
+                          <th scope="col">معتبر از</th>
+                          <th scope="col">معتبر تا</th>
+                          <th scope="col">درصد تخقیف</th>
+                          <th scope="col">فعال هست</th>
+                          <th scope="col">حذف</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for coupon in coupons %}
+                      <tr data-id="{{ coupon.uuid }}">
+                          <td><a href="{% url 'coupon:update' coupon.uuid %}" >{{ coupon.name }}</a></td>
+                          <td>{{ coupon.code }}</td>
+                          <td>{{ coupon.valid_from | jformat:' %Y/%m/%d' }}</td>
+                          <td>{{ coupon.valid_to  | jformat:' %Y/%m/%d' }}</td>
+                          <td>{{ coupon.discount }}%</td>
+                          <td>{% render_boolean_icon  coupon.is_active %}</td>
+                          <td>
+                              <button  class="btn btn-danger delete-coupon" data-id="{{ coupon.uuid }}">
+                                  <i class="mdi mdi-delete"></i>
+                              </button>
+                          </td>                    
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+      </div>
     </div>
-  </div>
+    </div>
 </div>
 {% endblock %}
 {% block page-js %}

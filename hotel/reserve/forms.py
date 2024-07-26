@@ -3,7 +3,8 @@ from django import forms
 from django.core.validators import RegexValidator
 from django_select2 import forms as s2forms
 from django.db.models import Q
-from .models import Reservation, Resource
+from .models import Reservation, Resource,Peaktime
+from django.forms import modelformset_factory
 
 
 def overlap_checker(data, instance=None):
@@ -25,7 +26,6 @@ def overlap_checker(data, instance=None):
     if overlapping_reservations.exists():
         return True
     return False
-
 
 class ReservationForm(forms.ModelForm):
     def __init__(self, user=None, *args, **kwargs):
@@ -136,9 +136,34 @@ class ReservationForm(forms.ModelForm):
         start = self.cleaned_data["start"]
         end = self.cleaned_data["end"]
         resource = self.cleaned_data["resource"]
-        total_days = end - start
-        # The addition of 2 is to ensure that both the start and end dates are counted
-        total_pay = (total_days.days + 2) * resource.price
+        more_capacity = self.cleaned_data.get("more_capacity", 0)  # تعداد نفرات بیشتر از ظرفیت مجاز
+
+        # محاسبه تعداد روزها
+        total_days = (end - start).days + 1
+
+        # تنظیم مقدار اولیه برای قیمت کل
+        total_pay = 0
+
+        # تکرار در روزهای بین تاریخ شروع و پایان
+        current_date = start
+        while current_date <= end:
+            # بررسی اینکه آیا این روز در زمان پیک است یا نه
+            if Peaktime.objects.filter(start__lte=current_date, end__gte=current_date).exists():
+                daily_rate = resource.peak_price
+            else:
+                daily_rate = resource.price
+
+            # محاسبه قیمت برای این روز
+            total_pay += daily_rate
+
+            # محاسبه هزینه اضافی برای ظرفیت بیشتر
+            if more_capacity > 0:
+                extra_person_charge = resource.extra_person_price
+                total_pay += more_capacity * extra_person_charge
+
+            # روز بعد
+            current_date += timedelta(days=1)
+
         return total_pay
 
     def clean(self):
@@ -148,11 +173,6 @@ class ReservationForm(forms.ModelForm):
         if overlap_checker(data, instance=self.instance):
             raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
         return data
-
-
-from django import forms
-from .models import Resource
-from django.forms import modelformset_factory
 
 class ResourceForm(forms.ModelForm):
     class Meta:
@@ -180,3 +200,41 @@ class ResourceForm(forms.ModelForm):
         return cleaned_data
     
 ResourceFormSet = modelformset_factory(Resource, form=ResourceForm, extra=0)
+
+class PeaktimeForm(forms.ModelForm):
+    
+    class Meta:
+        model = Peaktime
+        fields = [
+            "start",
+            "end",
+        ]
+        widgets = {
+            "start": forms.DateInput(attrs={"class": "datepicker"}),
+            "end": forms.DateInput(attrs={"class": "datepicker"}),
+        }
+
+        labels = {
+            "start": "تاریخ شروع",
+            "end": "تاریخ پایان",
+        }
+
+    def clean_start(self):
+        start_date = self.cleaned_data["start"].replace(
+            hour=14, minute=0, second=0, tzinfo=None
+        )
+        return start_date
+
+    def clean_end(self):
+        end_date = self.cleaned_data["end"].replace(
+            hour=12, minute=0, second=0, tzinfo=None
+        )
+        return end_date
+    
+    # def clean(self):
+    #     data = super().clean()
+
+        # # Check for overlapping reservations
+        # if overlap_checker(data, instance=self.instance):
+        #     raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
+        # return data

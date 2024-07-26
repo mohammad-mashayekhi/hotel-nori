@@ -157,23 +157,10 @@
     <div class="card">
         <div class="card-body">
         <div class="card-datatable table-responsive">
-            <label for="min-price"> حداقل قیمت : </label>
-            <input type="number" id="min-price" placeholder="حداقل قیمت را وارد کنید">
-            <label for="max-price"> حداکثر قیمت :</label>
-            <input type="number" id="max-price" placeholder="حداکثر قیمت را وارد کنید">
-            <label for="status-filter"> فیلتر وضعیت </label>
-            <select id="status-filter" class="status-filter">
-                <option value="">بدون فیلتر وضعیت</option>
-                <option value="در انتظار پرداخت">در انتظار پرداخت</option>
-                <option value="تایید شده">تایید شده</option>
-                <option value="کنسل شده">کنسل شده</option>
-                <option value="منقضی شده">منقضی شده</option>
-                <option value="نظافت">نظافت</option>
-            </select>
-            <br>
           <table style="text-align-last:center;"  class="table table-striped text-center" id="TableofR">
             <thead class="table-light">
               <tr>
+                <th class="th">ردیف</th>
                 <th class="th">شناسه رزرو</th>
                 <th class="th">تاریخ شروع</th>
                 <th class="th">تاریخ پایان</th>
@@ -192,16 +179,17 @@
             <tbody class="table-body">
               {% for r in reservations%}
                 <tr>
+                  <td>{{ r.id }}</td>
                   <td>{{ r.reserve_id }}</td>
                   <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
                   <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'reserve:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
-                  <td>{{ r.author.get_full_name }}</td>
-                  <td>{{ r.user.get_full_name }}</td>
+                  <td>{{ r.author }}</td>
+                  <td class="small">{{ r.user.get_full_name }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
                   <td>{% render_payment_id r.payment.refrence_id %}</td>
                   <td>{{ r.resource.name }}</td>
-                  <td>{{ r.get_status_display }}</td>
+                  <td class="small">{{ r.get_status_display }}</td>
                   <td>{% render_boolean_icon r.cleaning %}</td>
                   <td>{{ r.more_capacity }}</td>
                   <td>{{ r.total_pay|intcomma  }}</td>

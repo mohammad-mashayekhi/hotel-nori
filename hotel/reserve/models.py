@@ -83,3 +83,22 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+
+
+class Peaktime(models.Model):
+    peaktime_id = ShortUUIDField(unique=True, length=5, max_length=9, alphabet="abcdefgh12345")
+    start = models.DateTimeField(null=True)
+    end = models.DateTimeField(null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='created_peaktime')
+    created_at = models.DateTimeField(auto_now_add=True)  # Save creation time
+
+    def get_created_at_shamsi(self):
+        return date2jalali(self.created_at).strftime('%y/%m/%d')
+    
+    def get_start_shamsi(self):
+        return date2jalali(self.start).strftime('%y/%m/%d')
+
+    def get_end_shamsi(self):
+        return date2jalali(self.end).strftime('%y/%m/%d')

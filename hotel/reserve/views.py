@@ -12,8 +12,8 @@ from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.forms.models import model_to_dict
 from datetime import timedelta
-from .models import Reservation, Resource
-from .forms import ReservationForm,ResourceForm
+from .models import Reservation, Resource,Peaktime
+from .forms import ReservationForm,ResourceForm,PeaktimeForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
 from .decorators import is_admin
@@ -130,7 +130,7 @@ def add_reservation(request):
             reservation.user = user
         else:
             reservation.user = request.user
-            reservation.author = request.user
+            # reservation.author = request.user
 
         if reservation.cleaning and reservation.status != "closetime":
             cleaning = Reservation(
@@ -143,7 +143,6 @@ def add_reservation(request):
                 user=reservation.user,
             )
             cleaning.save()
-
         reservation.save()
         try:
             # Convert and format dates
@@ -379,3 +378,51 @@ def roomsprice(request):
         formset = ResourceFormSet(queryset=Resource.objects.all())
 
     return render(request, "reserve/roomsprice.html", {"formset": formset})
+
+
+
+@login_required
+def peaktime(request):
+    reservations = Peaktime.objects.all()
+    reservation_data = list(
+            reservations.values(
+                "start",
+                "end",
+            )
+        )
+
+    # change format of the date from datetime objects to string so they can be used in javascript scripts
+    for reservation in reservation_data:
+        reservation["start"] = date_formatter(reservation["start"])
+        reservation["end"] = date_formatter(reservation["end"])
+
+
+    context = {
+        "reservation_data": json.dumps(reservation_data),
+        "reservations": reservations,
+    }
+    return render(request, "reserve/peaktime.html", context)
+
+@login_required
+def add_peaktime(request):
+    new_reservation_data = PeaktimeForm(data=request.POST)
+    if new_reservation_data.is_valid():
+        reservation = new_reservation_data.save(commit=False)
+        reservation.author = request.user
+        print(reservation.start)
+        reservation.save()
+        try:
+            messages.add_message(request, messages.SUCCESS,
+                                 message="زمان پیک با موفقیت افزوده شد")
+            return JsonResponse({"success": True, "reservation_id": reservation.peaktime_id}, status=201)
+        except Exception as e:
+            print(e)
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+    else:
+        for field in new_reservation_data:
+            if field.errors:
+                print(field.errors, field.label)
+                messages.add_message(request, level=messages.ERROR, message=field.errors, extra_tags=field.label)
+        if new_reservation_data.non_field_errors():
+            messages.add_message(request, level=messages.ERROR, message=new_reservation_data.non_field_errors())
+        return JsonResponse({"success": False}, status=400)
