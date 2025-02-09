@@ -17,7 +17,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="row invoice-preview">
     <!-- Invoice -->
-    <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-4">
+    <div class="{% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" %} col-xl-9 col-md-8 col-12 {% else %} col-12 {% endif %} mb-md-0 mb-4">
       <div class="card invoice-preview-card">
         <div class="card-body">
           <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column">
@@ -25,7 +25,7 @@
               <div class="d-flex svg-illustration align-items-center gap-2 mb-4">
                 <h5 lang="fa" style="">فاکتور : {{ reservation.reserve_id }}</h5>
               </div>
-              <p class="mb-1" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</p>
+              <h4 class="mb-1" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</h4>
             </div>
             <div>
               <div class="mb-1">
@@ -36,51 +36,80 @@
         </div>
         <hr class="my-0">
         <div class="card-body">
-          <div class="d-flex justify-content-around flex-wrap">
-            <div class="my-3">
-              <h6 class="pb-2" lang="fa">فاکتور به:</h6>
-              {% if reservation.user.get_full_name %}  
-              <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
-              {% endif %}  
-              {% if reservation.user.national_code %}  
-              <p class="mb-1" lang="fa"> کدملی: {{ reservation.user.national_code }}</p>
-              {% endif %}
-              <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
+          <!-- <div class="d-flex justify-content-around flex-wrap"> -->
+          <div class="row">
+            <div class="col-lg-6">
+              <h5 class="pb-2" lang="fa">فاکتور به</h5>
+              <div class="demo-inline-spacing mt-3">
+                <ul class="list-group">
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-account me-2"></i>
+                    <p class="mb-1" lang="fa"> نام و نام‌خانوادگی: 
+                      {% if reservation.user.get_full_name %}  
+                      {{ reservation.user.get_full_name }}
+                      {% else %}
+                      وارد نشده‌است.
+                      {% endif %} 
+                    </p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-id-card me-2"></i>
+                    <p class="mb-1" lang="fa"> کدملی: 
+                      {% if reservation.user.national_code %} 
+                      {{ reservation.user.national_code }}
+                      {% else %}
+                      وارد نشده‌است.
+                      {% endif %}
+                    </p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-phone me-2"></i>
+                    <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div class="px-5 my-3">
-              <h6 class="pb-2" lang="fa" style="">مشخصات رزور:</h6>
-              <table>
-                <tbody>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">کد روزر</td>
-                    <td lang="fa" style="">{{ reservation.reserve_id }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa"> وضعیت </td>
-                    <td lang="fa" style="">{{ reservation.get_status_display }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa">اتاق:</td>
-                    <td lang="fa" style="">{{ reservation.resource.name }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">شروع:</td>
-                    <td lang="fa" style="">{{ reservation.start  | jformat:'%Y/%m/%d' }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">پایین:</td>
-                    <td lang="fa">{{ reservation.end  | jformat:'%Y/%m/%d' }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">هزینه کل:</td>
-                    <td lang="fa">{{ reservation.total_pay }}</td>
-                  </tr>
-                  <tr>
-                    <td class="pe-3 fw-medium" lang="fa" style="">نظافت:</td>
-                    <td lang="fa">{% render_boolean_icon reservation.cleaning  %}</td>
-                  </tr>
-                </tbody>
-              </table>
+
+            <div class="col-lg-6 mt-4 mt-lg-0">
+              <h5 class="pb-2" lang="fa">مشخصات رزرو</h5>
+              <div class="demo-inline-spacing mt-3">
+                <ul class="list-group">
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-calendar-check me-2"></i>
+                    <p class="mb-1" lang="fa"> کد رزرو: {{ reservation.reserve_id }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-cash-multiple me-2"></i>
+                    <p class="mb-1" lang="fa"> وضعیت: {{ reservation.get_status_display }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-bed me-2"></i>
+                    <p class="mb-0" lang="fa"> اتاق: {{ reservation.resource.name }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-calendar-plus me-2"></i>
+                    <p class="mb-0" lang="fa"> شروع: {{ reservation.start  | jformat:'%Y/%m/%d' }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-calendar-remove me-2"></i>
+                    <p class="mb-0" lang="fa"> پایان: {{ reservation.end  | jformat:'%Y/%m/%d' }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-currency-usd me-2"></i>
+                    <p class="mb-0" lang="fa"> هزینه کل: 
+                      {% if reservation.total_pay %}
+                      {{ reservation.total_pay | intcomma_custom }} تومان
+                      {% else %}
+                      وارد نشده‌است.
+                      {% endif %}
+                    </p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-broom me-2"></i>
+                    <p class="mb-0" lang="fa"> نظافت: {% render_boolean_icon reservation.cleaning %}</p>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <hr>
@@ -90,42 +119,42 @@
                 <form action="/coupon/apply/" method="post">
                   {% csrf_token %}
                   <div class="form-floating form-floating-outline mb-4">
-                          <input type="text" id="coupon" class="form-control" name="coupon">
-                          <label for="coupon" style="text-align: right;" lang="fa">کدتخفیف </label>  
+                    <input type="text" id="coupon" class="form-control" name="coupon">
+                    <label for="coupon" style="text-align: right;" lang="fa">کدتخفیف </label>  
                   </div>    
                   <input type="hidden" value="{{ reservation.reserve_id }}" name="reservation_id" >
                   <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa">اعمال کد تخفیف</button>
               </form>
             </div>
             <div class="px-5  my-3">
-                {% if coupon %}
-                      <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
-                      <table>
-                        <tbody>
-                          <tr>
-                            <td class="pe-3 fw-medium" lang="fa" style="">مقدار کل:</td>
-                            <td lang="fa" style="">{{ reservation.total_pay }}</td>
-                          </tr>
-                          <tr>
-                            <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به درصد:</td>
-                            <td lang="fa" style="">{{ coupon.discount }}%</td>
-                          </tr>
-                          <tr>
-                            <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به تومان:</td>
-                            <td lang="fa" style="">{{ discount }} تومان </td>
-                          </tr>
-                          <tr>
-                            <td class="pe-3 fw-medium" lang="fa" style="">مقدار  کل با تخفیف:</td>
-                            <td lang="fa" style=""> {{ total_pay_with_discount }} تومان </td>
-                          </tr>
-                        </tbody>
-                      </table>
+              {% if coupon %}
+                <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="pe-3 fw-medium" lang="fa" style="">مقدار کل:</td>
+                      <td lang="fa" style="">{{ reservation.total_pay }}</td>
+                    </tr>
+                    <tr>
+                      <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به درصد:</td>
+                      <td lang="fa" style="">{{ coupon.discount }}%</td>
+                    </tr>
+                    <tr>
+                      <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به تومان:</td>
+                      <td lang="fa" style="">{{ discount }} تومان </td>
+                    </tr>
+                    <tr>
+                      <td class="pe-3 fw-medium" lang="fa" style="">مقدار  کل با تخفیف:</td>
+                      <td lang="fa" style=""> {{ total_pay_with_discount }} تومان </td>
+                    </tr>
+                  </tbody>
+                </table>
               {% elif messages %}
-                  <ul class="messages fw-bold my-3 "> 
-                      {% for message in messages %}
-                            <li class="{{ message.tags }}">{{ message }}</li>
-                      {% endfor %}
-                  </ul>
+                <ul class="messages fw-bold my-3 "> 
+                  {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                  {% endfor %}
+                </ul>
               {% endif %}
             </div>    
           </div>
@@ -172,42 +201,36 @@
     </div>
     <!-- /Invoice -->
 
+
+    {% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" %}
     <!-- Invoice Actions -->
     <div class="col-xl-3 col-md-4 col-12 invoice-actions">
       <div class="card">
         <div class="card-body">
-        {% if reservation.status == "confirmed" %}
-          <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank"
-             href="{% url 'reserve:billprint' reservation.reserve_id %}" lang="fa"> چاپ </a>
-        {% endif %}
-{#        {% if request.user.uesr_status == "admin_level_2" %}#}
-{#          <a href="app-invoice-edit.html" class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect"#}
-{#             lang="fa"> ویرایش فاکتور </a>#}
-{#        {% endif %}#}
         {% if reservation.status == "pending_payment" %}
-              <div>  
-                      <form action="{% url 'zarinpal:request' %}" method="post">
-                          {% csrf_token %}
-                         <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
-                        
-                        <div class="mb-3 d-flex flex-wrap">
-                            
-                          <button type="submit" class="btn btn-primary me-3 waves-effect waves-light"
-                                  lang="fa"> پرداخت </button>
-                        </div>
-                        <div class="form-floating form-floating-outline mb-4">
-                            <label for="description"></label><textarea class="form-control" id="description" name="description" style="height: 62px;">صورت حساب روز حسینیه به شماره فاکتور
-                               {{ reservation.reserve_id }}   </textarea>
-                          <label for="payment-note" style="text-align: right;" lang="fa">یادداشت پرداخت </label>
-                        </div>  
-                          
-                      </form>
+          <div>  
+            <form action="{% url 'zarinpal:request' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
+              <div class="mb-3 d-flex flex-wrap">
+                <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa"> پرداخت </button>
               </div>
+              <div class="form-floating form-floating-outline mb-4">
+                <p class="form-control" id="description" name="description" style="height: 62px;">صورت حساب رزرو حسینیه به شماره فاکتور <strong>{{ reservation.reserve_id }}</strong></p>
+                <label for="payment-note" style="text-align: right;" lang="fa">یادداشت پرداخت </label>
+              </div>  
+            </form>
+          </div>
+        {% elif reservation.status == "confirmed" %}
+          <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank" href="{% url 'reserve:billprint' reservation.reserve_id %}" lang="fa">چاپ</a>
+        {% elif reservation.status == "cancelled" %}
+          <div class="alert alert-danger" role="alert">کنسل‌شده</div>
         {% endif %}
         </div>
       </div>
     </div>
     <!-- /Invoice Actions -->
+    {% endif %}
   </div>
   <!-- Offcanvas -->
 

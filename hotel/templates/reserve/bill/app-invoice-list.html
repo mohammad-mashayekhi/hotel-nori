@@ -35,123 +35,103 @@
 {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
 {% if request.user.user_status != "verified" %}
-      <div class="row g-4 mb-4">
-        <div class="col-sm-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="avatar">
-                  <div class="avatar-initial bg-label-primary rounded">
-                    <div class="mdi mdi-account-outline mdi-24px"></div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{{ total_customers }}</h5>
-    {#                <div#}
-    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
-    {#                ></div>#}
-    {#                <small class="text-danger">8.1%</small>#}
-                  </div>
-                  <small class="text-muted"> کل مشتری ها</small>
-                </div>
+  <div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-primary rounded">
+                <div class="mdi mdi-account-outline mdi-24px"></div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
+            <div class="ms-3">
               <div class="d-flex align-items-center">
-                <div class="avatar">
-                  <div class="avatar-initial bg-label-warning rounded">
-                    <div class="mdi mdi-poll mdi-24px"></div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="d-flex align-items-center">
-                    <h5 class="mb-0"> {{ total_purchase }}</h5>
-    {#                <div#}
-    {#                  class="mdi mdi-chevron-up text-success mdi-24px"#}
-    {#                ></div>#}
-    {#                <small class="text-success">18.2%</small>#}
-                  </div>
-                  <small class="text-muted">  کل پرداخت ها</small>
-                </div>
+                <h5 class="mb-0">{{ total_customers }}</h5>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="avatar">
-                  <div class="avatar-initial bg-label-info rounded">
-                    <div class="mdi mdi-trending-up mdi-24px"></div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{{ total_reservations }}</h5>
-    {#                <div#}
-    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
-    {#                ></div>#}
-    {#                <small class="text-danger">24.6%</small>#}
-                  </div>
-                  <small class="text-muted"> تعداد کل رزور ها</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="avatar">
-                  <div class="avatar-initial bg-label-success rounded">
-                    <div class="mdi mdi-currency-usd mdi-24px"></div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{% if total_income %}{{ total_income }}{% else %} 0 {% endif %}</h5>
-    {#                <div#}
-    {#                  class="mdi mdi-chevron-down text-success mdi-24px"#}
-    {#                ></div>#}
-    {#                <small class="text-success">22.5%</small>#}
-                  </div>
-                  <small class="text-muted">کل درآمد</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="avatar">
-                  <div class="avatar-initial bg-label-info rounded">
-                    <div class="mdi mdi-trending-up mdi-24px"></div>
-                  </div>
-                </div>
-                <div class="ms-3">
-                  <div class="d-flex align-items-center">
-                    <h5 class="mb-0">{{ total_cancellation }}</h5>
-    {#                <div#}
-    {#                  class="mdi mdi-chevron-down text-danger mdi-24px"#}
-    {#                ></div>#}
-    {#                <small class="text-danger">24.6%</small>#}
-                  </div>
-                  <small class="text-muted"> تعداد کل کنسلی ها</small>
-                </div>
-              </div>
+              <small class="text-muted"> کل مشتری ها</small>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-warning rounded">
+                <div class="mdi mdi-poll mdi-24px"></div>
+              </div>
+            </div>
+            <div class="ms-3">
+              <div class="d-flex align-items-center">
+                <h5 class="mb-0"> {{ total_purchase }}</h5>
+              </div>
+              <small class="text-muted">  کل پرداخت ها</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-info rounded">
+                <div class="mdi mdi-trending-up mdi-24px"></div>
+              </div>
+            </div>
+            <div class="ms-3">
+              <div class="d-flex align-items-center">
+                <h5 class="mb-0">{{ total_reservations }}</h5>
+              </div>
+              <small class="text-muted"> تعداد کل رزور ها</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-success rounded">
+                <div class="mdi mdi-currency-usd mdi-24px"></div>
+              </div>
+            </div>
+            <div class="ms-3">
+              <div class="d-flex align-items-center">
+                <h5 class="mb-0">{% if total_income %}{{ total_income | intcomma }}{% else %} 0 {% endif %}</h5>
+              </div>
+              <small class="text-muted">کل درآمد</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-center">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-info rounded">
+                <div class="mdi mdi-trending-up mdi-24px"></div>
+              </div>
+            </div>
+            <div class="ms-3">
+              <div class="d-flex align-items-center">
+                <h5 class="mb-0">{{ total_cancellation }}</h5>
+              </div>
+              <small class="text-muted"> تعداد کل کنسلی ها</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endif %}
     <!-- Invoice List Table -->
     <div class="card">
@@ -168,7 +148,7 @@
                 <th class="th">ایجاد کننده</th>
                 <th class="th">کاربر</th>
                 <th class="th">پرداخت شده</th>
-                <th class="th">شناسه پرداخت</th>
+                <th class="th">شناسه مرجع</th>
                 <th class="th">اتاق</th>
                 <th class="th">وضعیت</th>
                 <th class="th">نظافت</th>
@@ -179,20 +159,36 @@
             <tbody class="table-body">
               {% for r in reservations%}
                 <tr>
-                  <td>{{ r.id }}</td>
+                  <td>{{ forloop.counter }}</td>
                   <td>{{ r.reserve_id }}</td>
                   <td>{{ r.start | jformat:' %Y/%m/%d'}}</td>
                   <td>{{ r.end | jformat:' %Y/%m/%d'}}</td>
                   <td><a href="{% url 'reserve:billdetail' r.reserve_id %}">{{ r.title }}</a></td>
                   <td>{{ r.author }}</td>
-                  <td class="small">{{ r.user.get_full_name }}</td>
+                  <td class="small">{{ r.user.get_name }}</td>
                   <td>{% render_boolean_icon r.paid %}</td>
-                  <td>{% render_payment_id r.payment.refrence_id %}</td>
+                  <td>{{ r.get_payment }}</td>
                   <td>{{ r.resource.name }}</td>
                   <td class="small">{{ r.get_status_display }}</td>
                   <td>{% render_boolean_icon r.cleaning %}</td>
-                  <td>{{ r.more_capacity }}</td>
-                  <td>{{ r.total_pay|intcomma  }}</td>
+                  <td>
+                    {% if r.more_capacity and r.more_capacity > 0 %}
+                    {{ r.more_capacity }}
+                    {% elif r.more_capacity == 0 %}
+                    {{ r.more_capacity }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if r.total_pay and r.total_pay > 0 %}
+                    {{ r.total_pay| intcomma }}
+                    {% elif r.total_pay == 0 %}
+                    {{ r.total_pay }}
+                    {% else %}
+                    -
+                    {% endif %}
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -213,54 +209,53 @@
 <script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>
 <!-- <script src="{% static 'js/app-invoice-list.js' %}"></script> -->
-
-
 <script>
-    $(document).ready( function () {
+  $(document).ready( function () {
     var table = $('#TableofR').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
-        }
+      language: {
+        url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
+      }
     });
     var table = $('#datatable').DataTable({
-                paging: false,
-                dom: 'lrtip', // remove the default search box
-                fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                paging: false,
-                scrollCollapse: true,
-                scrollX: true,
-                scrollY: 380
-            });
+      paging: false,
+      dom: 'lrtip', // remove the default search box
+      fixedHeader: {
+        header: true,
+        footer: true
+      },
+      paging: false,
+      scrollCollapse: true,
+      scrollX: true,
+      scrollY: 380,
+      ordering: false,
+    });
 
-        // Create the range filtering function
+    // Create the range filtering function
     $.fn.dataTable.ext.search.push(
-        function(settings, data, dataIndex) {
-            var min = parseInt($('#min-price').val(), 10);
-            var max = parseInt($('#max-price').val(), 10);
-            var price = parseFloat(data[12]) || 0; // use data for the 'Total Pay' column
+      function(settings, data, dataIndex) {
+        var min = parseInt($('#min-price').val(), 10);
+        var max = parseInt($('#max-price').val(), 10);
+        var price = parseFloat(data[12]) || 0; // use data for the 'Total Pay' column
 
-            if ((isNaN(min) && isNaN(max)) ||
-                 (isNaN(min) && price <= max) ||
-                 (min <= price && isNaN(max)) ||
-                 (min <= price && price <= max)) {
-                return true;
-            }
-            return false;
+        if ((isNaN(min) && isNaN(max)) ||
+              (isNaN(min) && price <= max) ||
+              (min <= price && isNaN(max)) ||
+              (min <= price && price <= max)) {
+            return true;
         }
+        return false;
+      }
     );
 
     $('#status-filter').on('change', function() {
-        var value = $(this).val();
-        table.column(9).search(value).draw();
+      var value = $(this).val();
+      table.column(9).search(value).draw();
     });
 
     // Re-draw the table whenever the input values change
     $('#min-price, #max-price').on('keyup', function() {
-        table.draw();
+      table.draw();
     });
-} );
+  });
 </script>
 {% endblock %}

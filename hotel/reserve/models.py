@@ -64,6 +64,20 @@ class Reservation(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_payment(self):
+        if self.paid:
+            from zarinpal.models import Payment
+            payments = Payment.objects.filter(reservation=self)
+            count = payments.count()
+
+            if count == 1:
+                return f'{payments.first().refrence_id}'
+            elif count > 1:
+                return 'خطای سیستم'
+            return '-'
+    
+        return 'پرداخت نشده'
 
 
 class Resource(models.Model):

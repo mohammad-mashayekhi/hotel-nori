@@ -116,7 +116,7 @@ def add_reservation(request):
         reservation = new_reservation_data.save(commit=False)
 
         # if user is not normal user it can reserve for another user but if it is not it can reserve for itself
-        if request.user.user_status != "veified":
+        if request.user.user_status != "verified":
             reservation.author = request.user
             User = get_user_model()
             user_mobile_number = new_reservation_data.cleaned_data["mobile_number"]
@@ -310,8 +310,7 @@ def list_of_bills(request):
 
         total_purchase = Reservation.objects.filter(paid=True).count()
 
-        reservations = Reservation.objects.all().order_by("-id")
-
+        reservations = Reservation.objects.all().order_by("-created_at")
         context = {
             "users": all_users,
             "total_cancellation": total_cancellation,
@@ -322,7 +321,7 @@ def list_of_bills(request):
             "reservations": reservations,
         }
     else:
-        reservations = Reservation.objects.filter(user=request.user)
+        reservations = Reservation.objects.filter(user=request.user).order_by("-created_at")
         context = {"reservations": reservations}
     return render(request, "reserve/bill/app-invoice-list.html", context=context)
 

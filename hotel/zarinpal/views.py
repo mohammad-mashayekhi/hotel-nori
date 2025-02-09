@@ -9,6 +9,7 @@ from reserve.models import Reservation
 from coupon.models import Coupon
 from .utils import get_payment_status_description
 from .models import Payment
+import os
 if settings.SANDBOX:
     sandbox = 'sandbox'
 else:
@@ -20,7 +21,13 @@ ZP_API_STARTPAY = f"https://{sandbox}.zarinpal.com/pg/StartPay/"
 
 
 # Important: need to edit for realy server.
-CallbackURL = 'http://127.0.0.1:8000/zarinpal/verify/'
+
+if os.getenv('SERVER') == "True":
+    print(os.getenv('SERVER'))
+    CallbackURL = 'https://mahdiyanreserve.ir/zarinpal/verify/'
+else:
+    print(os.getenv('SERVER'))
+    CallbackURL = 'http://127.0.0.1:8000/zarinpal/verify/'
 
 
 def send_request(request):
@@ -33,7 +40,7 @@ def send_request(request):
     data = {
         "MerchantID": settings.MERCHANT,
         "Amount": float(amount),
-        "Description": request.POST["description"],
+        "Description": f"صورت حساب رزرو حسینیه به شماره فاکتور {reservation.reserve_id}",
         "Phone": request.user.mobile_number,
         "order_id": request.POST["order_id"],
         "CallbackURL": CallbackURL,
@@ -102,7 +109,7 @@ def verify(request):
                 request.session.pop('coupon')
             reservation.save()
             payment.save()
-            data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay, }
+            data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay,}
             return render(request, "zarinpal/purchase_status.html", context=data)
         else:
             code_desciption = get_payment_status_description(response["Status"])

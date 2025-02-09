@@ -21,3 +21,13 @@ def render_payment_id(payment_id):
         return payment_id
     else:
         return "پرداخت نشده"
+    
+
+
+@register.filter
+def intcomma_custom(value):
+    try:
+        value = float(value)
+        return "{:,.0f}".format(value)
+    except (ValueError, TypeError):
+        return value

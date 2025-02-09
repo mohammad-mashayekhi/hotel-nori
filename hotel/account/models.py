@@ -75,3 +75,8 @@ class Userprofile(AbstractUser):
             "admin_level_b": "کاربر ادمین سطح b",
         }
         return status_mapping.get(self.user_status, "وضعیت نامعلوم")
+    
+    def get_name(self):
+        if self.first_name and self.last_name:
+            return f"{self.first_name} {self.last_name}"
+        return self.mobile_number

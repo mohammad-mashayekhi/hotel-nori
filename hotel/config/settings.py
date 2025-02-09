@@ -148,5 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = reverse_lazy("account:login")
 AUTH_USER_MODEL = 'account.UserProfile'
 
-MERCHANT = "0ae87b99-948e-4126-bb14-cccd29891c80"
+# MERCHANT = "0ae87b99-948e-4126-bb14-cccd29891c80"
+MERCHANT = "a1afc3be-5d17-4f85-a137-0e1fd60b3d04"
 SANDBOX = True
