@@ -128,27 +128,29 @@
             </div>
             <div class="px-5  my-3">
               {% if coupon %}
-                <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
-                <table>
-                  <tbody>
-                    <tr>
-                      <td class="pe-3 fw-medium" lang="fa" style="">مقدار کل:</td>
-                      <td lang="fa" style="">{{ reservation.total_pay }}</td>
-                    </tr>
-                    <tr>
-                      <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به درصد:</td>
-                      <td lang="fa" style="">{{ coupon.discount }}%</td>
-                    </tr>
-                    <tr>
-                      <td class="pe-3 fw-medium" lang="fa">مقدار تخفیف به تومان:</td>
-                      <td lang="fa" style="">{{ discount }} تومان </td>
-                    </tr>
-                    <tr>
-                      <td class="pe-3 fw-medium" lang="fa" style="">مقدار  کل با تخفیف:</td>
-                      <td lang="fa" style=""> {{ total_pay_with_discount }} تومان </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div>
+                  <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
+                  <div class="demo-inline-spacing mt-3">
+                    <ul class="list-group">
+                      <li class="list-group-item d-flex align-items-center">
+                        <!-- <i class="mdi mdi-calendar-check me-2"></i> -->
+                        <p class="mb-1" lang="fa"> مقدار کل: {{ reservation.total_pay | intcomma_custom }}</p>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <!-- <i class="mdi mdi-cash-multiple me-2"></i> -->
+                        <p class="mb-1" lang="fa"> مقدار تخفیف به درصد: {{ coupon.discount }}%</p>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <!-- <i class="mdi mdi-bed me-2"></i> -->
+                        <p class="mb-0" lang="fa"> مقدار تخفیف به تومان: {{ discount | intcomma_custom }} تومان </p>
+                      </li>
+                      <li class="list-group-item d-flex align-items-center">
+                        <!-- <i class="mdi mdi-calendar-plus me-2"></i> -->
+                        <p class="mb-0" lang="fa"> مقدار کل با تخفیف: {{ total_pay_with_discount | intcomma_custom }} تومان </p>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               {% elif messages %}
                 <ul class="messages fw-bold my-3 "> 
                   {% for message in messages %}
