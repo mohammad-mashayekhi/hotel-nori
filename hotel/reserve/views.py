@@ -18,7 +18,7 @@ from .utils import get_reservation_color, datetime_combine, send_message_accept_
 from .models import Resource, Reservation
 from .decorators import is_admin
 from coupon.models import Coupon
-
+from zarinpal.models import Payment
 
 def date_formatter(date):
     return date.strftime("%Y-%m-%dT%H:%M")
@@ -335,6 +335,7 @@ def bill_print(request, reserve_id):
 @login_required
 def bill_detail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
+    payment = None
 
     if not is_admin(request.user) and reservation.user != request.user:
         raise PermissionDenied
@@ -343,10 +344,16 @@ def bill_detail(request, reserve_id):
         reservation.status = "cancelled"
         reservation.save()
 
-    context = {"reservation": reservation}
+    if reservation.status == "confirmed" and Payment.objects.filter(reservation=reservation).count() == 1:
+        payment = Payment.objects.filter(reservation=reservation).first()
 
-    if request.session.get("coupon"):
-        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+    context = {"reservation": reservation, 'payment':payment}
+    # if request.session.get("coupon"):
+    #     coupon = Coupon.objects.get(id=request.session.get("coupon"))
+    #     discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
+    #     total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
+    if reservation.coupon:
+        coupon = Coupon.objects.get(id=reservation.coupon.id)
         discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
         total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
         context.update({"coupon": coupon, "discount": discount, "total_pay_with_discount": total_pay_with_discount})

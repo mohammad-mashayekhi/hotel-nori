@@ -115,6 +115,14 @@
           <hr>
         {% if not reservation.payment %}
           <div class="d-flex justify-content-between flex-wrap">
+            {% if reservation.status == "pending_payment" %}
+            {% if reservation.coupon %}
+            <div>
+              <div class="alert alert-success" role="alert">
+                کد تخفیف با موفقیت اعمال شد.
+              </div>   
+            </div>         
+            {% else %}
             <div class=" my-3">
                 <form action="/coupon/apply/" method="post">
                   {% csrf_token %}
@@ -126,10 +134,12 @@
                   <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa">اعمال کد تخفیف</button>
               </form>
             </div>
+            {% endif %}
+            {% endif %}
             <div class="px-5  my-3">
-              {% if coupon %}
+              {% if coupon and reservation.coupon %}
                 <div>
-                  <h6 class="pb-2" lang="fa" style="">تخفیف:</h6>
+                  <h5 class="pb-2" lang="fa" style="">تخفیف:</h5>
                   <div class="demo-inline-spacing mt-3">
                     <ul class="list-group">
                       <li class="list-group-item d-flex align-items-center">
@@ -166,8 +176,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-12">
-              {% if reservation.payment %}
-                  {% with payment=reservation.payment %}
+              {% if payment %}
                     <table id="TableofPayments" class="table">
                     <thead class="thead-dark">
                         <tr>
@@ -185,14 +194,19 @@
                                 <td>{{ payment.card_number }}</td>
                                 <td>{{ payment.refrence_id }}</td>
                                 <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
-                                <td>{{ payment.cost_paid }}</td>
-                                <td>{{ payment.discount }}</td>
-                                <td>{{ payment.user.get_full_name }}</td>
+                                <td>{{ payment.cost_paid | intcomma_custom }} تومان</td>
+                                <td>
+                                  {% if payment.discount %}
+                                  {{ payment.discount | intcomma_custom }} تومان
+                                  {% else %}
+                                  -
+                                  {% endif %}
+                                </td>
+                                <td>{{ payment.user.get_name }}</td>
                                 <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
                             </tr>
                     </tbody>
                 </table>
-                   {% endwith %}
               {% else %}
                 <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
               {% endif %}  
@@ -236,6 +250,7 @@
   </div>
   <!-- Offcanvas -->
 
+  {% comment %}
   <!-- Add Payment Sidebar -->
   <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
     <div class="offcanvas-header mb-3">
@@ -266,7 +281,8 @@
   </div>
   <!-- /Add Payment Sidebar -->
   <!-- /Offcanvas -->
-</div>
+  </div>
+  {% endcomment %}
 <!-- / Content -->
 {% endblock %}
 {% block vondors-js %}

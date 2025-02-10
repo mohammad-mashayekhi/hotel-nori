@@ -3,7 +3,7 @@ from django.conf import settings
 from shortuuid.django_fields import ShortUUIDField
 from django.utils import timezone
 from jalali_date import datetime2jalali, date2jalali
-
+from coupon.models import Coupon
 
 class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
@@ -27,6 +27,7 @@ class Reservation(models.Model):
     more_capacity = models.IntegerField(blank=True, null=True)
     total_pay = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Save creation time
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True)
 
     def get_created_at_shamsi(self):
         return date2jalali(self.created_at).strftime('%y/%m/%d')

@@ -68,6 +68,8 @@ def apply(request):
             is_active=True,
         )
         request.session["coupon"] = coupon.id
+        reservation.coupon = coupon
+        reservation.save()
     except Coupon.DoesNotExist:
         request.session["coupon"] = None
         messages.add_message(request, messages.ERROR, "این کد تخفیف معتبر نمی باشد")
