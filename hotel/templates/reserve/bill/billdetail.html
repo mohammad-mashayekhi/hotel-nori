@@ -5,7 +5,7 @@
 {% block vendors-css %}
 <!-- Vendors CSS -->
 <!--suppress SpellCheckingInspection -->
-    <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
 <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
@@ -36,7 +36,6 @@
         </div>
         <hr class="my-0">
         <div class="card-body">
-          <!-- <div class="d-flex justify-content-around flex-wrap"> -->
           <div class="row">
             <div class="col-lg-6">
               <h5 class="pb-2" lang="fa">فاکتور به</h5>
@@ -143,19 +142,15 @@
                   <div class="demo-inline-spacing mt-3">
                     <ul class="list-group">
                       <li class="list-group-item d-flex align-items-center">
-                        <!-- <i class="mdi mdi-calendar-check me-2"></i> -->
                         <p class="mb-1" lang="fa"> مقدار کل: {{ reservation.total_pay | intcomma_custom }}</p>
                       </li>
                       <li class="list-group-item d-flex align-items-center">
-                        <!-- <i class="mdi mdi-cash-multiple me-2"></i> -->
                         <p class="mb-1" lang="fa"> مقدار تخفیف به درصد: {{ coupon.discount }}%</p>
                       </li>
                       <li class="list-group-item d-flex align-items-center">
-                        <!-- <i class="mdi mdi-bed me-2"></i> -->
                         <p class="mb-0" lang="fa"> مقدار تخفیف به تومان: {{ discount | intcomma_custom }} تومان </p>
                       </li>
                       <li class="list-group-item d-flex align-items-center">
-                        <!-- <i class="mdi mdi-calendar-plus me-2"></i> -->
                         <p class="mb-0" lang="fa"> مقدار کل با تخفیف: {{ total_pay_with_discount | intcomma_custom }} تومان </p>
                       </li>
                     </ul>
@@ -177,35 +172,35 @@
           <div class="row">
             <div class="col-12">
               {% if payment %}
-                    <table id="TableofPayments" class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>شماره کارت</th>
-                            <th>شناسه مرجع</th>
-                            <th>تاریخ پرداخت</th>
-                            <th>مبلغ پرداختی</th>
-                            <th>تخفیف</th>
-                            <th>کاربر</th>
-                            <th>پرداخت توسط کارمند</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <tr>
-                                <td>{{ payment.card_number }}</td>
-                                <td>{{ payment.refrence_id }}</td>
-                                <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
-                                <td>{{ payment.cost_paid | intcomma_custom }} تومان</td>
-                                <td>
-                                  {% if payment.discount %}
-                                  {{ payment.discount | intcomma_custom }} تومان
-                                  {% else %}
-                                  -
-                                  {% endif %}
-                                </td>
-                                <td>{{ payment.user.get_name }}</td>
-                                <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
-                            </tr>
-                    </tbody>
+                <table id="TableofPayments" class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>شماره کارت</th>
+                      <th>شناسه مرجع</th>
+                      <th>تاریخ پرداخت</th>
+                      <th>مبلغ پرداختی</th>
+                      <th>تخفیف</th>
+                      <th>کاربر</th>
+                      <th>پرداخت توسط کارمند</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>{{ payment.card_number }}</td>
+                      <td>{{ payment.refrence_id }}</td>
+                      <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
+                      <td>{{ payment.cost_paid | intcomma_custom }} تومان</td>
+                      <td>
+                        {% if payment.discount %}
+                        {{ payment.discount | intcomma_custom }} تومان
+                        {% else %}
+                        -
+                        {% endif %}
+                      </td>
+                      <td>{{ payment.user.get_name }}</td>
+                      <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
+                    </tr>
+                  </tbody>
                 </table>
               {% else %}
                 <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
@@ -248,41 +243,6 @@
     <!-- /Invoice Actions -->
     {% endif %}
   </div>
-  <!-- Offcanvas -->
-
-  {% comment %}
-  <!-- Add Payment Sidebar -->
-  <div class="offcanvas offcanvas-end" id="addPaymentOffcanvas" aria-hidden="true">
-    <div class="offcanvas-header mb-3">
-        {% if reservation.status == "pending_payment" %}
-            <h5 class="offcanvas-title" lang="fa">اضافه کردن پرداخت</h5>
-        {% endif %}      
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"
-        ></button>
-    </div>
-  {% if reservation.status == "pending_payment" %}
-    <div class="offcanvas-body  flex-grow-1">
-      <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
-        <p class="mb-0" lang="fa">مبلغ پرداختی :</p>
-        <p class="fw-bold mb-0" lang="fa">{{ reservation.total_pay }}</p>
-      </div>
-      {% if coupon %}  
-      <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
-        <p class="mb-0" lang="fa"> {{ coupon.discount }}  درصد تخفیف :</p>
-        <p class="fw-bold mb-0" lang="fa">{{ discount }}</p>
-      </div>      
-      <div class="d-flex justify-content-between bg-lighter p-2 mb-3" >
-        <p class="mb-0" lang="fa">: مقدار کل با تخفیف</p>
-        <p class="fw-bold mb-0" lang="fa">{{ total_pay_with_discount }}</p>
-      </div>
-      {% endif %}    
-
-  {% endif %}
-  </div>
-  <!-- /Add Payment Sidebar -->
-  <!-- /Offcanvas -->
-  </div>
-  {% endcomment %}
 <!-- / Content -->
 {% endblock %}
 {% block vondors-js %}

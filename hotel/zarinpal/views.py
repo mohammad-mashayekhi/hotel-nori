@@ -32,8 +32,8 @@ else:
 
 def send_request(request):
     reservation = get_object_or_404(Reservation, reserve_id=request.POST.get('order_id'))
-    if request.session.get("coupon"):
-        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+    if reservation.coupon:
+        coupon = Coupon.objects.get(id=reservation.coupon.id)
         amount = coupon.get_total_pay_with_discount(reservation.total_pay)
     else:
         amount = reservation.total_pay
@@ -73,8 +73,8 @@ def send_request(request):
 def verify(request):
     order_id = request.session["order_id"]
     reservation = get_object_or_404(Reservation, reserve_id=order_id)
-    if request.session.get("coupon"):
-        coupon = Coupon.objects.get(id=request.session.get("coupon"))
+    if reservation.coupon:
+        coupon = Coupon.objects.get(id=reservation.coupon.id)
         amount = coupon.get_total_pay_with_discount(reservation.total_pay)
     else:
         amount = reservation.total_pay
@@ -101,15 +101,14 @@ def verify(request):
             reservation.paid = True
             reservation.status = "confirmed"
 
-            if request.session.get("coupon"):
+            if reservation.coupon:
                 discount = coupon.get_discount(reservation.total_pay)
                 payment.discount = discount
                 coupon.users.remove(reservation.user)
                 coupon.save()
-                request.session.pop('coupon')
             reservation.save()
             payment.save()
-            data = {'status': True, 'RefID': response['RefID'], 'amount': reservation.total_pay,}
+            data = {'status': True, 'RefID': response['RefID'], 'amount': amount,}
             return render(request, "zarinpal/purchase_status.html", context=data)
         else:
             code_desciption = get_payment_status_description(response["Status"])

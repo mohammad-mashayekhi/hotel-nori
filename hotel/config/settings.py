@@ -33,7 +33,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-x%x0))x*_7l-akcqf*phfz^l7q9xoi)cx%id5+23gyr2+xllj8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv('DEBUG') == 'False':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -148,6 +151,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = reverse_lazy("account:login")
 AUTH_USER_MODEL = 'account.UserProfile'
 
-# MERCHANT = "0ae87b99-948e-4126-bb14-cccd29891c80"
-MERCHANT = "a1afc3be-5d17-4f85-a137-0e1fd60b3d04"
-SANDBOX = True
+
+MERCHANT = os.getenv('MERCHANT')
+
+if os.getenv('SERVER') == "True":
+    SANDBOX = False
+else:
+    SANDBOX = True

@@ -158,8 +158,12 @@ class ReservationForm(forms.ModelForm):
 
             # محاسبه هزینه اضافی برای ظرفیت بیشتر
             if more_capacity > 0:
+                '''
+                mohammadour chnages extra_person_price to price_per_person because
+                this field does not exist and resource model does not have extra_person_price
+                '''
                 # extra_person_charge = resource.extra_person_price
-                extra_person_charge = resource.price_per_person # I chnage extra_person_price to price_per_person because this field does not exist
+                extra_person_charge = resource.price_per_person 
                 total_pay += more_capacity * extra_person_charge
 
             # روز بعد

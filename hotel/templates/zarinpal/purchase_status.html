@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-
+{% load reserve_tags %}
 {% block title %}
 جزئیات خرید موفق
 {% endblock %}
@@ -15,7 +15,7 @@
             <p>خرید شما با موفقیت انجام شد. جزئیات خرید شما به شرح زیر است:</p>
             <ul>
                 <li>شماره خرید: {{ RefID }}</li>
-                <li>مبلغ: {{ amount }}</li>
+                <li>مبلغ: {{ amount | intcomma_custom }} تومان</li>
             </ul>
             <a href="{% url 'home' %}" class="btn btn-primary">بازگشت به صفحه اصلی</a>
             <a href="{% url 'reserve:bill' %}" class="btn btn-primary">بازگشت به لیست رزورها</a>

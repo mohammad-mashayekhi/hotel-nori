@@ -348,10 +348,6 @@ def bill_detail(request, reserve_id):
         payment = Payment.objects.filter(reservation=reservation).first()
 
     context = {"reservation": reservation, 'payment':payment}
-    # if request.session.get("coupon"):
-    #     coupon = Coupon.objects.get(id=request.session.get("coupon"))
-    #     discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
-    #     total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
     if reservation.coupon:
         coupon = Coupon.objects.get(id=reservation.coupon.id)
         discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
