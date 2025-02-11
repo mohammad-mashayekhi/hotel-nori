@@ -71,194 +71,252 @@
     <script src="{% static 'vendor/js/template-customizer.js' %}"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static 'js/config.js' %}"></script>
+    <style>
+      .list-group-print li{
+        font-size: 14px !important;
+      }
+    </style>
   </head>
   <body>
-    <!-- Content -->
-    <div class="invoice-print p-5">
-      <div class="d-flex justify-content-between flex-row">
-        <div class="mb-4">
-          <div class="d-flex svg-illustration align-items-center gap-2 mb-4">
-            <span class="app-brand-logo demo">
-              <span style="color: var(--bs-primary)">
-                <svg
-                  width="268"
-                  height="150"
-                  viewBox="0 0 38 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M30.0944 2.22569C29.0511 0.444187 26.7508 -0.172113 24.9566 0.849138C23.1623 1.87039 22.5536 4.14247 23.5969 5.92397L30.5368 17.7743C31.5801 19.5558 33.8804 20.1721 35.6746 19.1509C37.4689 18.1296 38.0776 15.8575 37.0343 14.076L30.0944 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M30.171 2.22569C29.1277 0.444187 26.8274 -0.172113 25.0332 0.849138C23.2389 1.87039 22.6302 4.14247 23.6735 5.92397L30.6134 17.7743C31.6567 19.5558 33.957 20.1721 35.7512 19.1509C37.5455 18.1296 38.1542 15.8575 37.1109 14.076L30.171 2.22569Z"
-                    fill="url(#paint0_linear_2989_100980)"
-                    fill-opacity="0.4"
-                  />
-                  <path
-                    d="M22.9676 2.22569C24.0109 0.444187 26.3112 -0.172113 28.1054 0.849138C29.8996 1.87039 30.5084 4.14247 29.4651 5.92397L22.5251 17.7743C21.4818 19.5558 19.1816 20.1721 17.3873 19.1509C15.5931 18.1296 14.9843 15.8575 16.0276 14.076L22.9676 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
-                    fill="url(#paint1_linear_2989_100980)"
-                    fill-opacity="0.4"
-                  />
-                  <path
-                    d="M7.82901 2.22569C8.87231 0.444187 11.1726 -0.172113 12.9668 0.849138C14.7611 1.87039 15.3698 4.14247 14.3265 5.92397L7.38656 17.7743C6.34325 19.5558 4.04298 20.1721 2.24875 19.1509C0.454514 18.1296 -0.154233 15.8575 0.88907 14.076L7.82901 2.22569Z"
-                    fill="currentColor"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_2989_100980"
-                      x1="5.36642"
-                      y1="0.849138"
-                      x2="10.532"
-                      y2="24.104"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop offset="0" stop-opacity="1" />
-                      <stop offset="1" stop-opacity="0" />
-                    </linearGradient>
-                    <linearGradient
-                      id="paint1_linear_2989_100980"
-                      x1="5.19475"
-                      y1="0.849139"
-                      x2="10.3357"
-                      y2="24.1155"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop offset="0" stop-opacity="1" />
-                      <stop offset="1" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+  <!-- Content -->
+  <div class="invoice-print p-5">  
+    <div>
+      <div class="card-body">
+        <div class="row">
+          <div style="width: max-content !important;">
+            <div class="d-flex svg-illustration align-items-center gap-2 mb-4">
+              <span class="app-brand-logo demo">
+                <span style="color: var(--bs-primary)">
+                  <svg
+                    width="268"
+                    height="150"
+                    viewBox="0 0 38 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M30.0944 2.22569C29.0511 0.444187 26.7508 -0.172113 24.9566 0.849138C23.1623 1.87039 22.5536 4.14247 23.5969 5.92397L30.5368 17.7743C31.5801 19.5558 33.8804 20.1721 35.6746 19.1509C37.4689 18.1296 38.0776 15.8575 37.0343 14.076L30.0944 2.22569Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M30.171 2.22569C29.1277 0.444187 26.8274 -0.172113 25.0332 0.849138C23.2389 1.87039 22.6302 4.14247 23.6735 5.92397L30.6134 17.7743C31.6567 19.5558 33.957 20.1721 35.7512 19.1509C37.5455 18.1296 38.1542 15.8575 37.1109 14.076L30.171 2.22569Z"
+                      fill="url(#paint0_linear_2989_100980)"
+                      fill-opacity="0.4"
+                    />
+                    <path
+                      d="M22.9676 2.22569C24.0109 0.444187 26.3112 -0.172113 28.1054 0.849138C29.8996 1.87039 30.5084 4.14247 29.4651 5.92397L22.5251 17.7743C21.4818 19.5558 19.1816 20.1721 17.3873 19.1509C15.5931 18.1296 14.9843 15.8575 16.0276 14.076L22.9676 2.22569Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
+                      fill="currentColor"
+                    />
+                    <path
+                      d="M14.9558 2.22569C13.9125 0.444187 11.6122 -0.172113 9.818 0.849138C8.02377 1.87039 7.41502 4.14247 8.45833 5.92397L15.3983 17.7743C16.4416 19.5558 18.7418 20.1721 20.5361 19.1509C22.3303 18.1296 22.9391 15.8575 21.8958 14.076L14.9558 2.22569Z"
+                      fill="url(#paint1_linear_2989_100980)"
+                      fill-opacity="0.4"
+                    />
+                    <path
+                      d="M7.82901 2.22569C8.87231 0.444187 11.1726 -0.172113 12.9668 0.849138C14.7611 1.87039 15.3698 4.14247 14.3265 5.92397L7.38656 17.7743C6.34325 19.5558 4.04298 20.1721 2.24875 19.1509C0.454514 18.1296 -0.154233 15.8575 0.88907 14.076L7.82901 2.22569Z"
+                      fill="currentColor"
+                    />
+                    <defs>
+                      <linearGradient
+                        id="paint0_linear_2989_100980"
+                        x1="5.36642"
+                        y1="0.849138"
+                        x2="10.532"
+                        y2="24.104"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop offset="0" stop-opacity="1" />
+                        <stop offset="1" stop-opacity="0" />
+                      </linearGradient>
+                      <linearGradient
+                        id="paint1_linear_2989_100980"
+                        x1="5.19475"
+                        y1="0.849139"
+                        x2="10.3357"
+                        y2="24.1155"
+                        gradientUnits="userSpaceOnUse"
+                      >
+                        <stop offset="0" stop-opacity="1" />
+                        <stop offset="1" stop-opacity="0" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </span>
               </span>
-            </span>
-            <span class="h4 mb-0 app-brand-text fw-bold">حسینیه مرحوم مهدیان</span>
-          </div>
-          <p class="mb-1">یزد صفاییه</p>
-          <p class="mb-1">پارک علم و فناوری، اتاق 32</p>
-          <p class="mb-0">
-            <span class="d-inline-block" dir="ltr">+21 (321) 654 9870</span> ،
-            <span class="d-inline-block" dir="ltr">+44 (876) 543 2198</span>
-          </p>
-        </div>
-        <div>
-          <h4>#{{ reservation.reserve_id}}  صورتحساب </h4>
-          <div class="mb-2">
-            <span>تاریخ صدور:</span>
-            <span class="fw-semibold">{{ reservation.created_at | jformat:' %Y/%m/%d' }}</span>
-          </div>
-<<<<<<< HEAD
-          <div len="293">
-            <div class="mb-1">
-              <font lang="fa"><span len="12">تاریخ انتشار:</span> <span len="14">{{reservation.get_created_at_shamsi}}</span></font>
+              <span class="h4 mb-0 app-brand-text fw-bold">حسینیه مرحوم مهدیان</span>
             </div>
-=======
-          <div>
-            <span>تاریخ سررسید:</span>
-            <span class="fw-semibold">{{ reservation.payment.payment_date | jformat:' %Y/%m/%d' }}</span>
->>>>>>> origin/yaser
+          </div>
+        </div>
+        <div class="row">
+          <div style="width: max-content !important;">
+            <h6 class="pb-2" lang="fa">حسینیه</h6>
+            <div class="demo-inline-spacing mt-3">
+              <ul class="list-group list-group-print">
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa">یزد صفاییه</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa">پارک علم و فناوری، اتاق 32</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <div class="d-flex flex-column justify-content-start align-items-center">
+                    <span class="d-inline-block" dir="ltr">+21 (321) 654 9870</span>
+                    <span class="d-inline-block" dir="ltr">+44 (876) 543 2198</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div style="width: max-content !important;">
+            <h6 class="pb-2" lang="fa">فاکتور به</h6>
+            <div class="demo-inline-spacing mt-3" style="font-size: 13px;">
+              <ul class="list-group list-group-print">
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> نام و نام‌خانوادگی: 
+                    {% if reservation.user.get_full_name %}  
+                    {{ reservation.user.get_full_name }}
+                    {% else %}
+                    وارد نشده‌است.
+                    {% endif %} 
+                  </p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> کدملی: 
+                    {% if reservation.user.national_code %} 
+                    {{ reservation.user.national_code }}
+                    {% else %}
+                    وارد نشده‌است.
+                    {% endif %}
+                  </p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div style="width: max-content !important;">
+            <h6 class="pb-2" lang="fa">مشخصات رزرو</h6>
+            <div class="demo-inline-spacing mt-3">
+              <ul class="list-group list-group-print">
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> کد رزرو: {{ reservation.reserve_id }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> وضعیت: {{ reservation.get_status_display }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> اتاق: {{ reservation.resource.name }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> شروع: {{ reservation.start  | jformat:'%Y/%m/%d' }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> پایان: {{ reservation.end  | jformat:'%Y/%m/%d' }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> هزینه کل: 
+                    {% if reservation.total_pay %}
+                    {{ reservation.total_pay | intcomma_custom }} تومان
+                    {% else %}
+                    وارد نشده‌است.
+                    {% endif %}
+                  </p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> نظافت: {% render_boolean_icon reservation.cleaning %}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> تاریخ صدور: {{ reservation.created_at | jformat:' %Y/%m/%d' }}</p>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <hr/>
-
-      <div class="d-flex justify-content-around flex-wrap">
-            <div class="my-3">
-              <h6 class="pb-2" lang="fa">:فاکتور به</h6>
-              {% if reservation.user.get_full_name %}  
-              <p class="mb-1" lang="fa"> نام و خوانوادگی: {{ reservation.user.get_full_name }}</p>
-              {% endif %}
-            {% if reservation.user.national_code %}  
-                <p class="mb-1" lang="fa"> کدملی: {{ reservation.user.national_code }}</p>
-            {% endif %}
-              <p class="mb-0" lang="fa"> شماره همراه: {{reservation.user.mobile_number}}</p>
-            </div>
-            <div class="px-5 my-3">
-              <h6 class="pb-2" lang="fa" style="">:مشخصات رزور</h6>
-              <table>
-                <tbody>
-                  <tr>
-                    <td lang="fa" style="">{{ reservation.reserve_id }}</td>
-                    <td class="pe-3 fw-medium" lang="fa" style="">:کد روزر</td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa" style="">{{ reservation.get_status_display }}</td>
-                    <td class="pe-3 fw-medium" lang="fa">:وضعیت </td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa" style="">{{ reservation.resource.name }}</td>
-                    <td class="pe-3 fw-medium" lang="fa">:اتاق</td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa" style="">{{ reservation.start  | jformat:'%Y/%m/%d' }}</td>
-                    <td class="pe-3 fw-medium" lang="fa" style="">:شروع</td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa">{{ reservation.end  | jformat:'%Y/%m/%d' }}</td>
-                    <td class="pe-3 fw-medium" lang="fa" style="">:پایین</td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa">{{ reservation.total_pay }}</td>
-                    <td class="pe-3 fw-medium" lang="fa" style="">:هزینه کل</td>  
-                  </tr>
-                  <tr>
-                    <td lang="fa">{% render_boolean_icon reservation.cleaning  %}</td>
-                    <td class="pe-3 fw-medium" lang="fa" style="">:نظافت</td>  
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
       
-     <hr/>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-12">
-              {% if reservation.payment %}
-                  {% with payment=reservation.payment %}
-                    <table id="TableofPayments" class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>شماره کارت</th>
-                            <th>شناسه مرجع</th>
-                            <th>تاریخ پرداخت</th>
-                            <th>مبلغ پرداختی</th>
-                            <th>تخفیف</th>
-                            <th>کاربر</th>
-                            <th>پرداخت توسط کارمند</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            <tr>
-                                <td>{{ payment.card_number }}</td>
-                                <td>{{ payment.refrence_id }}</td>
-                                <td>{{ payment.payment_date | jformat:' %Y/%m/%d' }}</td>
-                                <td>{{ payment.cost_paid }}</td>
-                                <td>{{ payment.discount }}</td>
-                                <td>{{ payment.user.get_full_name }}</td>
-                                <td>{% render_boolean_icon payment.paid_by_stuff %}</td>
-                            </tr>
-                    </tbody>
-                </table>
-                   {% endwith %}
-              {% else %}
-                <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
-              {% endif %}  
+      <hr/>
+      <div class="card-body">
+        <div class="row">
+          <div style="width: max-content !important;">
+            <h4>اطلاعات پرداخت</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div style="width: max-content !important;">
+            <h6 class="pb-2" lang="fa">کد تخفیف</h6>
+            <div class="demo-inline-spacing mt-3">
+              <ul class="list-group list-group-print">
+                {% if coupon %}
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> مقدار کل: {{ reservation.total_pay | intcomma_custom }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> مقدار تخفیف به درصد: {{ coupon.discount }}%</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> مقدار تخفیف به تومان: {{ discount | intcomma_custom }} تومان </p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> مقدار کل با تخفیف: {{ total_pay_with_discount | intcomma_custom }} تومان </p>
+                </li>
+                {% else %}
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa">وارد نشده‌است.</p>
+                </li>
+                {% endif %}
+              </ul>
             </div>
           </div>
-        </div>   
-
-
+          <div style="width: max-content !important;">
+            <h6 class="pb-2" lang="fa">اطلاعات پرداخت</h6>
+            <div class="demo-inline-spacing mt-3">
+              <ul class="list-group list-group-print">
+                {% if payment %}
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> شماره کارت: {{ payment.card_number }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa"> شماره مرجع: {{ payment.refrence_id }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa">  تاریخ پرداخت: {{ payment.payment_date | jformat:' %Y/%m/%d' }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> مبلغ پرداختی: {{ payment.cost_paid | intcomma_custom }} تومان</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> تخفیف: 
+                    {% if payment.discount %}
+                      {{ payment.discount | intcomma_custom }} تومان
+                    {% else %}
+                      -
+                    {% endif %}
+                  </p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> کاربر: {{ payment.user.get_name }}</p>
+                </li>
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-0" lang="fa"> پرداخت توسط کارمند: {% render_boolean_icon payment.paid_by_stuff %}</p>
+                </li>
+                {% else %}
+                <li class="list-group-item d-flex align-items-center">
+                  <p class="mb-1" lang="fa">پرداخت انجام نشده‌است.</p>
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>   
 
     </div>
+  </div>
     <!-- / Content -->
 
     <!-- Core JS -->

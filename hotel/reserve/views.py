@@ -328,8 +328,16 @@ def list_of_bills(request):
 
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
-
-    return render(request, "reserve/bill/billprint.html", {"reservation": reservation})
+    context = {"reservation": reservation}
+    if reservation.status == "confirmed" and Payment.objects.filter(reservation=reservation).count() == 1:
+        payment = Payment.objects.filter(reservation=reservation).first()
+        context.update({'payment':payment})
+    if reservation.coupon:
+        coupon = Coupon.objects.get(id=reservation.coupon.id)
+        discount = coupon.get_discount(reservation.total_pay)  
+        total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
+        context.update({"coupon": coupon, "discount": discount, "total_pay_with_discount": total_pay_with_discount})
+    return render(request, "reserve/bill/billprint.html", context)
 
 
 @login_required
