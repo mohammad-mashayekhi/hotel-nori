@@ -16,7 +16,7 @@ from .models import Reservation, Resource,Peaktime
 from .forms import ReservationForm,ResourceForm,PeaktimeForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
-from .decorators import is_admin
+from .decorators import is_admin, verified_required
 from coupon.models import Coupon
 from zarinpal.models import Payment
 
@@ -110,6 +110,7 @@ def reserve_schedule(request):
 
 
 @login_required
+@verified_required
 def add_reservation(request):
     new_reservation_data = ReservationForm(data=request.POST, user=request.user)
     if new_reservation_data.is_valid():
@@ -228,6 +229,7 @@ def add_reservation(request):
 
 
 @login_required
+@verified_required
 def get_reservation_info(request):
     if request.method == "GET" and "reservation_id" in request.GET:
         reservation_id = request.GET.get("reservation_id")
@@ -262,6 +264,7 @@ def get_reservation_info(request):
 
 
 @login_required
+@verified_required
 def cancel_reservation(request, reservation_id):
     try:
         # یافتن رزرو مربوطه از پایگاه داده
@@ -294,6 +297,7 @@ def cancel_reservation(request, reservation_id):
 
 
 @login_required
+@verified_required
 def list_of_bills(request):
     if is_admin(request.user):
         all_users = get_user_model().objects.all()
@@ -325,7 +329,7 @@ def list_of_bills(request):
         context = {"reservations": reservations}
     return render(request, "reserve/bill/app-invoice-list.html", context=context)
 
-
+@verified_required
 def bill_print(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
     context = {"reservation": reservation}
@@ -341,6 +345,7 @@ def bill_print(request, reserve_id):
 
 
 @login_required
+@verified_required
 def bill_detail(request, reserve_id):
     reservation = get_object_or_404(Reservation, reserve_id=reserve_id)
     payment = None
@@ -375,6 +380,7 @@ from .models import Resource
 from .forms import ResourceFormSet
 
 @login_required
+@verified_required
 def roomsprice(request):
     if request.method == 'POST':
         formset = ResourceFormSet(request.POST)
@@ -392,6 +398,7 @@ def roomsprice(request):
 
 
 @login_required
+@verified_required
 def peaktime(request):
     reservations = Peaktime.objects.all()
     reservation_data = list(
@@ -414,6 +421,7 @@ def peaktime(request):
     return render(request, "reserve/peaktime.html", context)
 
 @login_required
+@verified_required
 def add_peaktime(request):
     new_reservation_data = PeaktimeForm(data=request.POST)
     if new_reservation_data.is_valid():

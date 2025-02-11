@@ -7,7 +7,7 @@ from django.core.validators import RegexValidator
 from django.utils import timezone
 from .models import Userprofile
 from .utils import validate_otp
-
+from django.core.validators import MaxLengthValidator
 
 class UserProfileEditForm(forms.ModelForm):
 
@@ -72,10 +72,40 @@ class CustomUserCreationForm(UserCreationForm):
     username = None
     mobile_number = UsernameField(help_text="شماره تلفن همراه به صورت 09993334444 وارد شود")
     terms = forms.BooleanField(label="تیک قوانین")
+    first_name = forms.CharField(
+        label="نام",
+        max_length=150,
+        validators=[
+            MaxLengthValidator(150, message='نام نمی‌تواند بیشتر از ۱۵۰ حرف باشد.')
+        ],
+        error_messages={
+            'required': "پر کردن این فیلد الزامی است.",
+        },
+        required=True)
+    last_name = forms.CharField(
+        label="نام خانوادگی",
+        max_length=150,
+        validators=[
+            MaxLengthValidator(150, message='نام خانوادگی نمی‌تواند بیشتر از ۱۵۰ حرف باشد.')
+        ],
+        error_messages={
+            'required': "پر کردن این فیلد الزامی است.",
+        },
+        required=True)
+    referrer = forms.CharField(
+        label="نام معرف",
+        max_length=100,
+        validators=[
+            MaxLengthValidator(100, message='نام معرف نمی‌تواند بیشتر از ۱۰۰ حرف باشد.')
+        ],
+        error_messages={
+            'required': "پر کردن این فیلد الزامی است.",
+        },
+        required=True)
 
     class Meta(UserCreationForm.Meta):
         model = Userprofile
-        fields = ("mobile_number", "password1", "password2")
+        fields = ("mobile_number", "password1", "password2", "first_name", "last_name", "referrer")
 
 
 class PhoneNumberForm(forms.Form):

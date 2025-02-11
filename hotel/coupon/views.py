@@ -9,8 +9,10 @@ from django.views.decorators.http import require_POST
 from .models import Coupon
 from .forms import CouponForm
 from reserve.models import Reservation
+from reserve.decorators import verified_required
 
 
+@verified_required
 def create_coupon(request):
     if request.method == "POST":
         form = CouponForm(request.POST)
@@ -21,7 +23,7 @@ def create_coupon(request):
         form = CouponForm()
     return render(request, "coupon/coupon_add_update.html", {"form": form})
 
-
+@verified_required
 def update_coupon(request, uuid):
     coupon = Coupon.objects.get(uuid=uuid)
     if request.method == "POST":
@@ -43,7 +45,7 @@ def update_coupon(request, uuid):
         form = CouponForm(instance=coupon, initial=initial_data)
         return render(request, "coupon/coupon_add_update.html", {"form": form})
 
-
+@verified_required
 def coupon_list(request):
     coupons = Coupon.objects.all()
     valid_coupons = coupons.filter(is_active=True).count()

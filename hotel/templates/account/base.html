@@ -196,6 +196,24 @@
             <div>صفحه اصلی</div>
           </a>
         </li>
+        <li class="menu-item {% if request.resolver_match.view_name == 'account:dashboard' %} active {% endif %}">
+          <a href="{% url 'account:dashboard' %}" class="menu-link ">
+            <i class="menu-icon tf-icons mdi mdi-view-grid-outline"></i>
+            <div>حساب کاربری</div>
+          </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.view_name == 'reserve:reserve_schedule' %} active {% endif %}">
+          <a href="{% url 'reserve:reserve_schedule' %}" class="menu-link ">
+            <i class="menu-icon tf-icons mdi mdi-calendar-blank-outline"></i>
+            <div>جدول رزرو</div>
+          </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.view_name == 'reserve:rooms' %} active {% endif %}">
+          <a href="{% url 'reserve:rooms' %}" class="menu-link ">
+            <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+            <div>اتاق‌ها</div>
+          </a>
+        </li>
         {% endif %}
         </ul>
       </aside>
@@ -525,6 +543,24 @@
         </nav>
 
         <!-- / Navbar -->
+
+        {% if messages %}
+        <div class="ms-xl-4">
+            {% for message in messages %}
+                {% if 'cart' not in message.tags %}
+                    {% if 'success' in message.tags %}
+                        <div class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <!-- Content wrapper -->
         <div class="content-wrapper">

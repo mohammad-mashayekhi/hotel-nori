@@ -22,6 +22,14 @@ def is_admin_level_one(user):
 def is_admin_level_two(user):
     return user.is_authenticated and user.user_status == "admin_level_2"
 
+def verified_required(view_function):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.user_status == "normal":
+            messages.warning(request,"لطفا صبور باشید تا ثبت‌نام شما تائید شود. بعد از تائید برای شما پیامک ارسال خواهد شد.")
+            return redirect("account:dashboard")
+        return view_function(request, *args, **kwargs)
+    return wrapper
+
 
 #
 # def verified_user_required(view_func):

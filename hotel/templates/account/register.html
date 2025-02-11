@@ -22,15 +22,42 @@
           <div class="w-px-400 mx-auto pt-5 pt-lg-0">
             <form class="mb-3" method="POST">
               {% csrf_token %}
-              <div class="form-floating form-floating-outline mb-3">
+                <div class="form-floating form-floating-outline mb-3">
                   <input type="text" {% if form.mobile_number.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_mobile_number" name="mobile_number" placeholder="شماره تلفن همراه خود را وارد کنید" autofocus>
                   <label for="username">شماره  تلفن همراه</label>
                   {% if form.mobile_number.errors %}
-                       {% for error in form.mobile_number.errors %}
-                           <p class="error errorlist">{{ error }}</p>
-                       {% endfor %}
+                    {% for error in form.mobile_number.errors %}
+                      <p class="error errorlist">{{ error }}</p>  
+                    {% endfor %}
                   {% endif  %}                  
-                  <p>{{ form.mobile_number.help_text }}</p>
+                  <p class="mt-2">{{ form.mobile_number.help_text }}</p>
+                </div>
+                <div class="form-floating form-floating-outline mb-3">
+                  <input type="text" {% if form.first_name.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_first_name" name="first_name" placeholder="نام" autofocus>
+                  <label for="id_first_name">نام</label>
+                  {% if form.first_name.errors %}
+                    {% for error in form.first_name.errors %}
+                      <p class="error errorlist">{{ error }}</p>  
+                    {% endfor %}
+                  {% endif  %}                  
+                </div>
+                <div class="form-floating form-floating-outline mb-3">
+                  <input type="text" {% if form.last_name.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_last_name" name="last_name" placeholder="نام خانوادگی" autofocus>
+                  <label for="id_last_name">نام خانوادگی</label>
+                  {% if form.last_name.errors %}
+                    {% for error in form.last_name.errors %}
+                      <p class="error errorlist">{{ error }}</p>  
+                    {% endfor %}
+                  {% endif  %}                  
+                </div>
+                <div class="form-floating form-floating-outline mb-3">
+                  <input type="text" {% if form.referrer.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_referrer" name="referrer" placeholder="نام معرف" autofocus>
+                  <label for="id_referrer">نام معرف</label>
+                  {% if form.referrer.errors %}
+                    {% for error in form.referrer.errors %}
+                      <p class="error errorlist">{{ error }}</p>  
+                    {% endfor %}
+                  {% endif  %}                  
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="input-group input-group-merge">
@@ -40,10 +67,9 @@
                     </div>
                   </div>
                     {% if form.password1.errors %}
-                        {% for error in form.password1.errors %}
-                            
-                            <p class="error errorlist">{{ error }}</p>
-                        {% endfor %}
+                      {% for error in form.password1.errors %}
+                        <p class="error errorlist">{{ error }}</p>
+                      {% endfor %}
                     {% endif  %}                          
                    <p>{{ form.password1.help_text }}</p>
                 </div>
@@ -55,9 +81,9 @@
                     </div>
                   </div>
                     {% if form.password2.errors %}
-                       {% for error in form.password2.errors %}
-                           <p class="error errorlist">{{ error }}</p>
-                       {% endfor %}
+                      {% for error in form.password2.errors %}
+                        <p class="error errorlist">{{ error }}</p>
+                      {% endfor %}
                     {% endif  %}                
                 </div>
                 <div class="mb-3">
@@ -68,9 +94,9 @@
                       <a href="{% url 'terms' %}"> سیاست حریم خصوصی و قوانین</a>
                     </label>
                     {% if form.terms.errors %}
-                       {% for error in form.terms.errors %}
-                           <p class="error errorlist">{{ error }}</p>
-                       {% endfor %}
+                      {% for error in form.terms.errors %}
+                      <p class="error errorlist">{{ error }}</p>
+                      {% endfor %}
                     {% endif  %}                
                   </div>
                 </div>

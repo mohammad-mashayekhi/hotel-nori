@@ -58,6 +58,7 @@ class Userprofile(AbstractUser):
         choices=USER_STATUS_CHOICES,
         default="normal",
     )
+    referrer = models.CharField(max_length=100, blank=True, null=True)
 
     USERNAME_FIELD = "mobile_number"
     REQUIRED_FIELDS = []
