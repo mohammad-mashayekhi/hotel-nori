@@ -143,15 +143,23 @@
               <div>اتاق‌ها</div>
             </a>
           </li>
+          {% if request.user.user_status == "admin_level_a" %}
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:roomsprice' %} active {% endif %}">
             <a href="{% url 'reserve:roomsprice' %}" class="menu-link ">
-              <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+              <i class="menu-icon tf-icons mdi mdi-cash"></i>
               <div>قیمت اتاق‌ها</div>
             </a>
           </li>
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:financial-report' %} active {% endif %}">
+            <a href="{% url 'reserve:financial-report' %}" class="menu-link">
+              <i class="menu-icon tf-icons mdi mdi-file-chart"></i>
+              <div>گزارش مالی</div>
+            </a>
+          </li>
+          {% endif %}
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:peaktime' %} active {% endif %}">
             <a href="{% url 'reserve:peaktime' %}" class="menu-link ">
-              <i class="menu-icon tf-icons mdi mdi-home-outline"></i>
+              <i class="menu-icon tf-icons mdi mdi-trending-up"></i>
               <div>زمان‌های پیک</div>
             </a>
           </li>
