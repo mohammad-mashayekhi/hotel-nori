@@ -17,5 +17,6 @@ urlpatterns = [
     path("bill/print/<str:reserve_id>/", views.bill_print, name="billprint"),
     path("rooms/", views.rooms, name="rooms"),
     path("roomsprice/", views.roomsprice, name="roomsprice"),
+    path("financial-report/", views.financial_report, name="financial-report"),
 
 ]

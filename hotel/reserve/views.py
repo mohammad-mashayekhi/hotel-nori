@@ -16,7 +16,7 @@ from .models import Reservation, Resource,Peaktime
 from .forms import ReservationForm,ResourceForm,PeaktimeForm
 from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
 from .models import Resource, Reservation
-from .decorators import is_admin, verified_required
+from .decorators import is_admin, verified_required, admin_required, admin_a_required
 from coupon.models import Coupon
 from zarinpal.models import Payment
 
@@ -381,6 +381,7 @@ from .forms import ResourceFormSet
 
 @login_required
 @verified_required
+@admin_a_required
 def roomsprice(request):
     if request.method == 'POST':
         formset = ResourceFormSet(request.POST)
@@ -399,6 +400,7 @@ def roomsprice(request):
 
 @login_required
 @verified_required
+@admin_required
 def peaktime(request):
     reservations = Peaktime.objects.all()
     reservation_data = list(
@@ -444,3 +446,7 @@ def add_peaktime(request):
         if new_reservation_data.non_field_errors():
             messages.add_message(request, level=messages.ERROR, message=new_reservation_data.non_field_errors())
         return JsonResponse({"success": False}, status=400)
+    
+@admin_a_required
+def financial_report(request):
+    return render(request, "reserve/financial-report.html")

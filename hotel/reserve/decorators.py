@@ -30,6 +30,23 @@ def verified_required(view_function):
         return view_function(request, *args, **kwargs)
     return wrapper
 
+def admin_required(view_function):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.user_status == "verified":
+            messages.warning(request,"شما اجازه دسترسی به این صفحه را ندارید.")
+            return redirect("account:dashboard")
+        return view_function(request, *args, **kwargs)
+    return wrapper
+
+
+def admin_a_required(view_function):
+    def wrapper(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.user_status != "admin_level_a":
+            messages.warning(request,"شما اجازه دسترسی به این صفحه را ندارید.")
+            return redirect("account:dashboard")
+        return view_function(request, *args, **kwargs)
+    return wrapper
+
 
 #
 # def verified_user_required(view_func):
