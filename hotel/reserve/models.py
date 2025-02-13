@@ -4,6 +4,7 @@ from shortuuid.django_fields import ShortUUIDField
 from django.utils import timezone
 from jalali_date import datetime2jalali, date2jalali
 from coupon.models import Coupon
+import jdatetime
 
 class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
@@ -79,7 +80,57 @@ class Reservation(models.Model):
             return '-'
     
         return 'پرداخت نشده'
+    
+    
+    def start_shamsi_month(self):
+        shamsi_date = jdatetime.datetime.fromgregorian(datetime=self.start)  
+        return shamsi_date.month  
+    
+    def end_shamsi_month(self):
+        shamsi_date = jdatetime.datetime.fromgregorian(datetime=self.end)  
+        return shamsi_date.month 
+    
+    def length_of_stay(self):
+        if self.start and self.end:
+            start_shamsi = jdatetime.datetime.fromgregorian(datetime=self.start)
+            end_shamsi = jdatetime.datetime.fromgregorian(datetime=self.end)
 
+
+            if start_shamsi.year != end_shamsi.year:
+                stay_list = []
+                next_month = 1
+                next_year = start_shamsi.year + 1
+
+                end_of_start_month = jdatetime.datetime(next_year, next_month, 1) - jdatetime.timedelta(days=1)
+                days_in_first_month = (end_of_start_month - start_shamsi).days + 1.5
+                stay_list.append({start_shamsi.month: days_in_first_month, 'year': start_shamsi.year})
+                # the number of the second month
+                days_in_second_month = (end_shamsi - end_shamsi.replace(day=1)).days + 0.5
+                stay_list.append({end_shamsi.month: days_in_second_month, 'year': next_year})
+                return stay_list
+            else:
+                if start_shamsi.month == end_shamsi.month:
+                    # if start and end be in the same month
+                    duration = self.end - self.start
+                    return duration.days + 1
+                else:
+                    # return stay_list  
+                    stay_list = []
+
+                    # محاسبه تعداد روزهای ماه اول
+                    next_month = start_shamsi.month + 1  # فقط ماه بعدی، بدون تغییر سال
+
+                    end_of_start_month = jdatetime.datetime(start_shamsi.year, next_month, 1) - jdatetime.timedelta(days=1)
+                    days_in_first_month = (end_of_start_month - start_shamsi).days + 1.5
+                    stay_list.append({start_shamsi.month: days_in_first_month, 'year': start_shamsi.year})
+
+                    # محاسبه تعداد روزهای ماه دوم
+                    days_in_second_month = (end_shamsi - end_shamsi.replace(day=1)).days + 0.5
+                    stay_list.append({end_shamsi.month: days_in_second_month, 'year': start_shamsi.year})
+                    return stay_list
+
+        return None  
+                
 
 class Resource(models.Model):
     name = models.CharField(max_length=100,blank=True, null=True)

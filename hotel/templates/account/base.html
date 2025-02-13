@@ -151,7 +151,7 @@
             </a>
           </li>
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:financial-report' %} active {% endif %}">
-            <a href="{% url 'reserve:financial-report' %}" class="menu-link">
+            <a href="{% url 'reserve:financial-report' current_year_shamsi %}" class="menu-link">
               <i class="menu-icon tf-icons mdi mdi-file-chart"></i>
               <div>گزارش مالی</div>
             </a>

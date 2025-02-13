@@ -448,5 +448,119 @@ def add_peaktime(request):
         return JsonResponse({"success": False}, status=400)
     
 @admin_a_required
-def financial_report(request):
-    return render(request, "reserve/financial-report.html")
+def financial_report(request, current_year_shamsi):
+    persian_months = [
+        (1, "فروردین"),
+        (2, "اردیبهشت"),
+        (3, "خرداد"),
+        (4, "تیر"),
+        (5, "مرداد"),
+        (6, "شهریور"),
+        (7, "مهر"),
+        (8, "آبان"),
+        (9, "آذر"),
+        (10, "دی"),
+        (11, "بهمن"),
+        (12, "اسفند"),
+    ]
+    # current_year_shamsi = jdatetime.datetime.now().year
+    context = {
+        'resourses':Resource.objects.all(),
+        'months': persian_months,
+        'list_of_a_year':occupancy_rate_per_year(current_year_shamsi),
+        'avg_in_months':average_occupancy_rate_for_all_months(current_year_shamsi),
+        'selected_year':current_year_shamsi,
+        'years':get_year_choices(current_year_shamsi)
+    }
+    return render(request, "reserve/financial-report.html", context)
+
+
+
+
+def full_day_of_month_for_room(month, year, reservations):
+    days = 0
+    for reservation in reservations:
+        stay_data = reservation.length_of_stay()
+
+        if isinstance(stay_data, int):
+            if jdatetime.datetime.fromgregorian(datetime=reservation.start).month == month:
+                days += stay_data
+
+        elif isinstance(stay_data, list):
+            for stay in stay_data:
+                if stay.get(month) and stay.get("year") == year:
+                    days += stay[month]
+
+    return days
+
+
+def number_of_reserve(month, year, room_id):
+    start_date = jdatetime.datetime(year, month, 1).togregorian()
+    end_date = (jdatetime.datetime(year, month, 1) + jdatetime.timedelta(days=num_total_days_in_month(month, year))).togregorian()
+    
+    return Reservation.objects.filter(
+        Q(status__in=['confirmed', 'onlocalpay']),
+        Q(start__lt=end_date, end__gte=start_date),
+        resource_id=room_id,  
+        paid=True
+    )
+
+
+
+def occupancy_rate_for_room(month, year, reservations):
+    total_days = num_total_days_in_month(month, year)
+    occupied_days = full_day_of_month_for_room(month, year, reservations)
+    return (occupied_days / total_days) * 100 if total_days else 0
+
+
+
+def occupancy_rate_per_year(year):
+    rooms = Resource.objects.all()
+    occupancy_data = {}
+    for room in rooms:
+        monthly_occupancy = {
+            month: occupancy_rate_for_room(month, year, number_of_reserve(month, year, room.id))
+            for month in range(1, 13)
+        }
+        
+        yearly_occupancy = sum(monthly_occupancy.values()) / len(monthly_occupancy)
+        
+        occupancy_data[room.name] = {
+            "monthly": monthly_occupancy,
+            "yearly": yearly_occupancy
+        }
+
+    return occupancy_data
+
+
+
+def num_total_days_in_month(month, year):
+    next_month = 1 if month == 12 else month + 1
+    next_year = year + 1 if month == 12 else year
+    return (jdatetime.datetime(next_year, next_month, 1) - jdatetime.timedelta(days=1)).day
+
+
+def average_occupancy_rate_for_month(year, month):
+    rooms = Resource.objects.all()
+    total_occupancy = 0
+    for room in rooms:
+        occupancy = occupancy_rate_for_room(month, year, number_of_reserve(month, year, room.id))
+        total_occupancy += occupancy
+    
+    average_occupancy = total_occupancy / len(rooms) if rooms else 0
+    return average_occupancy
+
+
+def average_occupancy_rate_for_all_months(year):
+    monthly_averages = {}
+    
+    for month in range(1, 13): 
+        average_occupancy = average_occupancy_rate_for_month(year, month)
+        monthly_averages[month] = average_occupancy
+    
+    return monthly_averages
+
+
+def get_year_choices(current_year):
+    years = list(range(current_year - 25, current_year + 26))
+    return [year for year in years]
