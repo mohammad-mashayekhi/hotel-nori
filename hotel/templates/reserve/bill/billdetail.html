@@ -17,7 +17,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="row invoice-preview">
     <!-- Invoice -->
-    <div class="{% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" %} col-xl-9 col-md-8 col-12 {% else %} col-12 {% endif %} mb-md-0 mb-4">
+    <div class="{% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" or reservation.status == "onlocalpay" %} col-xl-9 col-md-8 col-12 {% else %} col-12 {% endif %} mb-md-0 mb-4">
       <div class="card invoice-preview-card">
         <div class="card-body">
           <div class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column">
@@ -213,7 +213,7 @@
     <!-- /Invoice -->
 
 
-    {% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" %}
+    {% if reservation.status == "pending_payment" or reservation.status == "confirmed" or reservation.status == "cancelled" or reservation.status == "onlocalpay" %}
     <!-- Invoice Actions -->
     <div class="col-xl-3 col-md-4 col-12 invoice-actions">
       <div class="card">
@@ -232,7 +232,7 @@
               </div>  
             </form>
           </div>
-        {% elif reservation.status == "confirmed" %}
+        {% elif reservation.status == "confirmed" or reservation.status == "onlocalpay" %}
           <a class="btn btn-outline-secondary d-grid w-100 mb-3 waves-effect" target="_blank" href="{% url 'reserve:billprint' reservation.reserve_id %}" lang="fa">چاپ</a>
         {% elif reservation.status == "cancelled" %}
           <div class="alert alert-danger" role="alert">کنسل‌شده</div>
