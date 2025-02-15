@@ -12,6 +12,16 @@
     max-height: 300px;
     overflow-y: auto; 
   }
+  .chart-container {
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+  }
+
+  .chart-container canvas {
+    min-width: 400px; 
+    min-height: 450px; 
+  }
 </style>
 {% endblock %}
 
@@ -93,8 +103,8 @@
   <div class="card my-5">
     <h5 class="card-header">نمودار گزارش مالی</h5>
     <h6 class="card-header">سال {{ selected_year }}</h6>
-    <div class="card-body">
-      <canvas id="myChart" width="400" height="200"></canvas>
+    <div class="card-body chart-container">
+      <canvas id="myChart" width="400" height="450"></canvas>
     </div>
   </div>
 
