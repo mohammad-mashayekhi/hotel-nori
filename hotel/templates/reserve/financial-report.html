@@ -9,93 +9,95 @@
 {% block page-css %}
 <style>
   .custom-scroll {
-      max-height: 300px; /* حداکثر ارتفاع */
-      overflow-y: auto; /* فعال کردن اسکرول */
+    max-height: 300px;
+    overflow-y: auto; 
   }
 </style>
-<!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
-<link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}"/>
-<link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}"/> -->
 {% endblock %}
 
 {% block content %}
 
 <!-- Bordered Table -->
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="card">
-        <h5 class="card-header">گزارش مالی</h5>
-        <div class="card-body">
-        <small class="fw-medium">انتخاب سال</small>
-        <div class="demo-inline-spacing mb-4">
-          <div class="btn-group">
-            <button type="button" class="btn btn-label-primary dropdown-toggle d-flex justify-content-between align-items-center"
-            style="width: 160px !important;" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ selected_year }}
-            </button>
-            <ul class="dropdown-menu custom-scroll">
-              {% for year in years %}
-              <li><a class="dropdown-item" href="{% url 'reserve:financial-report' year %}">{{ year }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
+  <div class="card">
+      <h5 class="card-header">گزارش مالی</h5>
+      <div class="card-body">
+      <small class="fw-medium">انتخاب سال</small>
+      <div class="demo-inline-spacing mb-4">
+        <div class="btn-group">
+          <button type="button" class="btn btn-label-primary dropdown-toggle d-flex justify-content-between align-items-center"
+          style="width: 160px !important;" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ selected_year }}
+          </button>
+          <ul class="dropdown-menu custom-scroll">
+            {% for year in years %}
+            <li><a class="dropdown-item" href="{% url 'reserve:financial-report' year %}">{{ year }}</a></li>
+            {% endfor %}
+          </ul>
         </div>
-        <div class="table-responsive text-nowrap">
-            <table class="table table-bordered">
-            <thead>
-                <tr>
-                <th>اتاق‌ها/ماه</th>
-                {% for number, month in months %}
-                <th>{{ month }}</th>
-                {% endfor %}
-                <th>درصد میانگین <br> اشغال اتاق</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for room_name, room_data in list_of_a_year.items %}
-                <tr>
-                    <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">{{ room_name }}</span></td>
-                    <!-- درصد اشغال‌شدگی ماهانه -->
-                    {% for month, percent in room_data.monthly.items %}
-                    <td>
-                        {% if percent == 0 %}
-                            0
-                        {% else %}
-                            %{{ percent  | floatformat:2  }}
-                        {% endif %}
-                    </td>
-                    {% endfor %}
-                    <!-- میانگین درصد اشغال‌شدگی سالانه -->
-                    <td>
-                        {% if room_data.yearly == 0 %}
-                            0
-                        {% else %}
-                            %{{ room_data.yearly  |floatformat:2  }}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                <tr>
-                  <td>درصد میانگین <br>اشغال در ماه</td>
-                  {% for month, avg_precent in avg_in_months.items %}
+      </div>
+      <div class="table-responsive text-nowrap">
+          <table class="table table-bordered">
+          <thead>
+              <tr>
+              <th>اتاق‌ها/ماه</th>
+              {% for number, month in months %}
+              <th>{{ month }}</th>
+              {% endfor %}
+              <th>درصد میانگین <br> اشغال اتاق</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for room_name, room_data in list_of_a_year.items %}
+              <tr>
+                  <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <span class="fw-medium">{{ room_name }}</span></td>
+                  <!-- درصد اشغال‌شدگی ماهانه -->
+                  {% for month, percent in room_data.monthly.items %}
                   <td>
-                    {% if avg_precent == 0 %}
-                      0
-                    {% else %}
-                      %{{ avg_precent  | floatformat:2  }}
-                    {% endif %}
+                      {% if percent == 0 %}
+                          0
+                      {% else %}
+                          %{{ percent  | floatformat:2  }}
+                      {% endif %}
                   </td>
                   {% endfor %}
-                </tr>
-            </tbody>
-            </table>
-        </div>
-        </div>
+                  <!-- میانگین درصد اشغال‌شدگی سالانه -->
+                  <td>
+                      {% if room_data.yearly == 0 %}
+                          0
+                      {% else %}
+                          %{{ room_data.yearly  |floatformat:2  }}
+                      {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td>درصد میانگین <br>اشغال در ماه</td>
+                {% for month, avg_precent in avg_in_months.items %}
+                <td>
+                  {% if avg_precent == 0 %}
+                    0
+                  {% else %}
+                    %{{ avg_precent  | floatformat:2  }}
+                  {% endif %}
+                </td>
+                {% endfor %}
+              </tr>
+          </tbody>
+          </table>
+      </div>
+      </div>
+  </div>
+
+
+  <div class="card my-5">
+    <h5 class="card-header">نمودار گزارش مالی</h5>
+    <h6 class="card-header">سال {{ selected_year }}</h6>
+    <div class="card-body">
+      <canvas id="myChart" width="400" height="200"></canvas>
     </div>
+  </div>
+
 </div>
 <!--/ Bordered Table -->
 
@@ -105,58 +107,39 @@
 
 
 {% block page-js %}
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="{% static 'vendor/libs/select2/select2.js' %}"></script> -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json"></script>
+<script src="{% static 'js/chart.js' %}"></script>
 <script>
-  $(document).ready( function () {
-    var table = $('#TableofR').DataTable({
-      language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/fa.json'
-      }
-    });
-    var table = $('#datatable').DataTable({
-      paging: false,
-      dom: 'lrtip', // remove the default search box
-      fixedHeader: {
-        header: true,
-        footer: true
-      },
-      paging: false,
-      scrollCollapse: true,
-      scrollX: true,
-      scrollY: 380,
-      ordering: false,
-    });
+  const ctx = document.getElementById('myChart').getContext('2d');
 
-    // Create the range filtering function
-    $.fn.dataTable.ext.search.push(
-      function(settings, data, dataIndex) {
-        var min = parseInt($('#min-price').val(), 10);
-        var max = parseInt($('#max-price').val(), 10);
-        var price = parseFloat(data[12]) || 0; // use data for the 'Total Pay' column
-
-        if ((isNaN(min) && isNaN(max)) ||
-              (isNaN(min) && price <= max) ||
-              (min <= price && isNaN(max)) ||
-              (min <= price && price <= max)) {
-            return true;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],
+      datasets: [
+        {
+          label: 'پرداخت آنلاین',
+          data: {{ online_pay_list }},
+          backgroundColor: '#1E3A8A'
+        },
+        {
+          label: 'پرداخت حضوری',
+          data: {{ onlocalpay_list }},
+          backgroundColor: '#60A5FA'
         }
-        return false;
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      },
+      scales: {
+        x: { stacked: true },
+        y: { stacked: true }
       }
-    );
-
-    $('#status-filter').on('change', function() {
-      var value = $(this).val();
-      table.column(9).search(value).draw();
-    });
-
-    // Re-draw the table whenever the input values change
-    $('#min-price, #max-price').on('keyup', function() {
-      table.draw();
-    });
+    }
   });
-</script> -->
+</script>
 {% endblock %}

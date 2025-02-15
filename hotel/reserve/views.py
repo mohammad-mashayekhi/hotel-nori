@@ -463,14 +463,15 @@ def financial_report(request, current_year_shamsi):
         (11, "بهمن"),
         (12, "اسفند"),
     ]
-    # current_year_shamsi = jdatetime.datetime.now().year
     context = {
         'resourses':Resource.objects.all(),
         'months': persian_months,
         'list_of_a_year':occupancy_rate_per_year(current_year_shamsi),
         'avg_in_months':average_occupancy_rate_for_all_months(current_year_shamsi),
         'selected_year':current_year_shamsi,
-        'years':get_year_choices(current_year_shamsi)
+        'years':get_year_choices(current_year_shamsi),
+        'online_pay_list':total_pay_list(current_year_shamsi)['online_pay_list'],
+        'onlocalpay_list':total_pay_list(current_year_shamsi)['onlocal_pay_list'],
     }
     return render(request, "reserve/financial-report.html", context)
 
@@ -564,3 +565,46 @@ def average_occupancy_rate_for_all_months(year):
 def get_year_choices(current_year):
     years = list(range(current_year - 25, current_year + 26))
     return [year for year in years]
+
+
+
+def number_of_reserve_for_pay(month, year):
+    start_date = jdatetime.datetime(year, month, 1).togregorian()
+    end_date = (jdatetime.datetime(year, month, 1) + jdatetime.timedelta(days=num_total_days_in_month(month, year) - 1)).togregorian()
+    all_reservation = Reservation.objects.filter(
+        status__in=['confirmed', 'onlocalpay'],
+        created_at__gte=start_date,
+        created_at__lte=end_date,
+        paid=True
+    )
+    return {
+        'online_pay':all_reservation.filter(status='confirmed'),
+        'onlocal_pay':all_reservation.filter(status='onlocalpay'),
+    }
+
+
+def total_pay_pre_month(month, year):
+    reserves = number_of_reserve_for_pay(month, year)
+    online_pay_reserve = reserves['online_pay']
+    onlocal_pay_reserve = reserves['onlocal_pay']
+
+    total_pay_onlocal_pay = sum(reserve.total_pay for reserve in onlocal_pay_reserve if reserve.total_pay)
+    total_pay_online_pay = sum(
+        reserve.coupon.get_total_pay_with_discount(reserve.total_pay) if reserve.coupon else reserve.total_pay
+        for reserve in online_pay_reserve if reserve.total_pay
+    )
+
+    return {
+        'total_pay_onlocal_pay': total_pay_onlocal_pay,
+        'total_pay_online_pay': total_pay_online_pay
+    }
+
+
+
+def total_pay_list(year):
+    monthly_totals = [total_pay_pre_month(month, year) for month in range(1, 13)]
+    
+    return {
+        'online_pay_list': [int(month_data['total_pay_online_pay']) for month_data in monthly_totals],
+        'onlocal_pay_list': [int(month_data['total_pay_onlocal_pay']) for month_data in monthly_totals],
+    }
