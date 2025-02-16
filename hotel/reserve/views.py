@@ -159,10 +159,6 @@ def add_reservation(request):
                 send_online_payment_reserve(phone, reservation.reserve_id)
             elif reservation.status == "onlocalpay":
                 send_completed_reserve_reserve(phone,start,end)
-            # message_key = "reserve-room-test" if paid else "reserve-room-not-paid"
-            # send_message_accept_reserve(
-            #     user_username, resource, formatted_start, formatted_end, message=message_key
-            # )
             messages.add_message(request, messages.SUCCESS,
                                  message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
