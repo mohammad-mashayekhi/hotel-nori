@@ -31,6 +31,7 @@ class UserProfileEditForm(forms.ModelForm):
             "gender",
             "birth_date",
             "user_status",
+            "referrer"
         ]
 
     def clean_birth_date(self):

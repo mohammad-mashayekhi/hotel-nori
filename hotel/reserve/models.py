@@ -25,7 +25,7 @@ class Reservation(models.Model):
     resource = models.ForeignKey('Resource', on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=RESERVATION_STATUS_CHOICES, default='pending_payment')  # اضافه کردن فیلد حالت رزرو
     cleaning = models.BooleanField(default=False)  # True for active, False for inactive
-    more_capacity = models.IntegerField(blank=True, null=True)
+    more_capacity = models.IntegerField(blank=True, null=True) # this field is for all people who reserve room
     total_pay = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Save creation time
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
@@ -136,7 +136,7 @@ class Resource(models.Model):
     name = models.CharField(max_length=100,blank=True, null=True)
     cssClass = models.CharField(max_length=7)
     capacity = models.IntegerField(blank=True, null=True)
-    max_capacity = models.IntegerField(blank=True, null=True)
+    max_capacity = models.IntegerField(blank=True, null=True) # this field for extra capacity
     price = models.IntegerField( blank=True, null=True) # Regular price
     peak_price = models.IntegerField(blank=True, null=True)  # Peak time price
     price_per_person = models.IntegerField( blank=True, null=True)

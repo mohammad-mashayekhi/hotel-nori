@@ -216,14 +216,17 @@
                   <option value="pending_payment">در انتظار پرداخت</option>
                   <option value="confirmed">تایید شده</option>
                   <option value="closetime">غیرقابل رزرو</option>
+                  <option value="onlocalpay">پرداخت حضوری</option>
                 </select>
                 {% endif %}  
                 <span id="event-capacity" name="event-capacity"></span><br>
                 <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity"><br>
                 <label for="event-cleaning">نظافت:</label>
                 <input type="checkbox" id="event-cleaning" name="event-cleaning">
-                <label for="event-paid">پرداخت حضوری:</label>
+                {% if request.user.user_status != "verified" %}
+                <label for="event-paid">وضعیت پرداخت:</label>
                 <input type="checkbox" id="event-paid" name="event-paid">
+                {% endif %}
               </div>
               <!-- Second Column -->
               <div class="col-md-6 col-6">

@@ -6,10 +6,12 @@ from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import redirect
 from reserve.models import Reservation
+import jdatetime
 from coupon.models import Coupon
 from .utils import get_payment_status_description
 from .models import Payment
 import os
+from reserve.utils import send_completed_reserve_reserve
 if settings.SANDBOX:
     sandbox = 'sandbox'
 else:
@@ -57,6 +59,13 @@ def send_request(request):
                 data = {'status': True, 'url': ZP_API_STARTPAY + str(response['Authority'] + "/?order_id=" +request.POST["order_id"]),
                         'authority': response['Authority']}
                 request.session["order_id"] = request.POST["order_id"]
+                jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+                jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+                formatted_start = jalali_start.strftime("%Y/%m/%d")
+                formatted_end = jalali_end.strftime("%Y/%m/%d")
+                start = f"{formatted_start}-14:00"
+                end = f"{formatted_end}-12:00"
+                send_completed_reserve_reserve(reservation.user.mobile_number,start,end)
                 return redirect(data["url"])
             else:
                 data = {'status': False, 'code': str(response['Status'])}

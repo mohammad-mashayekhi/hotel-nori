@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     'coupon',
     'django_humanize',
     'django_select2',
+    'django_q',
 ]
 
 MIDDLEWARE = [
@@ -133,6 +134,17 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
+
+Q_CLUSTER = {
+   'name': 'DjangORM',
+   'workers': 4,
+   'timeout': 90,
+   'retry': 120,
+   'queue_limit': 50,
+   'bulk': 10,
+   'orm': 'default',
+}
 
 
 # Static files (CSS, JavaScript, Images)
