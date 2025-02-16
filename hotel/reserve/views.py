@@ -14,7 +14,7 @@ from django.forms.models import model_to_dict
 from datetime import timedelta
 from .models import Reservation, Resource,Peaktime
 from .forms import ReservationForm,ResourceForm,PeaktimeForm
-from .utils import get_reservation_color, datetime_combine, send_message_accept_reserve
+from .utils import get_reservation_color, datetime_combine
 from .models import Resource, Reservation
 from .decorators import is_admin, verified_required, admin_required, admin_a_required
 from coupon.models import Coupon

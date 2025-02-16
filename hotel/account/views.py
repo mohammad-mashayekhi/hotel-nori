@@ -20,7 +20,7 @@ from .decorators import (is_admin, is_admin_level_one, is_admin_level_two,
                          is_verified_user)
 from .forms import (CustomUserCreationForm, OTPValidationForm, PhoneNumberForm,
                     Userprofile, UserProfileEditForm, UserProfileEditFormUser)
-from .utils import ( otp_generator, send_otp_sms, validate_otp)
+from .utils import ( otp_generator, send_signup_sms, send_otp_sms, send_verified_user_sms)
 from reserve.models import Resource,Reservation
 from django.http import JsonResponse
 
@@ -51,11 +51,15 @@ def update_profile(request):
 @user_passes_test(is_admin)
 def edit_user_profile(request, user_id):
     user = Userprofile.objects.get(id=user_id)
+    pervious_status = user.user_status 
     initial_data = {}
     if request.method == "POST":
         form = UserProfileEditForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            new_status = user.user_status 
+            if new_status == "verified" and pervious_status == "normal":
+                send_verified_user_sms(user.mobile_number)
             return render(request, "account/edit-user.html", {"form": form})
         else:
             return render(request, "account/edit-user.html", {"form": form})
@@ -72,9 +76,9 @@ def edit_user_profile(request, user_id):
 @user_passes_test(is_admin)
 def users(request):
     if request.user.user_status == "admin_level_b":
-        all_users = User.objects.filter(user_status="verified")
+        all_users = User.objects.filter(user_status="verified").order_by("-date_joined")
     elif request.user.user_status == "admin_level_a":
-        all_users = User.objects.all()
+        all_users = User.objects.all().order_by("-date_joined")
 
     context = {
         "users": all_users,
@@ -344,9 +348,11 @@ def add_reservation(request):
             formatted_start = jalali_start.strftime('%Y/%m/%d')
             formatted_end = jalali_end.strftime('%Y/%m/%d')
             if status == 'onlocalpay':
-                send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-test')
+                # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-test')
+                pass
             else : 
-                send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+                # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+                pass
 
             return JsonResponse({'success': True})
         except Reservation.DoesNotExist:
@@ -423,6 +429,7 @@ def register(request):
             # اعتبارسنجی تایید شرایط و قوانین
             if form.cleaned_data["terms"]:
                 # کاربر را وارد سیستم می‌کنیم
+                send_signup_sms(user.mobile_number)
                 auth_login(request, user)
                 return redirect(
                     "success_page_register"
@@ -500,50 +507,50 @@ class PasswordResetSetView(PasswordResetConfirmView):
     success_url = reverse_lazy("home")
 
 
-def send_message_accept_reserve(phone_number,reserve_id, room_id, enter_date, exit_date, message):
-    API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
-    TEMPLATE = message
-    RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
-    TOKEN = room_id
-    TOKEN2 = enter_date
-    TOKEN3 = exit_date
-    TOKEN10 = reserve_id
-    TYPE = 'sms'
-    if message == 'reserve-room-not-paid':
-        try:
-            api = KavenegarAPI(API)
-            params = {
-                'receptor': RECEPTOR,
-                'template': TEMPLATE,
-                'token': TOKEN,
-                'token2': TOKEN2,
-                'token3': TOKEN3,
-                'token10': TOKEN10,
-                'type': TYPE,
-            }
-            response = api.verify_lookup(params)
-            print(response)
-        except APIException as e:
-            print(e)
-        except HTTPException as e:
-            print(e)
-    else: 
-        try:
-            api = KavenegarAPI(API)
-            params = {
-                'receptor': RECEPTOR,
-                'template': TEMPLATE,
-                'token': TOKEN,
-                'token2': TOKEN2,
-                'token3': TOKEN3,
-                'type': TYPE,
-            }
-            response = api.verify_lookup(params)
-            print(response)
-        except APIException as e:
-            print(e)
-        except HTTPException as e:
-            print(e) 
+# def send_message_accept_reserve(phone_number,reserve_id, room_id, enter_date, exit_date, message):
+#     API = '464F396F576F69626E74345432725037463339437954734C36743954524B57736A4877484C4D316A5A31413D'
+#     TEMPLATE = message
+#     RECEPTOR = convert_to_western_numerals(phone_number)  # Convert Persian numerals
+#     TOKEN = room_id
+#     TOKEN2 = enter_date
+#     TOKEN3 = exit_date
+#     TOKEN10 = reserve_id
+#     TYPE = 'sms'
+#     if message == 'reserve-room-not-paid':
+#         try:
+#             api = KavenegarAPI(API)
+#             params = {
+#                 'receptor': RECEPTOR,
+#                 'template': TEMPLATE,
+#                 'token': TOKEN,
+#                 'token2': TOKEN2,
+#                 'token3': TOKEN3,
+#                 'token10': TOKEN10,
+#                 'type': TYPE,
+#             }
+#             response = api.verify_lookup(params)
+#             print(response)
+#         except APIException as e:
+#             print(e)
+#         except HTTPException as e:
+#             print(e)
+#     else: 
+#         try:
+#             api = KavenegarAPI(API)
+#             params = {
+#                 'receptor': RECEPTOR,
+#                 'template': TEMPLATE,
+#                 'token': TOKEN,
+#                 'token2': TOKEN2,
+#                 'token3': TOKEN3,
+#                 'type': TYPE,
+#             }
+#             response = api.verify_lookup(params)
+#             print(response)
+#         except APIException as e:
+#             print(e)
+#         except HTTPException as e:
+#             print(e) 
 
 
 def convert_to_western_numerals(persian_number):
