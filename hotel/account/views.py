@@ -101,296 +101,296 @@ def user_bill(request):
     )
 
 
-@login_required
-def calendar(request):
-    reservations = Reservation.objects.filter(
-        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
-    )
+# @login_required
+# def calendar(request):
+#     reservations = Reservation.objects.filter(
+#         Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
+#     )
 
-    if not is_admin(request.user):
-        print(request.user)
-        reservations = reservations.filter(user=request.user)
-        print(reservations)
-    closetime = Reservation.objects.filter(status="closetime")
-    resources = Resource.objects.all()
-    reservation_data = []
-    closetime_data = []
-    resource_data = []
+#     if not is_admin(request.user):
+#         print(request.user)
+#         reservations = reservations.filter(user=request.user)
+#         print(reservations)
+#     closetime = Reservation.objects.filter(status="closetime")
+#     resources = Resource.objects.all()
+#     reservation_data = []
+#     closetime_data = []
+#     resource_data = []
 
-    for reservation in reservations:
-        # Create start datetime with time set to 12:00
-        start_datetime = datetime.combine(
-            reservation.start, datetime.strptime("14:00", "%H:%M").time()
-        )
-        # Create end datetime with time set to 14:00
-        end_datetime = datetime.combine(
-            reservation.end, datetime.strptime("12:00", "%H:%M").time()
-        )
+#     for reservation in reservations:
+#         # Create start datetime with time set to 12:00
+#         start_datetime = datetime.combine(
+#             reservation.start, datetime.strptime("14:00", "%H:%M").time()
+#         )
+#         # Create end datetime with time set to 14:00
+#         end_datetime = datetime.combine(
+#             reservation.end, datetime.strptime("12:00", "%H:%M").time()
+#         )
 
-        # start_datetime = start_datetime - timedelta(days=3)
-        # end_datetime = end_datetime - timedelta(days=3)
+#         # start_datetime = start_datetime - timedelta(days=3)
+#         # end_datetime = end_datetime - timedelta(days=3)
 
-        if reservation.status == "confirmed":
-            color = "#4A827C"  # رنگ سبز برای رزروهای تایید شده
-        elif reservation.status == "pending_payment":
-            color = "#D1A975"  # رنگ زرد برای رزروهای در انتظار پرداخت
-        elif reservation.status == "cleaning":
-            color = "#DD5746"  # رنگ زرد برای رزروهای نظافت
-        else:
-            color = "#000000"  # رنگ پیش‌فرض برای حالت‌های دیگر
+#         if reservation.status == "confirmed":
+#             color = "#4A827C"  # رنگ سبز برای رزروهای تایید شده
+#         elif reservation.status == "pending_payment":
+#             color = "#D1A975"  # رنگ زرد برای رزروهای در انتظار پرداخت
+#         elif reservation.status == "cleaning":
+#             color = "#DD5746"  # رنگ زرد برای رزروهای نظافت
+#         else:
+#             color = "#000000"  # رنگ پیش‌فرض برای حالت‌های دیگر
 
-        # if reservation.cleaning :
-        #     bufferAfter = 1440
-        # else :
-        #     bufferAfter = 0
+#         # if reservation.cleaning :
+#         #     bufferAfter = 1440
+#         # else :
+#         #     bufferAfter = 0
 
-        reservation_data.append(
-            {
-                "reserve_id": reservation.reserve_id,
-                "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
-                # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-                "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
-                "title": reservation.title,
-                "resource": reservation.resource_id,
-                "color": color,
-                "cleaning": reservation.cleaning,
-                "user": reservation.user.username,  # نام کاربر
-                # 'bufferAfter': bufferAfter,
-            }
-        )
+#         reservation_data.append(
+#             {
+#                 "reserve_id": reservation.reserve_id,
+#                 "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
+#                 # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+#                 "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+#                 "title": reservation.title,
+#                 "resource": reservation.resource_id,
+#                 "color": color,
+#                 "cleaning": reservation.cleaning,
+#                 "user": reservation.user.username,  # نام کاربر
+#                 # 'bufferAfter': bufferAfter,
+#             }
+#         )
 
-    for closetime in closetime:
-        start_datetime = datetime.combine(
-            closetime.start, datetime.strptime("14:00", "%H:%M").time()
-        )
-        # Create end datetime with time set to 14:00
-        end_datetime = datetime.combine(
-            closetime.end, datetime.strptime("12:00", "%H:%M").time()
-        )
-        closetime_data.append(
-            {
-                "reserve_id": closetime.reserve_id,
-                "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
-                # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
-                "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
-                "title": closetime.title,
-                "resource": closetime.resource_id,
-                "cssClass": "md-lunch-break-class mbsc-flex",
-            }
-        )
+#     for closetime in closetime:
+#         start_datetime = datetime.combine(
+#             closetime.start, datetime.strptime("14:00", "%H:%M").time()
+#         )
+#         # Create end datetime with time set to 14:00
+#         end_datetime = datetime.combine(
+#             closetime.end, datetime.strptime("12:00", "%H:%M").time()
+#         )
+#         closetime_data.append(
+#             {
+#                 "reserve_id": closetime.reserve_id,
+#                 "start": start_datetime.strftime("%Y-%m-%dT%H:%M"),
+#                 # فرمت تاریخ به شکل استاندارد برای استفاده در ویو‌های جاوااسکریپت
+#                 "end": end_datetime.strftime("%Y-%m-%dT%H:%M"),
+#                 "title": closetime.title,
+#                 "resource": closetime.resource_id,
+#                 "cssClass": "md-lunch-break-class mbsc-flex",
+#             }
+#         )
 
-    for resource in resources:
-        resource_data.append(
-            {
-                "id": resource.id,
-                "name": resource.name,
-                "cssClass": resource.css,
-                "capacity": resource.capacity,
-                "price": resource.price,
-                "price_per_person": resource.price_per_person,
-                "max_capacity": resource.max_capacity,
-            }
-        )
+#     for resource in resources:
+#         resource_data.append(
+#             {
+#                 "id": resource.id,
+#                 "name": resource.name,
+#                 "cssClass": resource.css,
+#                 "capacity": resource.capacity,
+#                 "price": resource.price,
+#                 "price_per_person": resource.price_per_person,
+#                 "max_capacity": resource.max_capacity,
+#             }
+#         )
 
-    if request.method == "POST":
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            reservation.author = request.user  # تنظیم نویسنده رزرو
-            reservation.start = datetime.now().date()
-            reservation.end = datetime.now().date()
-            reservation.save()
-            form = ReservationForm()
-            context = {
-                "reservation_data": json.dumps(reservation_data),
-                "resource_data": json.dumps(resource_data),
-                "form": form,
-                "resources:": resources,
-            }
+#     if request.method == "POST":
+#         form = ReservationForm(request.POST)
+#         if form.is_valid():
+#             reservation = form.save(commit=False)
+#             reservation.author = request.user  # تنظیم نویسنده رزرو
+#             reservation.start = datetime.now().date()
+#             reservation.end = datetime.now().date()
+#             reservation.save()
+#             form = ReservationForm()
+#             context = {
+#                 "reservation_data": json.dumps(reservation_data),
+#                 "resource_data": json.dumps(resource_data),
+#                 "form": form,
+#                 "resources:": resources,
+#             }
 
-            return render(
-                request, "account/calendar.html", context
-            )  # بازگرداندن کاربر به صفحه کلندر
-        else:
-            print(form.errors)  # چاپ کردن خطا در ترمینال
-    else:
-        form = ReservationForm()
-        context = {
-            "reservation_data": json.dumps(reservation_data),
-            "resource_data": json.dumps(resource_data),
-            "closetime_data": json.dumps(closetime_data),
-            "form": form,
-            "resources": resources,
-            "reservations": reservations,
-        }
+#             return render(
+#                 request, "account/calendar.html", context
+#             )  # بازگرداندن کاربر به صفحه کلندر
+#         else:
+#             print(form.errors)  # چاپ کردن خطا در ترمینال
+#     else:
+#         form = ReservationForm()
+#         context = {
+#             "reservation_data": json.dumps(reservation_data),
+#             "resource_data": json.dumps(resource_data),
+#             "closetime_data": json.dumps(closetime_data),
+#             "form": form,
+#             "resources": resources,
+#             "reservations": reservations,
+#         }
 
-        return render(request, "account/calendar.html", context)
-
-
-@login_required
-def get_reservation_info(request):
-    if request.method == "GET" and "reservation_id" in request.GET:
-        reservation_id = request.GET.get("reservation_id")
-        try:
-            reservation = Reservation.objects.get(reserve_id=reservation_id)
-
-            if not is_admin(request.user) and reservation.user != request.user:
-                raise PermissionDenied
-            # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
-            # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
-
-            reservation_data = {
-                "title": reservation.title,
-                "start": reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
-                "end": reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
-                "status": reservation.status,
-                "cleaning": reservation.cleaning,
-                "resources": reservation.resource.id,
-                "user": reservation.user.username,  # نام کاربر
-                "capacity": reservation.resource.capacity,
-                "morecapacity": reservation.more_capacity,
-                "paid": reservation.paid,
-                "price": reservation.resource.price,
-                "price_per_person": reservation.resource.price_per_person,
-                "totalCost": reservation.total_pay,
-            }
-            return JsonResponse(reservation_data)
-        except Reservation.DoesNotExist:
-            return JsonResponse({"error": "Reservation not found"}, status=404)
-    else:
-        return JsonResponse({"error": "Invalid request"}, status=400)
+#         return render(request, "account/calendar.html", context)
 
 
-def add_reservation(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        start = request.POST.get("start")
-        end = request.POST.get("end")
-        resource_id = request.POST.get("resourceId")
-        author = request.user
-        status = request.POST.get("status")
+# @login_required
+# def get_reservation_info(request):
+#     if request.method == "GET" and "reservation_id" in request.GET:
+#         reservation_id = request.GET.get("reservation_id")
+#         try:
+#             reservation = Reservation.objects.get(reserve_id=reservation_id)
 
-        cleaning = request.POST.get("cleaning")
-        more_capacity = request.POST.get("more_capacity")
-        start = parse(start, fuzzy=True)
-        end = parse(end, fuzzy=True)
-        price =  request.POST.get('price')
-        start = datetime.combine(start, datetime.strptime('13:00', '%H:%M').time())
-        # Create end datetime with time set to 14:00
-        end = datetime.combine(end, datetime.strptime('12:00', '%H:%M').time())
-        if request.user.user_status == "normal":
-            user_username = request.user.username
-        else:
-            user_username = request.POST.get("user")
+#             if not is_admin(request.user) and reservation.user != request.user:
+#                 raise PermissionDenied
+#             # start_jdatetime = jdatetime.fromgregorian(datetime=start_datetime)
+#             # end_jdatetime = jdatetime.fromgregorian(datetime=end_datetime)
 
-        if not is_admin(request.user) and author != request.user:
-            raise PermissionDenied
+#             reservation_data = {
+#                 "title": reservation.title,
+#                 "start": reservation.start.strftime("%Y-%m-%d %H:%M:%S"),
+#                 "end": reservation.end.strftime("%Y-%m-%d %H:%M:%S"),
+#                 "status": reservation.status,
+#                 "cleaning": reservation.cleaning,
+#                 "resources": reservation.resource.id,
+#                 "user": reservation.user.username,  # نام کاربر
+#                 "capacity": reservation.resource.capacity,
+#                 "morecapacity": reservation.more_capacity,
+#                 "paid": reservation.paid,
+#                 "price": reservation.resource.price,
+#                 "price_per_person": reservation.resource.price_per_person,
+#                 "totalCost": reservation.total_pay,
+#             }
+#             return JsonResponse(reservation_data)
+#         except Reservation.DoesNotExist:
+#             return JsonResponse({"error": "Reservation not found"}, status=404)
+#     else:
+#         return JsonResponse({"error": "Invalid request"}, status=400)
 
-        print(user_username)
 
-        try:
-            resource = Resource.objects.get(id=resource_id)
-        except Resource.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Invalid resource ID"})
+# def add_reservation(request):
+#     if request.method == "POST":
+#         title = request.POST.get("title")
+#         start = request.POST.get("start")
+#         end = request.POST.get("end")
+#         resource_id = request.POST.get("resourceId")
+#         author = request.user
+#         status = request.POST.get("status")
 
-        if cleaning == 'true':
-            cleaning = True
-            end += timedelta(days=1)  # Add one day to end time if cleaning is true
-        else:
-            cleaning = False
+#         cleaning = request.POST.get("cleaning")
+#         more_capacity = request.POST.get("more_capacity")
+#         start = parse(start, fuzzy=True)
+#         end = parse(end, fuzzy=True)
+#         price =  request.POST.get('price')
+#         start = datetime.combine(start, datetime.strptime('13:00', '%H:%M').time())
+#         # Create end datetime with time set to 14:00
+#         end = datetime.combine(end, datetime.strptime('12:00', '%H:%M').time())
+#         if request.user.user_status == "normal":
+#             user_username = request.user.username
+#         else:
+#             user_username = request.POST.get("user")
 
-        overlapping_reservations = Reservation.objects.filter(
-            resource=resource,
-            status__in=["pending_payment", "confirmed"],
-        ).exclude(Q(end__lte=start) | Q(start__gte=end))
+#         if not is_admin(request.user) and author != request.user:
+#             raise PermissionDenied
 
-        # Check for overlapping reservations
-        if overlapping_reservations.exists():
-            return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
+#         print(user_username)
 
-        if status == 'closetime':
-            new_reservation = Reservation.objects.create(title='غیرقابل رزرو', start=start, end=end , resource=resource, author=author, user=author, status='closetime', cleaning=False)
-            return JsonResponse({'success': True})
+#         try:
+#             resource = Resource.objects.get(id=resource_id)
+#         except Resource.DoesNotExist:
+#             return JsonResponse({"success": False, "error": "Invalid resource ID"})
 
-        User = get_user_model()
-        user = User.objects.get(username=user_username)
-        print("hey it is", user)
-        try:
-            user = User.objects.get(username=user_username)
-        except User.DoesNotExist:
-            user = User.objects.create_user(
-                username=user_username, password=user_username
-            )
+#         if cleaning == 'true':
+#             cleaning = True
+#             end += timedelta(days=1)  # Add one day to end time if cleaning is true
+#         else:
+#             cleaning = False
 
-        if cleaning:
-            end -= timedelta(days=1)
-            new_reservation = Reservation.objects.create(
-                title="نظافت",
-                start=end,
-                end=end + timedelta(days=1),
-                resource=resource,
-                author=author,
-                user=user,
-                status="cleaning",
-                cleaning=cleaning,
-                more_capacity=more_capacity,
-                paid=paid,
-                total_pay=price,
-            )
+#         overlapping_reservations = Reservation.objects.filter(
+#             resource=resource,
+#             status__in=["pending_payment", "confirmed"],
+#         ).exclude(Q(end__lte=start) | Q(start__gte=end))
 
-        # Create reservation if there are no overlaps
-        new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity , total_pay = price )
-        try:
-            # Convert Gregorian date to Jalali date
-            jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
-            jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
-            # Format the Jalali dates as needed
-            formatted_start = jalali_start.strftime('%Y/%m/%d')
-            formatted_end = jalali_end.strftime('%Y/%m/%d')
-            if status == 'onlocalpay':
-                # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-test')
-                pass
-            else : 
-                # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
-                pass
+#         # Check for overlapping reservations
+#         if overlapping_reservations.exists():
+#             return JsonResponse({'success': False, 'error': 'Overlapping reservation'})
 
-            return JsonResponse({'success': True})
-        except Reservation.DoesNotExist:
-            # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-            return JsonResponse(
-                {"success": False, "error": "Reservation not found"}, status=404
-            )
-        except Exception as e:
-            print(e)
-            # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-    return JsonResponse({"success": False})
+#         if status == 'closetime':
+#             new_reservation = Reservation.objects.create(title='غیرقابل رزرو', start=start, end=end , resource=resource, author=author, user=author, status='closetime', cleaning=False)
+#             return JsonResponse({'success': True})
+
+#         User = get_user_model()
+#         user = User.objects.get(username=user_username)
+#         print("hey it is", user)
+#         try:
+#             user = User.objects.get(username=user_username)
+#         except User.DoesNotExist:
+#             user = User.objects.create_user(
+#                 username=user_username, password=user_username
+#             )
+
+#         if cleaning:
+#             end -= timedelta(days=1)
+#             new_reservation = Reservation.objects.create(
+#                 title="نظافت",
+#                 start=end,
+#                 end=end + timedelta(days=1),
+#                 resource=resource,
+#                 author=author,
+#                 user=user,
+#                 status="cleaning",
+#                 cleaning=cleaning,
+#                 more_capacity=more_capacity,
+#                 paid=paid,
+#                 total_pay=price,
+#             )
+
+#         # Create reservation if there are no overlaps
+#         new_reservation = Reservation.objects.create(title=title, start=start, end=end, resource=resource, author=author, user=user, status=status, cleaning=cleaning, more_capacity = more_capacity , total_pay = price )
+#         try:
+#             # Convert Gregorian date to Jalali date
+#             jalali_start = jdatetime.datetime.fromgregorian(datetime=start)
+#             jalali_end = jdatetime.datetime.fromgregorian(datetime=end)
+#             # Format the Jalali dates as needed
+#             formatted_start = jalali_start.strftime('%Y/%m/%d')
+#             formatted_end = jalali_end.strftime('%Y/%m/%d')
+#             if status == 'onlocalpay':
+#                 # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-test')
+#                 pass
+#             else : 
+#                 # send_message_accept_reserve(user_username,'/account/bill/'+new_reservation.reserve_id,resource,formatted_start,formatted_end,message='reserve-room-not-paid')
+#                 pass
+
+#             return JsonResponse({'success': True})
+#         except Reservation.DoesNotExist:
+#             # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+#             return JsonResponse(
+#                 {"success": False, "error": "Reservation not found"}, status=404
+#             )
+#         except Exception as e:
+#             print(e)
+#             # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+#             return JsonResponse({"success": False, "error": str(e)}, status=500)
+#     return JsonResponse({"success": False})
 
 
 # @require_POST
-@login_required
-def cancel_reservation(request):
-    # دریافت شناسه رزرو از درخواست POST
-    reservation_id = request.POST.get("reservation_id")
-    try:
-        # یافتن رزرو مربوطه از پایگاه داده
-        reservation = Reservation.objects.get(reserve_id=reservation_id)
-        if not is_admin(user) and reservation.user != request.user:
-            raise PermissionDenied
+# @login_required
+# def cancel_reservation(request):
+#     # دریافت شناسه رزرو از درخواست POST
+#     reservation_id = request.POST.get("reservation_id")
+#     try:
+#         # یافتن رزرو مربوطه از پایگاه داده
+#         reservation = Reservation.objects.get(reserve_id=reservation_id)
+#         if not is_admin(user) and reservation.user != request.user:
+#             raise PermissionDenied
 
-        # تغییر حالت رزرو به کنسل شده
-        reservation.status = "canceled"
-        reservation.save()
+#         # تغییر حالت رزرو به کنسل شده
+#         reservation.status = "canceled"
+#         reservation.save()
 
-        return JsonResponse({"success": True})
-    except Reservation.DoesNotExist:
-        # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
-        return JsonResponse(
-            {"success": False, "error": "Reservation not found"}, status=404
-        )
-    except Exception as e:
-        # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
-        return JsonResponse({"success": False, "error": str(e)}, status=500)
+#         return JsonResponse({"success": True})
+#     except Reservation.DoesNotExist:
+#         # در صورت عدم یافتن رزرو، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse(
+#             {"success": False, "error": "Reservation not found"}, status=404
+#         )
+#     except Exception as e:
+#         # در صورت بروز هر خطای دیگری، پاسخ خطای مناسب را برگردانید
+#         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
 def login(request):

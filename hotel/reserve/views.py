@@ -14,7 +14,7 @@ from django.forms.models import model_to_dict
 from datetime import timedelta
 from .models import Reservation, Resource,Peaktime
 from .forms import ReservationForm,ResourceForm,PeaktimeForm
-from .utils import get_reservation_color, datetime_combine
+from .utils import send_online_payment_reserve, send_completed_reserve_reserve
 from .models import Resource, Reservation
 from .decorators import is_admin, verified_required, admin_required, admin_a_required
 from coupon.models import Coupon
@@ -131,7 +131,7 @@ def add_reservation(request):
             reservation.user = user
         else:
             reservation.user = request.user
-            # reservation.author = request.user
+            reservation.author = request.user
 
         if reservation.cleaning and reservation.status != "closetime":
             cleaning = Reservation(
@@ -147,12 +147,18 @@ def add_reservation(request):
         reservation.save()
         try:
             # Convert and format dates
-            # jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
-            # jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
-            # formatted_start = jalali_start.strftime("%Y/%m/%d")
-            # formatted_end = jalali_end.strftime("%Y/%m/%d")
-
+            jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+            jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+            formatted_start = jalali_start.strftime("%Y/%m/%d")
+            formatted_end = jalali_end.strftime("%Y/%m/%d")
+            phone = reservation.user.mobile_number
+            start = f"{formatted_start}-14:00"
+            end = f"{formatted_end}-12:00"
             # # Send message
+            if reservation.status == "pending_payment":
+                send_online_payment_reserve(phone, reservation.reserve_id)
+            elif reservation.status == "onlocalpay":
+                send_completed_reserve_reserve(phone,start,end)
             # message_key = "reserve-room-test" if paid else "reserve-room-not-paid"
             # send_message_accept_reserve(
             #     user_username, resource, formatted_start, formatted_end, message=message_key

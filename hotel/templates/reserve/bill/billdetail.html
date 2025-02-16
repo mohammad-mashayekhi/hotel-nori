@@ -79,7 +79,11 @@
                   </li>
                   <li class="list-group-item d-flex align-items-center">
                     <i class="mdi mdi-cash-multiple me-2"></i>
-                    <p class="mb-1" lang="fa"> وضعیت: {{ reservation.get_status_display }}</p>
+                    <p class="mb-1" lang="fa"> وضعیت رزرو: {{ reservation.get_status_display }}</p>
+                  </li>
+                  <li class="list-group-item d-flex align-items-center">
+                    <i class="mdi mdi-check-circle me-2"></i>
+                    <p class="mb-1" lang="fa"> وضعیت پرداخت: {{ reservation.get_paid }}</p>
                   </li>
                   <li class="list-group-item d-flex align-items-center">
                     <i class="mdi mdi-bed me-2"></i>
@@ -203,7 +207,7 @@
                   </tbody>
                 </table>
               {% else %}
-                <p> اطلاعات پرداخت موجود نیست پرداخت صورت نگرفته است</p>  
+                <p> اطلاعات پرداخت موجود نیست پرداخت آنلاین صورت نگرفته است.</p>  
               {% endif %}  
             </div>
           </div>
