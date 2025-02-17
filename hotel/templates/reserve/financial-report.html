@@ -10,17 +10,21 @@
 <style>
   .custom-scroll {
     max-height: 300px;
-    overflow-y: auto; 
+    overflow: auto; 
   }
   .chart-container {
     width: 100%;
     height: 100%;
-    overflow: auto; 
+    overflow: auto;
+  }
+
+  #myChart{
+    font-family: IRANSans !important; 
   }
 
   .chart-container canvas {
     min-width: 400px; 
-    min-height: 450px; 
+    min-height: 150px; 
   }
 </style>
 {% endblock %}
@@ -33,6 +37,7 @@
       <h5 class="card-header">گزارش مالی</h5>
       <div class="card-body">
       <small class="fw-medium">انتخاب سال</small>
+      <!-- form for year selection start -->
       <div class="demo-inline-spacing mb-4">
         <div class="btn-group">
           <button type="button" class="btn btn-label-primary dropdown-toggle d-flex justify-content-between align-items-center"
@@ -46,6 +51,8 @@
           </ul>
         </div>
       </div>
+      <!-- form for year selection end -->
+      <!-- financial table start -->
       <div class="table-responsive text-nowrap">
           <table class="table table-bordered">
           <thead>
@@ -96,18 +103,19 @@
           </tbody>
           </table>
       </div>
+      <!-- financial table end -->
       </div>
   </div>
 
-
+  <!--  financial char start -->
   <div class="card my-5">
     <h5 class="card-header">نمودار گزارش مالی</h5>
     <h6 class="card-header">سال {{ selected_year }}</h6>
     <div class="card-body chart-container">
-      <canvas id="myChart" width="400" height="450"></canvas>
+      <canvas id="myChart" width="400" height="150"></canvas>
     </div>
   </div>
-
+  <!--  financial char end -->
 </div>
 <!--/ Bordered Table -->
 
@@ -119,6 +127,8 @@
 {% block page-js %}
 <script src="{% static 'js/chart.js' %}"></script>
 <script>
+  const onlinePayData = JSON.parse('{{ online_pay_list|escapejs }}');
+  const onLocalPayData = JSON.parse('{{ onlocalpay_list|escapejs }}');
   const ctx = document.getElementById('myChart').getContext('2d');
 
   new Chart(ctx, {
@@ -128,12 +138,12 @@
       datasets: [
         {
           label: 'پرداخت آنلاین',
-          data: {{ online_pay_list }},
+          data: onlinePayData,
           backgroundColor: '#1E3A8A'
         },
         {
           label: 'پرداخت حضوری',
-          data: {{ onlocalpay_list }},
+          data: onLocalPayData,
           backgroundColor: '#60A5FA'
         }
       ]
@@ -142,12 +152,31 @@
       responsive: true,
       plugins: {
         legend: {
-          position: 'top',
+          labels: {
+            position: 'top',
+            font: {
+              family: 'IRANSans' // فقط تغییر فونت برای عنوان‌ها
+            }
+          }
         }
       },
       scales: {
-        x: { stacked: true },
-        y: { stacked: true }
+        x: { 
+          stacked: true,
+          ticks: {
+            font: {
+              family: 'IRANSans' // فقط تغییر فونت برای لیبل‌های محور X
+            }
+          }
+        },
+        y: { 
+          stacked: true,
+          ticks: {
+            font: {
+              family: 'IRANSans' // فقط تغییر فونت برای لیبل‌های محور X
+            }
+          }
+        }
       }
     }
   });

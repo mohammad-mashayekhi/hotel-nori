@@ -157,7 +157,7 @@ def add_reservation(request):
             # # Send message
             if reservation.status == "pending_payment":
                 send_online_payment_reserve(phone, reservation.reserve_id)
-            elif reservation.status == "onlocalpay":
+            elif reservation.status == "onlocalpay" or reservation.status == "confirmed":
                 send_completed_reserve_reserve(phone,start,end)
             messages.add_message(request, messages.SUCCESS,
                                  message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
@@ -471,9 +471,9 @@ def financial_report(request, current_year_shamsi):
         'list_of_a_year':occupancy_rate_per_year(current_year_shamsi),
         'avg_in_months':average_occupancy_rate_for_all_months(current_year_shamsi),
         'selected_year':current_year_shamsi,
-        'years':get_year_choices(current_year_shamsi),
-        'online_pay_list':total_pay_list(current_year_shamsi)['online_pay_list'],
-        'onlocalpay_list':total_pay_list(current_year_shamsi)['onlocal_pay_list'],
+        'years':get_year_choices(current_year_shamsi), #list: A list of years spanning from (current_year - 25) to (current_year + 25).
+        'online_pay_list':json.dumps(total_pay_list(current_year_shamsi)['online_pay_list']),
+        'onlocalpay_list':json.dumps(total_pay_list(current_year_shamsi)['onlocal_pay_list']),
     }
     return render(request, "reserve/financial-report.html", context)
 
@@ -481,6 +481,24 @@ def financial_report(request, current_year_shamsi):
 
 
 def full_day_of_month_for_room(month, year, reservations):
+    """
+    Calculates the total number of occupied days for a specific room in a given Persian (Hijri shamsi) month and year.
+
+    Args:
+        month (int): The target month (1-12) in the Persian calendar.
+        year (int): The target year in the Persian calendar.
+        reservations (QuerySet or list): A list of reservations for the specific room.
+
+    Returns:
+        int: The total number of days the room was occupied during the specified month.
+
+    Notes:
+        - Iterates through the provided reservations to count the number of occupied days.
+        - Uses the `length_of_stay()` method from the reservation object to determine the duration.
+        - If the stay duration is an integer, it checks if the reservation started in the given month.
+        - If the stay duration is a list (split across multiple months), it extracts the days for the given month and year.
+        - **The reservations are already filtered for a specific room before passing them to this function.**
+    """
     days = 0
     for reservation in reservations:
         stay_data = reservation.length_of_stay()
@@ -498,6 +516,23 @@ def full_day_of_month_for_room(month, year, reservations):
 
 
 def number_of_reserve(month, year, room_id):
+    """
+    Retrieves the number of confirmed reservations for a specific room in a given Persian (Hijri shamsi) month and year.
+
+    Args:
+        month (int): The target month (1-12) in the Persian calendar.
+        year (int): The target year in the Persian calendar.
+        room_id (int): The unique identifier of the room.
+
+    Returns:
+        QuerySet: A filtered set of Reservation objects matching the criteria.
+
+    Notes:
+        - Converts the given Persian month and year to Gregorian dates for database queries.
+        - Filters reservations with 'confirmed' or 'onlocalpay' status.
+        - Includes reservations where the stay overlaps with the specified month.
+        - Ensures that only fully paid reservations are considered.
+    """
     start_date = jdatetime.datetime(year, month, 1).togregorian()
     end_date = (jdatetime.datetime(year, month, 1) + jdatetime.timedelta(days=num_total_days_in_month(month, year))).togregorian()
     
@@ -511,6 +546,23 @@ def number_of_reserve(month, year, room_id):
 
 
 def occupancy_rate_for_room(month, year, reservations):
+    """
+    Calculates the occupancy rate for a specific room in a given month and year.
+
+    Args:
+        month (int): The target month (1-12). (in Hijri shamsi)
+        year (int): The target year. (in Hijri shamsi)
+        reservations (list): A list of reservations for the room.
+
+    Returns:
+        float: The occupancy rate as a percentage (0 to 100).
+    
+    Notes:
+        - The function calculates the total number of days in the given month.
+        - It determines how many of those days the room is occupied.
+        - The result is the percentage of occupied days in the month.
+        - If the month has zero total days (invalid input), it returns 0.
+    """
     total_days = num_total_days_in_month(month, year)
     occupied_days = full_day_of_month_for_room(month, year, reservations)
     return (occupied_days / total_days) * 100 if total_days else 0
@@ -518,6 +570,36 @@ def occupancy_rate_for_room(month, year, reservations):
 
 
 def occupancy_rate_per_year(year):
+    """
+    Calculates the monthly and yearly occupancy rate for all rooms in a given Persian (Hijri shamsi) year.
+
+    Args:
+        year (int): The target year in the Persian calendar.
+
+    Returns:
+        dict: A dictionary containing occupancy data for each room with the following structure:
+            {
+                "Room Name": {
+                    "monthly": {
+                        1: occupancy_rate,  # Farvardin
+                        2: occupancy_rate,  # Ordibehesht
+                        ...
+                        12: occupancy_rate  # Esfand
+                    },
+                    "yearly": average_occupancy_rate  # The yearly average occupancy rate
+                },
+                ...
+            }
+
+    Notes:
+        - Iterates through all available rooms (`Resource.objects.all()`).
+        - Computes the occupancy rate for each room for every month using `occupancy_rate_for_room()`.
+        - Uses `number_of_reserve()` to get the reservations for each room per month.
+        - Calculates the yearly occupancy rate as the average of the 12 monthly rates.
+        - Returns a dictionary where:
+            - `"monthly"` contains the occupancy rate for each month.
+            - `"yearly"` contains the overall occupancy percentage for the year.
+    """
     rooms = Resource.objects.all()
     occupancy_data = {}
     for room in rooms:
@@ -538,12 +620,43 @@ def occupancy_rate_per_year(year):
 
 
 def num_total_days_in_month(month, year):
+    """
+    Calculates the total number of days in a given month of the Persian (Hijri shamsi) calendar.
+
+    Args:
+        month (int): The target month (1-12).
+        year (int): The target year.
+
+    Returns:
+        int: The number of days in the specified month.
+    
+    Notes:
+        - Uses the `jdatetime` library to determine the last day of the month.
+        - It calculates this by finding the first day of the next month and subtracting one day.
+    """
     next_month = 1 if month == 12 else month + 1
     next_year = year + 1 if month == 12 else year
     return (jdatetime.datetime(next_year, next_month, 1) - jdatetime.timedelta(days=1)).day
 
 
 def average_occupancy_rate_for_month(year, month):
+    """
+    Calculates the average occupancy rate for all rooms in a given Persian (Hijri shamsi) month and year.
+
+    Args:
+        year (int): The target year in the Persian calendar.
+        month (int): The target month (1-12) in the Persian calendar.
+
+    Returns:
+        float: The average occupancy rate of all rooms for the given month (percentage between 0 and 100).
+
+    Notes:
+        - Iterates through all available rooms (`Resource.objects.all()`).
+        - Calculates the occupancy rate for each room using `occupancy_rate_for_room()`.
+        - Uses `number_of_reserve()` to retrieve reservations for each room.
+        - Computes the average occupancy rate by summing individual room occupancies and dividing by the total number of rooms.
+        - Returns `0` if no rooms are available.
+    """
     rooms = Resource.objects.all()
     total_occupancy = 0
     for room in rooms:
@@ -555,6 +668,26 @@ def average_occupancy_rate_for_month(year, month):
 
 
 def average_occupancy_rate_for_all_months(year):
+    """
+    Calculates the average occupancy rate for all rooms in each month of a given Persian (Hijri shamsi) year.
+
+    Args:
+        year (int): The target year in the Persian calendar.
+
+    Returns:
+        dict: A dictionary containing the average occupancy rate for each month, structured as:
+            {
+                1: average_occupancy_rate,  # Farvardin
+                2: average_occupancy_rate,  # Ordibehesht
+                ...
+                12: average_occupancy_rate  # Esfand
+            }
+
+    Notes:
+        - Iterates through all 12 months of the given year.
+        - Calls `average_occupancy_rate_for_month()` to compute the monthly occupancy rate.
+        - Stores the results in a dictionary with months as keys.
+    """
     monthly_averages = {}
     
     for month in range(1, 13): 
@@ -565,12 +698,43 @@ def average_occupancy_rate_for_all_months(year):
 
 
 def get_year_choices(current_year):
+    """
+    Generates a list of years ranging from 25 years before to 25 years after the given Persian (Hijri shamsi) year.
+
+    Args:
+        current_year (int): The current year in the Persian (Hijri shamsi) calendar.
+
+    Returns:
+        list: A list of years spanning from (current_year - 25) to (current_year + 25).
+    """
     years = list(range(current_year - 25, current_year + 26))
     return [year for year in years]
 
 
 
 def number_of_reserve_for_pay(month, year):
+    """
+    Filters and categorizes reservations with successful payments for a given Persian (Hijri shamsi) month and year.
+
+    Args:
+        month (int): The target month (1-12) in the Persian calendar.
+        year (int): The target year in the Persian calendar.
+
+    Returns:
+        dict: A dictionary containing reservations categorized by payment type:
+            {
+                'online_pay': QuerySet of reservations with online payment (status='confirmed'),
+                'onlocal_pay': QuerySet of reservations with on-site payment (status='onlocalpay')
+            }
+
+    Notes:
+        - Converts the given Persian month and year to the corresponding date range.
+        - Filters reservations that:
+            - Have a status of either 'confirmed' (online payment) or 'onlocalpay' (on-site payment).
+            - Were created within the specified month.
+            - Have been successfully paid (`paid=True`).
+        - Separates online payments (`status='confirmed'`) from on-site payments (`status='onlocalpay'`).
+    """
     start_date = jdatetime.datetime(year, month, 1).togregorian()
     end_date = (jdatetime.datetime(year, month, 1) + jdatetime.timedelta(days=num_total_days_in_month(month, year) - 1)).togregorian()
     all_reservation = Reservation.objects.filter(
@@ -586,6 +750,25 @@ def number_of_reserve_for_pay(month, year):
 
 
 def total_pay_pre_month(month, year):
+    """
+    Calculates the total revenue from both online and on-site payments for a given Persian (Hijri shamsi) month and year.
+
+    Args:
+        month (int): The target month (1-12) in the Persian calendar.
+        year (int): The target year in the Persian calendar.
+
+    Returns:
+        dict: A dictionary containing the total revenue from each payment method:
+            {
+                'total_pay_onlocal_pay': Total revenue from on-site payments,
+                'total_pay_online_pay': Total revenue from online payments (after applying discounts, if any)
+            }
+
+    Notes:
+        - Calls `number_of_reserve_for_pay()` to retrieve reservations with successful payments.
+        - Sums up `total_pay` for on-site payments (`status='onlocalpay'`).
+        - For online payments (`status='confirmed'`), applies coupon discounts if available before summing up the total.
+    """
     reserves = number_of_reserve_for_pay(month, year)
     online_pay_reserve = reserves['online_pay']
     onlocal_pay_reserve = reserves['onlocal_pay']
@@ -604,6 +787,24 @@ def total_pay_pre_month(month, year):
 
 
 def total_pay_list(year):
+    """
+    Computes the total revenue from both online and on-site payments for each month in a given Persian (Hijri shamsi) year.
+
+    Args:
+        year (int): The target year in the Persian calendar.
+
+    Returns:
+        dict: A dictionary containing lists of total revenue per month for each payment method:
+            {
+                'online_pay_list': [total for Farvardin, total for Ordibehesht, ..., total for Esfand],
+                'onlocal_pay_list': [total for Farvardin, total for Ordibehesht, ..., total for Esfand]
+            }
+
+    Notes:
+        - Calls `total_pay_pre_month()` for each month (1-12) to compute the monthly revenue.
+        - Extracts and stores `total_pay_online_pay` and `total_pay_onlocal_pay` in separate lists.
+        - Converts revenue values to integers for consistency.
+    """
     monthly_totals = [total_pay_pre_month(month, year) for month in range(1, 13)]
     
     return {
