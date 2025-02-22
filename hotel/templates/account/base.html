@@ -241,6 +241,7 @@
           </div>
           <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
             <ul class="navbar-nav flex-row align-items-center ms-auto">
+              {% comment %}
               <!-- Notification -->
               <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-2 me-xl-1">
                 <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow waves-effect waves-light"
@@ -458,6 +459,7 @@
                 </ul>
               </li>
               <!--/ Notification -->
+              {% endcomment %}
               <!-- User -->
               {% if user.is_authenticated %}
               <li class="nav-item navbar-dropdown dropdown-user dropdown">

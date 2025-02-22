@@ -17,7 +17,6 @@ class UserProfileEditForm(forms.ModelForm):
             field.widget.attrs.update({"class": "form-control"})
             field.widget.attrs.pop("autofocus", None)
 
-    birth_date = forms.CharField(widget=DateInput(attrs={'id': 'id_birth_date'}))
 
     class Meta:
         model = Userprofile
@@ -26,21 +25,11 @@ class UserProfileEditForm(forms.ModelForm):
             "last_name",
             "email",
             "mobile_number",
-            "card_number",
-            "national_code",
             "gender",
-            "birth_date",
             "user_status",
             "referrer"
         ]
 
-    def clean_birth_date(self):
-        birth_date = self.cleaned_data['birth_date']
-        try:
-            birth_date = jdatetime.datetime.strptime(birth_date, "%Y/%m/%d").togregorian()
-        except ValueError:
-            raise forms.ValidationError("تاریخ معتبر نمی باشد")
-        return birth_date
 
 
 class UserProfileEditFormUser(forms.ModelForm):
@@ -51,7 +40,6 @@ class UserProfileEditFormUser(forms.ModelForm):
             field.widget.attrs.update({"class": "form-control"})
             field.widget.attrs.pop("autofocus", None)
 
-    birth_date = forms.CharField(widget=DateInput(attrs={'id': 'id_birth_date'}))
 
     class Meta:
         model = Userprofile
@@ -59,10 +47,7 @@ class UserProfileEditFormUser(forms.ModelForm):
             "first_name",
             "last_name",
             "email",
-            "card_number",
-            "national_code",
             "gender",
-            "birth_date",
         ]
         widgets = {
             "gender": Select(choices=[("male", "مرد"), ("female", "زن")])

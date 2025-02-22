@@ -83,32 +83,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                {{form.card_number}}
-                                <label for="cardNumber">شماره کارت</label>
-                            </div>
-                            <div class="errorlist error" id="id_card_number_error">
-                                {% if form.card_number.errors %}
-                                    {% for error in form.card_number.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>                      
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                {{form.national_code}}
-                                <label for="nationalCode">کد ملی</label>
-                            </div>
-                            <div class="errorlist error" id="id_national_error">
-                                {% if form.national_code.errors %}
-                                    {% for error in form.national_code.errors %}
-                                        <div class="text-danger">{{ error }}</div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>                      
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
                                 {{form.gender}}
                                 <label for="gender">جنسیت</label>
                             </div>
@@ -118,19 +92,6 @@
                                         <div class="text-danger">{{ error }}</div>
                                     {% endfor %}
                                 {% endif %}
-                            </div>                      
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                            {{form.birth_date}}
-                            <label for="birthDate">تاریخ تولد</label>
-                            </div>
-                            <div class="errorlist error" id="id_birth_date_error">
-                            {% if form.birth_date.errors %}
-                                {% for error in form.birth_date.errors %}
-                                    <div class="text-danger">{{ error }}</div>
-                                {% endfor %}
-                            {% endif %}
                             </div>                      
                         </div>
                         <div class="col-md-6">
