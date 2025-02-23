@@ -56,7 +56,7 @@ def send_online_payment_reserve(phone_number, reserve_id):
             "type": TYPE
         }
         response = api.verify_lookup(params)
-        print(response)
+        # print(response)
     except APIException as e:
         print(e)
     except HTTPException as e:
@@ -80,7 +80,7 @@ def send_completed_reserve_reserve(phone_number, start_date, end_date):
             "type": TYPE
         }
         response = api.verify_lookup(params)
-        print(response)
+        # print(response)
     except APIException as e:
         print(e)
     except HTTPException as e:

@@ -19,7 +19,9 @@ from .models import Resource, Reservation
 from .decorators import is_admin, verified_required, admin_required, admin_a_required
 from coupon.models import Coupon
 from zarinpal.models import Payment
-
+from .models import Reservation
+from django_q.tasks import schedule
+from django.utils.timezone import now
 def date_formatter(date):
     return date.strftime("%Y-%m-%dT%H:%M")
 
@@ -157,6 +159,14 @@ def add_reservation(request):
             # # Send message
             if reservation.status == "pending_payment":
                 send_online_payment_reserve(phone, reservation.reserve_id)
+                schedule(
+                    'reserve.tasks.payment_reminder',
+                    reservation.reserve_id,
+                    name=f'payment_reminder_{reservation.reserve_id}',  # مقدار یکتا
+                    schedule_type='O',  # اجرا فقط یک‌بار انجام شود
+                    next_run=now() + timedelta(hours=1, minutes=50)  # اجرا بعد از ۱ ساعت و ۵۰ دقیقه
+                    # next_run=now() + timedelta(minutes=5)  # اجرا بعد از ۱ ساعت و ۵۰ دقیقه
+                )
             elif reservation.status == "onlocalpay" or reservation.status == "confirmed":
                 send_completed_reserve_reserve(phone,start,end)
             messages.add_message(request, messages.SUCCESS,
