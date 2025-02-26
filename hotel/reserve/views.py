@@ -13,7 +13,7 @@ from django.core.exceptions import PermissionDenied
 from django.forms.models import model_to_dict
 from datetime import timedelta
 from .models import Reservation, Resource,Peaktime
-from .forms import ReservationForm,ResourceForm,PeaktimeForm
+from .forms import ReservationForm, ResourceForm, PeaktimeForm, AdminReservationChangeForm
 from .utils import send_online_payment_reserve, send_completed_reserve_reserve
 from .models import Resource, Reservation
 from .decorators import is_admin, verified_required, admin_required, admin_a_required
@@ -378,6 +378,28 @@ def bill_detail(request, reserve_id):
         discount = coupon.get_discount(reservation.total_pay)  # get the discount in money ammount -> 100$
         total_pay_with_discount = coupon.get_total_pay_with_discount(reservation.total_pay)
         context.update({"coupon": coupon, "discount": discount, "total_pay_with_discount": total_pay_with_discount})
+
+    if request.user.user_status == 'admin_level_a' or request.user.user_status == 'admin_level_b':
+        form_admin = AdminReservationChangeForm(instance=reservation)
+        context.update({"form_admin": form_admin})
+
+    if is_admin(request.user) and request.method == 'POST':
+        reservation_form = AdminReservationChangeForm(instance=reservation, data=request.POST)
+        if reservation_form.is_valid():
+            reservation_form.save()
+            if (reservation.status == "onlocalpay" or reservation.status == "confirmed") and reservation.paid:
+                jalali_start = jdatetime.datetime.fromgregorian(datetime=reservation.start)
+                jalali_end = jdatetime.datetime.fromgregorian(datetime=reservation.end)
+                formatted_start = jalali_start.strftime("%Y/%m/%d")
+                formatted_end = jalali_end.strftime("%Y/%m/%d")
+                start = f"{formatted_start}-14:00"
+                end = f"{formatted_end}-12:00"
+                send_completed_reserve_reserve(reservation.user.mobile_number,start,end)
+            messages.success(request, 'رزرو با موفقیت تغییر یافت.')
+            return redirect(reverse('reserve:billdetail', args=[reserve_id]))
+        else:
+            messages.error(request, "لطفاً خطاهای فرم را بررسی کنید.")  
+            return redirect(reverse('reserve:billdetail', args=[reserve_id]))
     return render(request, "reserve/bill/billdetail.html", context=context)
 
 

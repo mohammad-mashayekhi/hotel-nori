@@ -7,6 +7,16 @@ from .models import Reservation, Resource,Peaktime
 from django.forms import modelformset_factory
 
 
+RESERVATION_STATUS_CHOICES = [
+        ('pending_payment', 'در انتظار پرداخت'),  # در انتظار پرداخت
+        ('confirmed', 'تایید شده'),              # تایید شده
+        ('onlocalpay', 'پرداخت حضوری'),              # تایید شده و پرداخت حضوری
+        ('canceled', 'کنسل شده'),                # لغو شده
+        ('closetime', 'زمان تعطیلی'),                # زمان تعطیلی
+        ("cleaning", 'زمان نظافت')
+    ]
+
+
 def overlap_checker(data, instance=None):
     if instance:
         overlapping_reservations = Reservation.objects.filter(
@@ -243,3 +253,19 @@ class PeaktimeForm(forms.ModelForm):
         # if overlap_checker(data, instance=self.instance):
         #     raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
         # return data
+
+
+class AdminReservationChangeForm(forms.ModelForm):
+    status = forms.ChoiceField(
+        label="وضعیت رزرو",
+        choices=RESERVATION_STATUS_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control mt-2'}),
+    )
+    paid = forms.BooleanField(
+        label="وضعیت پرداخت",
+        widget=forms.CheckboxInput(attrs={'class': ''}),
+        required=False,
+    )
+    class Meta:
+        model = Reservation
+        fields = ["status","paid"]
