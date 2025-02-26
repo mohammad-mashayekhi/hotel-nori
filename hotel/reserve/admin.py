@@ -8,7 +8,7 @@ class ReservationAdmin(admin.ModelAdmin):
     search_fields = ("reserve_id","title")
 
 class ResourceAdmin(admin.ModelAdmin):    
-    list_display = ['name', 'max_capacity', 'price', 'peak_price', 'price_per_person', 'status']
+    list_display = ['name', 'capacity', 'max_capacity', 'price', 'peak_price', 'price_per_person', 'status']
     search_fields = ("name",)
 
 class PeaktimeAdmin(admin.ModelAdmin):    
