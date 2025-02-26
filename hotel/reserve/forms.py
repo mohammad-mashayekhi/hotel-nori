@@ -148,8 +148,13 @@ class ReservationForm(forms.ModelForm):
         resource = self.cleaned_data["resource"]
         more_capacity = self.cleaned_data.get("more_capacity", 0)  # تعداد نفرات بیشتر از ظرفیت مجاز
 
+        more_capacity = more_capacity - resource.capacity if more_capacity > resource.capacity else 0
+
+
         # محاسبه تعداد روزها
         total_days = (end - start).days + 1
+        # print('total_day',total_days)
+        # print('more_capacity',more_capacity)
 
         # تنظیم مقدار اولیه برای قیمت کل
         total_pay = 0
@@ -165,7 +170,7 @@ class ReservationForm(forms.ModelForm):
 
             # محاسبه قیمت برای این روز
             total_pay += daily_rate
-
+            # print('current_date',current_date)
             # محاسبه هزینه اضافی برای ظرفیت بیشتر
             if more_capacity > 0:
                 '''
