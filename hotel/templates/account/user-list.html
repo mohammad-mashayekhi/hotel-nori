@@ -40,53 +40,44 @@ href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css'%}"/
 <div class="container-xxl flex-grow-1 container-p-y">
 
   <!-- Users List Table -->
-  <div class="card">
-{#    <div class="card-header">#}
-{#      <!-- <h5 class="card-title">فیلتر جستجو</h5> -->#}
-{#      <div#}
-{#        class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">#}
-{#        <div class="col-md-4 user_role"></div>#}
-{#        <div class="col-md-4 user_plan"></div>#}
-{#        <div class="col-md-4 user_status"></div>#}
-{#      </div>#}
-{#    </div>#}
+  <div class="card mx-xl-4">
     <div class="card-body">
 
-    <div class="card-datatable table-responsive">
-      <table id="UserTable" class="table table-striped text-center datatables-users table">
-        <thead style="text-align-last:center;"  class="table-light">
-          <tr>
-            <th class="th"></th>
-            <th class="th"></th>
-            <th class="th">نام</th>
-            <th class="th">نام‌خانوادگی</th>
-            <th class="th">نقش کاربر</th>
-            <th class="th">شماره موبایل</th>
-            <th class="th">کدملی</th>
-            <th class="th">تاریخ تولد</th>
-            <th class="th">جنسیت</th>
-            <th class="th">ویرایش</th>
-          </tr>
-        </thead>
-        <tbody class="table-body" id="table-body">
-          {% for u in users %}
-          <tr>
-            <td></td>
-            <td></td>
-            <td>{{ u.first_name }}</td>
-            <td>{{ u.last_name }}</td>
-            <td>{{ u.get_user_status_display}}</td>          
-            <td>{{ u.mobile_number }}</td>
-            <td>{{ u.national_code }}</td>
-            <td>{{ u.birth_date |  jformat:' %Y/%m/%d' }}</td>
-            <td>{{ u.get_gender_display }}</td>
-            <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
-          </tr>
-          {% endfor %}        
-        </tbody>
-      </table>
+      <div class="card-datatable table-responsive">
+        <table id="UserTable" class="table table-striped text-center datatables-users table">
+          <thead style="text-align-last:center;"  class="table-light">
+            <tr>
+              <th class="th"></th>
+              <th class="th"></th>
+              <th class="th">نام</th>
+              <th class="th">نام‌خانوادگی</th>
+              <th class="th">نقش کاربر</th>
+              <th class="th">شماره موبایل</th>
+              <th class="th">کدملی</th>
+              <th class="th">تاریخ تولد</th>
+              <th class="th">جنسیت</th>
+              <th class="th">ویرایش</th>
+            </tr>
+          </thead>
+          <tbody class="table-body" id="table-body">
+            {% for u in users %}
+            <tr>
+              <td></td>
+              <td></td>
+              <td>{{ u.first_name }}</td>
+              <td>{{ u.last_name }}</td>
+              <td>{{ u.get_user_status_display}}</td>          
+              <td>{{ u.mobile_number }}</td>
+              <td>{{ u.national_code }}</td>
+              <td>{{ u.birth_date |  jformat:' %Y/%m/%d' }}</td>
+              <td>{{ u.get_gender_display }}</td>
+              <td><a href="{% url 'account:edit_user' u.id %}">ویرایش</a></td>
+            </tr>
+            {% endfor %}        
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
     <!-- Offcanvas to add new user -->
     <div
       class="offcanvas offcanvas-end"

@@ -2,107 +2,101 @@
 {% load static %}
 {% block content %}
 <style>
-.card-body{ 
-  height: 15rem !important;
-}
-.btn .btn-outline-primary .waves-effect{
-  border-color: black !important;
-}
-.card-special{
-  margin-right: auto;
-}
-.help-center-popular-مقالات{
-  margin:20px;
-}
+  .card-body{ 
+    height: 15rem !important;
+  }
+  .btn .btn-outline-primary .waves-effect{
+    border-color: black !important;
+  }
+  .card-special{
+    margin-right: auto;
+  }
+  .help-center-popular-مقالات{
+    margin:20px;
+  }
 </style>
-
-      <!-- Content wrapper -->
-      <div class="content-wrapper">
-        <!-- Content -->
-        <div class="container-xxl flex-grow-1 container-p-y">
-          <div class="card" style="background-size:cover; background-image: url('{% static 'img/pages/back-home.png'%}')">
-            <!-- Help Center Header -->
-            <div class="help-center-header d-flex flex-column justify-content-center align-items-center mg-3">
-              <!-- <h3 class="text-center text-primary fw-semibold" style="margin-top:30px">بسم الله الرحمن الرحیم</h3> -->
-            </div>
-            <!-- /Help Center Header -->
-            <div class="help-center-popular-مقالات py-5">
-              <div class="container-xl">
-                <div class="row mb-2">
-                  <div class="col-lg-10 mx-auto">
-                    <div class="row">
-                      <div class="col-md-4 mb-md-0 mb-4">
-                          <a class="" href="{% url 'account:login'%}">
-                          <div class="card border shadow-none homecaed">
-                            <div class="card-body text-center">
-                              <img class="mb-3" src="{% static 'img/home/account-100.png' %}" height="60" alt="Help center landing">
-                              <h5>ورود به حساب کاربری</h5>
-                            </div>
-                          </div>
-                        </a>
-                      </div>
-                      <div class="col-md-4 mb-md-0 mb-4 ">
-                        <a href="{% url 'reserve:reserve_schedule'%}">
-                        <div class="card border shadow-none homecaed">
-                          <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'img/home/reserve-80.png' %}" height="60" alt="Help center landing">
-                            <h5>رزرو اتاق</h5>
-                          </div>
-                        </div>
-                      </a>
-                      </div>
-                      <div class="col-md-4">
-                        <a href="{% url 'reserve:bill'%}">
-                        <div class="card border shadow-none homecaed">
-                          <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'img/home/cancel-80.png' %}" height="60" alt="Help center landing">
-                            <h5>کنسلی رزرو</h5>
-                          </div>
-                        </div>
-                      </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="container-xl">
-                <div class="row mb-2">
-                  <div class="col-lg-10 mx-auto">
-                    <div class="row">
-                      <div class="col-md-4 mb-md-0 mb-4">
-                        <a href="{% url 'reserve:rooms'%}">
-                        <div class="card border shadow-none homecaed">
-                          <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'img/home/room-100.png' %}" height="60" alt="Help center landing">
-                            <h5>مشاهده اتاق‌ها</h5>
-                          </div>
-                        </div>
-                      </a>
-                      </div>
-                      <div class="col-md-4 mb-md-0 mb-4 card-special">
-                        <a href="{% url 'contact-us' %}">
-                        <div class="card border shadow-none homecaed">
-                          <div class="card-body text-center">
-                            <img class="mb-3" src="{% static 'img/home/contact-us-80.png' %}" height="60" alt="Help center landing">
-                            <h5>تماس با ما</h5>
-                          </div>
-                        </div>
-                      </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>            
-          </div>
-          <!-- / Content -->
-          <div class="content-backdrop fade"></div>
-        </div>
-        <!--/ Content wrapper -->
+<!-- Content wrapper -->
+<div class="content-wrapper">
+  <!-- Content -->
+  <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="card" style="background-size:cover; background-image: url('{% static 'img/pages/back-home.png'%}')">
+      <!-- Help Center Header -->
+      <div class="help-center-header d-flex flex-column justify-content-center align-items-center mg-3">
+        <!-- <h3 class="text-center text-primary fw-semibold" style="margin-top:30px">بسم الله الرحمن الرحیم</h3> -->
       </div>
-      <!--/ Layout container -->
-    </div>
-  </div>  
-  <!--/ Layout wrapper -->
+      <!-- /Help Center Header -->
+      <div class="help-center-popular-مقالات py-5">
+        <div class="container-xl">
+          <div class="row mb-2">
+            <div class="col-lg-10 mx-auto">
+              <div class="row">
+                <div class="col-md-4 mb-md-0 mb-4">
+                    <a class="" href="{% url 'account:login'%}">
+                    <div class="card border shadow-none homecaed">
+                      <div class="card-body text-center">
+                        <img class="mb-3" src="{% static 'img/home/account-100.png' %}" height="60" alt="Help center landing">
+                        <h5>ورود به حساب کاربری</h5>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="col-md-4 mb-md-0 mb-4 ">
+                  <a href="{% url 'reserve:reserve_schedule'%}">
+                  <div class="card border shadow-none homecaed">
+                    <div class="card-body text-center">
+                      <img class="mb-3" src="{% static 'img/home/reserve-80.png' %}" height="60" alt="Help center landing">
+                      <h5>رزرو اتاق</h5>
+                    </div>
+                  </div>
+                </a>
+                </div>
+                <div class="col-md-4">
+                  <a href="{% url 'reserve:bill'%}">
+                  <div class="card border shadow-none homecaed">
+                    <div class="card-body text-center">
+                      <img class="mb-3" src="{% static 'img/home/cancel-80.png' %}" height="60" alt="Help center landing">
+                      <h5>کنسلی رزرو</h5>
+                    </div>
+                  </div>
+                </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-xl">
+          <div class="row mb-2">
+            <div class="col-lg-10 mx-auto">
+              <div class="row">
+                <div class="col-md-4 mb-md-0 mb-4">
+                  <a href="{% url 'reserve:rooms'%}">
+                  <div class="card border shadow-none homecaed">
+                    <div class="card-body text-center">
+                      <img class="mb-3" src="{% static 'img/home/room-100.png' %}" height="60" alt="Help center landing">
+                      <h5>مشاهده اتاق‌ها</h5>
+                    </div>
+                  </div>
+                </a>
+                </div>
+                <div class="col-md-4 mb-md-0 mb-4 card-special">
+                  <a href="{% url 'contact-us' %}">
+                  <div class="card border shadow-none homecaed">
+                    <div class="card-body text-center">
+                      <img class="mb-3" src="{% static 'img/home/contact-us-80.png' %}" height="60" alt="Help center landing">
+                      <h5>تماس با ما</h5>
+                    </div>
+                  </div>
+                </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>            
+  </div>
+  <!-- / Content -->
+  <div class="content-backdrop fade"></div>
+</div>
+<!--/ Content wrapper -->
 {% endblock %}

@@ -1,461 +1,458 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block content %}
-        <!-- Content -->
-          <div class="container-xxl flex-grow-1 container-p-y">    
-<div class="faq-header d-flex flex-column justify-content-center align-items-center">
-  <h3 class="text-center text-primary mb-2 fw-semibold">قوانین و مقررات رزرو</h3>
-  <p class="text-body text-center mb-0 px-3">لطفا پیش از رزرو اتاق قوانین را به دقت مطالعه بفرمایید</p>
-  
-</div>
-<div class="row mt-4">
-  <!-- Navigation -->
-  <div class="col-lg-3 col-md-4 col-12 mb-md-0 mb-3">
-    <div class="d-flex justify-content-between flex-column mb-2 mb-md-0">
-      <ul class="nav nav-align-left nav-pills flex-column">
-        <li class="nav-item">
-          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#payment">
-            <i class="mdi mdi-credit-card-outline me-1"></i>
-            <span class="align-middle">پرداخت</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#delivery">
-            <i class="mdi mdi-cart-plus me-1"></i>
-            <span class="align-middle">ارسال</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancellation">
-            <i class="mdi mdi-reload me-1"></i>
-            <span class="align-middle">انصراف و مرجوعی</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#orders">
-            <i class="mdi mdi-wallet-giftcard me-1"></i>
-            <span class="align-middle">سفارشات من</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#product">
-            <i class="mdi mdi-cog-outline me-1"></i>
-            <span class="align-middle">محصول و خدمات</span>
-          </button>
-        </li>
-      </ul>
-      <div class="d-none d-md-block">
-        <div class="mt-5 text-center">
-          <img src="{% static 'img/illustrations/faq-illustration.png' %}" class="img-fluid w-px-120" alt="FAQ Image">
-        </div>
-      </div>
-    </div>
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">    
+  <div class="faq-header d-flex flex-column justify-content-center align-items-center">
+    <h3 class="text-center text-primary mb-2 fw-semibold">قوانین و مقررات رزرو</h3>
+    <p class="text-body text-center mb-0 px-3">لطفا پیش از رزرو اتاق قوانین را به دقت مطالعه بفرمایید</p>
   </div>
-  <!-- /Navigation -->
-
-  <!-- FAQ's -->
-  <div class="col-lg-9 col-md-8 col-12">
-    <div class="tab-content p-0">
-      <div class="tab-pane fade show active" id="payment" role="tabpanel">
-        <div class="d-flex mb-3 gap-3">
-          <div class="avatar">
-            <div class="avatar-initial bg-label-primary rounded">
-              <i class="mdi mdi-credit-card-outline mdi-24px"></i>
-            </div>
-          </div>
-          <div>
-            <h5 class="mb-0">
+  <div class="row mt-4">
+    <!-- Navigation -->
+    <div class="col-lg-3 col-md-4 col-12 mb-md-0 mb-3">
+      <div class="d-flex justify-content-between flex-column mb-2 mb-md-0">
+        <ul class="nav nav-align-left nav-pills flex-column">
+          <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#payment">
+              <i class="mdi mdi-credit-card-outline me-1"></i>
               <span class="align-middle">پرداخت</span>
-            </h5>
-            <small class="text-muted">دریافت راهنمایی برای پرداخت</small>
-          </div>
-        </div>
-        <div id="accordionPayment" class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionPayment-1" aria-controls="accordionPayment-1">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-
-            <div id="accordionPayment-1" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
-                             </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-2" aria-controls="accordionPayment-2">
-             
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionPayment-2" class="accordion-collapse collapse">
-               <div class="accordion-body">
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
-                             </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-3" aria-controls="accordionPayment-3">
-             
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionPayment-3" class="accordion-collapse collapse">
-             <div class="accordion-body">
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
-                             </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-4" aria-controls="accordionPayment-4">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionPayment-4" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
-                             </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-5" aria-controls="accordionPayment-5">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionPayment-5" class="accordion-collapse collapse">
- <div class="accordion-body">
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
-                             </div>            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="delivery" role="tabpanel">
-        <div class="d-flex mb-3 gap-3">
-          <div class="avatar">
-            <span class="avatar-initial bg-label-primary rounded">
-              <i class="mdi mdi-cart-plus mdi-24px"></i>
-            </span>
-          </div>
-          <div>
-            <h5 class="mb-0">
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#delivery">
+              <i class="mdi mdi-cart-plus me-1"></i>
               <span class="align-middle">ارسال</span>
-            </h5>
-            <small class="text-muted">دریافت راهنمایی برای ارسال</small>
-          </div>
-        </div>
-        <div id="accordionDelivery" class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionDelivery-1" aria-controls="accordionDelivery-1">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-
-            <div id="accordionDelivery-1" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionDelivery-2" aria-controls="accordionDelivery-2">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionDelivery-2" class="accordion-collapse collapse">
-              <div class="accordion-body">The cost of scheduled delivery is $69 or $99 per order, depending on the destination postal code. The parcel delivery is free.
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionDelivery-4" aria-controls="accordionDelivery-4">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
-                            
-              </button>
-            </h2>
-            <div id="accordionDelivery-4" class="accordion-collapse collapse">
-              <div class="accordion-body">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="cancellation" role="tabpanel">
-        <div class="d-flex mb-3 gap-3">
-          <div class="avatar">
-            <span class="avatar-initial bg-label-primary rounded">
-              <i class="mdi mdi-reload mdi-24px"></i>
-            </span>
-          </div>
-          <div>
-            <h5 class="mb-0"><span class="align-middle">انصراف و مرجوعی</span></h5>
-            <small class="text-muted">دریافت راهنمایی برای ارسال</small>
-          </div>
-        </div>
-        <div id="accordionCancellation" class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionCancellation-1" aria-controls="accordionCancellation-1">
-            
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-
-            <div id="accordionCancellation-1" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCancellation-2" aria-controls="accordionCancellation-2">
-             
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-            <div id="accordionCancellation-2" class="accordion-collapse collapse">
-              <div class="accordion-body">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-controls="accordionCancellation-3" data-bs-target="#accordionCancellation-3">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-            <div id="accordionCancellation-3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="orders" role="tabpanel">
-        <div class="d-flex mb-3 gap-3">
-          <div class="avatar">
-            <span class="avatar-initial bg-label-primary rounded">
-              <i class="mdi mdi-wallet-giftcard mdi-24px"></i>
-            </span>
-          </div>
-          <div>
-            <h5 class="mb-0">
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancellation">
+              <i class="mdi mdi-reload me-1"></i>
+              <span class="align-middle">انصراف و مرجوعی</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#orders">
+              <i class="mdi mdi-wallet-giftcard me-1"></i>
               <span class="align-middle">سفارشات من</span>
-            </h5>
-            <small class="text-muted">دریافت راهنمایی برای ارسال</small>
-          </div>
-        </div>
-        <div id="accordionOrders" class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionOrders-1" aria-controls="accordionOrders-1">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-
-            <div id="accordionOrders-1" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionOrders-2" aria-controls="accordionOrders-2">
-             
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-            <div id="accordionOrders-2" class="accordion-collapse collapse">
-              <div class="accordion-body">
-              
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionOrders-3" aria-controls="accordionOrders-3">
-            
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-            <div id="accordionOrders-3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane fade" id="product" role="tabpanel">
-        <div class="d-flex mb-3 gap-3">
-          <div class="avatar">
-            <span class="avatar-initial bg-label-primary rounded">
-              <i class="mdi mdi-cog-outline mdi-24px"></i>
-            </span>
-          </div>
-          <div>
-            <h5 class="mb-0">
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#product">
+              <i class="mdi mdi-cog-outline me-1"></i>
               <span class="align-middle">محصول و خدمات</span>
-            </h5>
-            <small class="text-muted">دریافت راهنمایی برای ارسال</small>
-          </div>
-        </div>
-        <div id="accordionProduct" class="accordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionProduct-1" aria-controls="accordionProduct-1">
-                
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-
-            <div id="accordionProduct-1" class="accordion-collapse collapse show">
-              <div class="accordion-body">
-            
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionProduct-2" aria-controls="accordionProduct-2">
-                
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                            
-              </button>
-            </h2>
-            <div id="accordionProduct-2" class="accordion-collapse collapse">
-              <div class="accordion-body">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionProduct-3" aria-controls="accordionProduct-3">
-
-                              لورم ایپسوم متن ساختگی با تولید سادگی
-                                          </button>
-            </h2>
-            <div id="accordionProduct-3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-               
-                              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
-                            
-              </div>
-            </div>
+            </button>
+          </li>
+        </ul>
+        <div class="d-none d-md-block">
+          <div class="mt-5 text-center">
+            <img src="{% static 'img/illustrations/faq-illustration.png' %}" class="img-fluid w-px-120" alt="FAQ Image">
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- /FAQ's -->
-</div>
+    <!-- /Navigation -->
 
-<!-- Contact -->
-<div class="row mt-5">
-  <div class="col-12 text-center mb-3">
-    <div class="badge bg-label-primary rounded-pill">سوالی دارید؟</div>
-    <h5 class="my-3">همچنان سوالی دارید؟</h5>
-    <p class="text-muted">اگر سوالی را در سوالات متداول ما پیدا نمی کنید، همواره می توانید با ما تماس بگیرید. ما در اسرع وقت به شما پاسخ می دهیم.</p>
-  </div>
-</div>
-<div class="row justify-content-center gap-sm-0 gap-3">
-  <div class="col-sm-6">
-    <div class="py-3 rounded bg-faq-section d-flex align-items-center flex-column">
-      <div class="avatar">
-        <span class="avatar-initial bg-label-secondary rounded">
-          <i class="mdi mdi-phone mdi-24px"></i>
-        </span>
-      </div>
-      <h5 class="mt-3"><a class="text-heading" href="tel:+(810)25482568">+ (210) 321 12312</a></h5>
-      <p>ما همیشه خوشحالیم که به شما کمک کنیم</p>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="py-3 rounded bg-faq-section d-flex align-items-center flex-column">
-      <div class="avatar">
-        <span class="avatar-initial bg-label-secondary rounded">
-          <i class="mdi mdi-email-outline mdi-24px"></i>
-        </span>
-      </div>
-      <h5 class="mt-3"><a class="text-heading" href="mailto:help@help.com">@raadino.com</a></h5>
-      <p>بهترین راه برای دریافت یک پاسخ سریع</p>
-    </div>
-  </div>
-</div>
-<!-- /Contact -->
-
-            
+    <!-- FAQ's -->
+    <div class="col-lg-9 col-md-8 col-12">
+      <div class="tab-content p-0">
+        <div class="tab-pane fade show active" id="payment" role="tabpanel">
+          <div class="d-flex mb-3 gap-3">
+            <div class="avatar">
+              <div class="avatar-initial bg-label-primary rounded">
+                <i class="mdi mdi-credit-card-outline mdi-24px"></i>
+              </div>
+            </div>
+            <div>
+              <h5 class="mb-0">
+                <span class="align-middle">پرداخت</span>
+              </h5>
+              <small class="text-muted">دریافت راهنمایی برای پرداخت</small>
+            </div>
           </div>
-          <!-- / Content -->
+          <div id="accordionPayment" class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionPayment-1" aria-controls="accordionPayment-1">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+
+              <div id="accordionPayment-1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
+                              </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-2" aria-controls="accordionPayment-2">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionPayment-2" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
+                              </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-3" aria-controls="accordionPayment-3">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionPayment-3" class="accordion-collapse collapse">
+              <div class="accordion-body">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
+                              </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-4" aria-controls="accordionPayment-4">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionPayment-4" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
+                              </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionPayment-5" aria-controls="accordionPayment-5">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionPayment-5" class="accordion-collapse collapse">
+  <div class="accordion-body">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی
+                              </div>            </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="delivery" role="tabpanel">
+          <div class="d-flex mb-3 gap-3">
+            <div class="avatar">
+              <span class="avatar-initial bg-label-primary rounded">
+                <i class="mdi mdi-cart-plus mdi-24px"></i>
+              </span>
+            </div>
+            <div>
+              <h5 class="mb-0">
+                <span class="align-middle">ارسال</span>
+              </h5>
+              <small class="text-muted">دریافت راهنمایی برای ارسال</small>
+            </div>
+          </div>
+          <div id="accordionDelivery" class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionDelivery-1" aria-controls="accordionDelivery-1">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+
+              <div id="accordionDelivery-1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionDelivery-2" aria-controls="accordionDelivery-2">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionDelivery-2" class="accordion-collapse collapse">
+                <div class="accordion-body">The cost of scheduled delivery is $69 or $99 per order, depending on the destination postal code. The parcel delivery is free.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionDelivery-4" aria-controls="accordionDelivery-4">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم
+                              
+                </button>
+              </h2>
+              <div id="accordionDelivery-4" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="cancellation" role="tabpanel">
+          <div class="d-flex mb-3 gap-3">
+            <div class="avatar">
+              <span class="avatar-initial bg-label-primary rounded">
+                <i class="mdi mdi-reload mdi-24px"></i>
+              </span>
+            </div>
+            <div>
+              <h5 class="mb-0"><span class="align-middle">انصراف و مرجوعی</span></h5>
+              <small class="text-muted">دریافت راهنمایی برای ارسال</small>
+            </div>
+          </div>
+          <div id="accordionCancellation" class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionCancellation-1" aria-controls="accordionCancellation-1">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+
+              <div id="accordionCancellation-1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionCancellation-2" aria-controls="accordionCancellation-2">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+              <div id="accordionCancellation-2" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" aria-controls="accordionCancellation-3" data-bs-target="#accordionCancellation-3">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+              <div id="accordionCancellation-3" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="orders" role="tabpanel">
+          <div class="d-flex mb-3 gap-3">
+            <div class="avatar">
+              <span class="avatar-initial bg-label-primary rounded">
+                <i class="mdi mdi-wallet-giftcard mdi-24px"></i>
+              </span>
+            </div>
+            <div>
+              <h5 class="mb-0">
+                <span class="align-middle">سفارشات من</span>
+              </h5>
+              <small class="text-muted">دریافت راهنمایی برای ارسال</small>
+            </div>
+          </div>
+          <div id="accordionOrders" class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionOrders-1" aria-controls="accordionOrders-1">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+
+              <div id="accordionOrders-1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionOrders-2" aria-controls="accordionOrders-2">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+              <div id="accordionOrders-2" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionOrders-3" aria-controls="accordionOrders-3">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+              <div id="accordionOrders-3" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="product" role="tabpanel">
+          <div class="d-flex mb-3 gap-3">
+            <div class="avatar">
+              <span class="avatar-initial bg-label-primary rounded">
+                <i class="mdi mdi-cog-outline mdi-24px"></i>
+              </span>
+            </div>
+            <div>
+              <h5 class="mb-0">
+                <span class="align-middle">محصول و خدمات</span>
+              </h5>
+              <small class="text-muted">دریافت راهنمایی برای ارسال</small>
+            </div>
+          </div>
+          <div id="accordionProduct" class="accordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" aria-expanded="true" data-bs-target="#accordionProduct-1" aria-controls="accordionProduct-1">
+                  
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+
+              <div id="accordionProduct-1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+              
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionProduct-2" aria-controls="accordionProduct-2">
+                  
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                              
+                </button>
+              </h2>
+              <div id="accordionProduct-2" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#accordionProduct-3" aria-controls="accordionProduct-3">
+
+                                لورم ایپسوم متن ساختگی با تولید سادگی
+                                            </button>
+              </h2>
+              <div id="accordionProduct-3" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز
+                              
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /FAQ's -->
+  </div>
+
+  <!-- Contact -->
+  <div class="row mt-5">
+    <div class="col-12 text-center mb-3">
+      <div class="badge bg-label-primary rounded-pill">سوالی دارید؟</div>
+      <h5 class="my-3">همچنان سوالی دارید؟</h5>
+      <p class="text-muted">اگر سوالی را در سوالات متداول ما پیدا نمی کنید، همواره می توانید با ما تماس بگیرید. ما در اسرع وقت به شما پاسخ می دهیم.</p>
+    </div>
+  </div>
+  <div class="row justify-content-center gap-sm-0 gap-3">
+    <div class="col-sm-6">
+      <div class="py-3 rounded bg-faq-section d-flex align-items-center flex-column">
+        <div class="avatar">
+          <span class="avatar-initial bg-label-secondary rounded">
+            <i class="mdi mdi-phone mdi-24px"></i>
+          </span>
+        </div>
+        <h5 class="mt-3"><a class="text-heading" href="tel:+(810)25482568">+ (210) 321 12312</a></h5>
+        <p>ما همیشه خوشحالیم که به شما کمک کنیم</p>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="py-3 rounded bg-faq-section d-flex align-items-center flex-column">
+        <div class="avatar">
+          <span class="avatar-initial bg-label-secondary rounded">
+            <i class="mdi mdi-email-outline mdi-24px"></i>
+          </span>
+        </div>
+        <h5 class="mt-3"><a class="text-heading" href="mailto:help@help.com">@raadino.com</a></h5>
+        <p>بهترین راه برای دریافت یک پاسخ سریع</p>
+      </div>
+    </div>
+  </div>
+  <!-- /Contact -->
+</div>
+<!-- / Content -->
 {% endblock %}
 
           
