@@ -9,7 +9,8 @@ class Coupon(models.Model):
     name = models.CharField(max_length=10)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     code = models.CharField(max_length=6)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL) # allowed user to use discount
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="creator_discount")
     valid_from = models.DateField()
     valid_to = models.DateField()
     discount = models.DecimalField(max_digits=3, decimal_places=0,

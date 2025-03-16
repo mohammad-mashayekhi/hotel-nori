@@ -543,40 +543,6 @@ function createEditPopup(args, resourceId) {
         headerText: 'مشخصات رزرو',
         buttons: [
             'cancel',
-            {#{#}
-            {#    text: 'ویرایش',#}
-            {#    keyCode: 'enter',#}
-            {#    handler: function () {#}
-            {#        var reservtime = datepickerreserve.getVal();#}
-            {#        const startreserve = new Date(reservtime[0]);#}
-            {#        const endreserve = new Date(reservtime[1]);#}
-            {#        #}
-            {#        deleteEvent = false;#}
-            {#        updateReservation({#}
-            {#            title: $('#event-title').val(),#}
-            {#            {% if request.user.user_status == "verified" %}#}
-            {#                mobile_number: "{{request.user.mobile_number}}",#}
-            {#            {% else %}#}
-            {#                mobile_number: $('#event-user').val(),#}
-            {#            {% endif %}#}
-            {#            start: startreserve.toISOString(),#}
-            {#            end: endreserve.toISOString(),#}
-            {#            resource: $('#event-resource').val(),#}
-            {#            {% if request.user.user_status != "verified" %}#}
-            {#            status: $('#event-status').val(),#}
-            {#            {% else %}#}
-            {#            status: "pending_payment",#}
-            {#            {% endif %}#}
-            {#            cleaning: $('#event-cleaning').prop('checked'),#}
-            {#            more_capacity: $('#event-more-capacity').val(),#}
-            {#            paid: $('#event-paid').prop('checked'),#}
-            {#            price: totalCost#}
-            {#        },ev.reserve_id);#}
-            {#        #}
-            {#        popup.close();#}
-            {#    },                #}
-            {#    cssClass: 'mbsc-popup-button-primary'#}
-            {##}
         ],
         anchor: args.domEvent.currentTarget,
         position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
@@ -589,24 +555,6 @@ function createEditPopup(args, resourceId) {
     
 }
 
-{#function updateReservation(data,reserve_id) {#}
-{#        $.ajax({#}
-{#            url: 'reserve/update_reservation/' + reserve_id + "/",#}
-{#            method: 'POST',#}
-{#            data: {#}
-{#                csrfmiddlewaretoken: '{{ csrf_token }}',#}
-{#                ...data#}
-{#            },#}
-{#            success: function (response) {#}
-{#                if (response.success) {#}
-{#                    myCalendar.refresh();#}
-{#                    location.reload(true);#}
-{#                } else {#}
-{#                    console.log("add error", response);#}
-{#                }#}
-{#            }#}
-{#        });#}
-{##}
 
 function fetchReservationInfo(reservation_id) {
     $.ajax({
@@ -668,17 +616,18 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     renderHeader: function () {
       return (
         '<div class="mbsc-form-control-wrapper mbsc-bt-cotrol-today">' +
-        '<div mbsc-calendar-today></div>' +
+          '<div mbsc-calendar-today></div>' +
         '</div>' +
         '<div id="custom-date-range"></div>' +
         '<label>' +
-        'شروع :' +
-        '<input id="start" mbsc-input placeholder="کلیک کنید" />' +
+          'ورود :' +
+          '<input id="start" mbsc-input placeholder="کلیک کنید" />' +
         '</label>' +
         '<label>' +
-        'پایان :' +
-        '<input id="end" mbsc-input placeholder="کلیک کنید" />' +
-        '</label>'
+          'خروج :' +
+          '<input id="end" mbsc-input placeholder="کلیک کنید" />' +
+        '</label>' +
+        '<button id="open-reservation-form" class="mbsc-button-block w-auto mx-3" mbsc-button data-color="primary">فرم رزرو</button>'
       );
     },
     onPageLoaded: function (args) {

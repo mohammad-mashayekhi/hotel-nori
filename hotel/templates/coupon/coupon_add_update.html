@@ -3,150 +3,169 @@
 
 
 {% block page-css %}
-    <style>
+<style>
 
-    </style>
-    <link rel="stylesheet" href="{% static 'datepicker/css/persianDatepicker-default.css' %}">
-    {{ form.media.css }}
+</style>
+<link rel="stylesheet" href="{% static 'datepicker/css/persianDatepicker-default.css' %}">
+{{ form.media.css }}
 {% endblock %}
 
 {% block content %}
-    <div class="container mt-5 mx-xl-3">
-    {% if form.instance.name == "" %}
-        <h2>ساخت کد تخفیف</h2>
-    {% else %}    
-        <h2>ویرایش کد تخفیف</h2>
-    {% endif %}
-        <form method="post" id="CouponForm">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_name">اسم کد تخفیف</label>
-                {{ form.name }}
+<div class="container-xxl flex-grow-1 container-p-y">            
+    <div class="row mx-xl-4">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                {% if form.instance.name == "" %}
+                <h4 class="card-header">ساخت کد تخفیف</h4>
+                {% else %}
+                <h4 class="card-header">ویرایش کد تخفیف</h4>
+                {% endif %}
+                <!-- Account -->
+                <div class="card-body pt-2 mt-1">
+                    <form method="post" id="CouponForm">
+                        {% csrf_token %}
+                        <div class="row mt-2 gy-4">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.name}}
+                                    <label for="id_name">اسم کد تخفیف</label>
+                                </div>
+                                <div class="errorlist error" id="id_name_error">
+                                    {% if form.name.errors %}
+                                        {% for error in form.name.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.code}}
+                                    <label for="id_code">کد تخفیف</label>
+                                </div>
+                                <div class="errorlist error" id="id_code_error">  
+                                    {% if form.code.errors %}
+                                        {% for error in form.code.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.users}}
+                                    <label for="id_users">کاربران شامل کد تخفیف</label>
+                                </div>
+                                <div class="errorlist error" id="id_users_error">
+                                    {% if form.users.errors %}
+                                        {% for error in form.users.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>  
+                            </div>                  
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.discount}}
+                                    <label for="id_discount"> مقدار تخفیف به درصد</label>
+                                </div>
+                                <div class="errorlist error" id="id_discount_error">
+                                {% if form.discount.errors %}
+                                    {% for error in form.discount.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.valid_from}}
+                                    <label for="valid_from">معتبر از</label>
+                                </div>
+                                <div class="errorlist error" id="id_valid_from_error">
+                                    {% if form.valid_from.errors %}
+                                        {% for error in form.valid_from.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>                      
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                {{form.valid_to}}
+                                <label for="valid_to">معتبر تا</label>
+                                </div>
+                                <div class="errorlist error" id="id_valid_to_error">
+                                    {% if form.valid_to.errors %}
+                                        {% for error in form.valid_to.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>                      
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="id_is_active">کد تخفیف فعال هست</label>
+                                </div>
+                                <div class="errorlist error" id="id_is_active_error">
+                                    {% if  form.is_active.errors %}
+                                        {% for error in  form.is_active.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>                      
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary me-2">ذخیره تغییرات</button>
+                        </div>
+                    </form>
+                </div>
+                <script>
+                    // Disable default invalid event and add custom validation
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const form = document.getElementById('CouponForm');
+                        const fields = form.querySelectorAll('input, select, textarea'); // Include all form fields
+            
+                        fields.forEach(function (field) {
+                            console.log(field)
+                            field.addEventListener('invalid', function (event) {
+                                event.preventDefault(); // Prevent default invalid error
+                                const div = document.getElementById(field.id + '_error');
+                                if (div) {
+                                    if (!div.querySelector('p')) {
+                                        const p = document.createElement('p');
+                                        p.textContent = 'این فیلد لازم است';
+                                        div.appendChild(p);
+                                        div.style.display = 'block';
+                                    }
+            
+                                }
+                            });
+            
+                            // Reset error message on input
+                            field.addEventListener('input', function (event) {
+                                const errorMessage = document.getElementById(field.id + '_error');
+                                if (errorMessage) {
+                                    errorMessage.style.display = 'none';
+                                }
+                            });
+                        });
+                    });    
+                </script>
             </div>
-            <div class="errorlist error" id="id_name_error">
-                {% if form.name.errors %}
-                      {% for error in form.name.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>           
-            <div class="form-group">
-                <label for="id_code">کد تخفیف</label>
-                {{ form.code }}
-            </div>
-            <div class="errorlist error" id="id_code_error">
-                {% if form.code.errors %}
-                      {% for error in form.code.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>           
-            <div class="form-group">
-                <label for="id_users">کاربران شامل کد تخفیف :</label>
-                {{ form.users }}
-            </div>
-            <div class="errorlist error" id="id_users_error">
-                {% if form.users.errors %}
-                      {% for error in form.users.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>           
-            <div class="form-group">
-                <label for="valid_from">معتبر از</label>
-                {{ form.valid_from }}
-            </div>
-            <div class="errorlist error" id="id_valid_from_error">
-                {% if form.valid_from.errors %}
-                      {% for error in form.valid_from.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>           
-            <div>
-                {% if form.valid_from.errors %}
-                    {% for error in form.valid_from.errors %}
-                        <p class="error errorlist">{{ error }}</p>
-                    {% endfor %}
-                {% endif  %} 
-            </div>
-            <div class="form-group">
-                <label for="valid_to">معتبر تا</label>
-                {{ form.valid_to }}
-            </div>
-            <div class="errorlist error" id="id_valid_to_error">
-                {% if form.valid_to.errors %}
-                      {% for error in form.valid_to.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>   
-            <div class="form-group">
-                <label for="id_discount"> مقدار تخفیف به درصد :</label>
-                {{ form.discount }}
-            </div>
-            <div class="errorlist error" id="id_discount_error">
-                {% if form.discount.errors %}
-                      {% for error in form.discount.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}  
-            </div>   
-            <div class="form-group form-check">
-                {{ form.is_active }}
-                <label class="form-check-label" for="id_is_active">کد تخفیف فعال هست</label>
-            </div>
-                <div class="errorlist error" id="id_is_active_error">
-                {% if form.is_active.errors %}
-                      {% for error in form.is_active.errors %}
-                          <p class="error errorlist">{{ error }}</p>
-                      {% endfor %}
-                {% endif  %}                     
-                </div>            
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    <script>
-                // Disable default invalid event and add custom validation
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('CouponForm');
-            const fields = form.querySelectorAll('input, select, textarea'); // Include all form fields
-
-            fields.forEach(function(field) {
-                console.log(field)
-                field.addEventListener('invalid', function(event) {
-                    event.preventDefault(); // Prevent default invalid error
-                    const div = document.getElementById(field.id + '_error');
-                    if (div) {
-                        if (!div.querySelector('p')) {
-                            const p = document.createElement('p');
-                            p.textContent = 'این فیلد لازم است';
-                            div.appendChild(p);
-                            div.style.display = 'block';
-                        }    
-                        
-                    }
-                });
-
-                // Reset error message on input
-                field.addEventListener('input', function(event) {
-                    const errorMessage = document.getElementById(field.id + '_error');
-                    if (errorMessage) {
-                        errorMessage.style.display = 'none';
-                    }
-                });
-            });
-         });    
-    </script>
-    </div>
+        </div>
+    </div>            
+</div>
 {% endblock %}
 
 {% block page-js %}
-    <script src="{% static 'datepicker/js/jquery-1.10.1.min.js' %}"></script>
-    <script src="{% static 'datepicker/js/persian-date.min.js' %}"></script>
-    <script src="{% static 'datepicker/js/persianDatepicker.min.js' %}"></script>
-    <script>
-    
-    $(document).ready(function() {
+<script src="{% static 'datepicker/js/jquery-1.10.1.min.js' %}"></script>
+<script src="{% static 'datepicker/js/persian-date.min.js' %}"></script>
+<script src="{% static 'datepicker/js/persianDatepicker.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
         var startDateInput = $('#valid_from');
         var endDateInput = $('#valid_to');
         startDateInput.persianDatepicker();

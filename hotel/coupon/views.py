@@ -18,7 +18,9 @@ def create_coupon(request):
     if request.method == "POST":
         form = CouponForm(request.POST)
         if form.is_valid():
-            form.save()
+            coupon = form.save(commit=False)
+            coupon.author = request.user
+            coupon.save()
             return redirect("coupon:list")
     else:
         form = CouponForm()
@@ -49,7 +51,7 @@ def update_coupon(request, uuid):
 @verified_required
 @admin_required
 def coupon_list(request):
-    coupons = Coupon.objects.all()
+    coupons = Coupon.objects.all().order_by("-id")
     valid_coupons = coupons.filter(is_active=True).count()
     return render(
         request,
