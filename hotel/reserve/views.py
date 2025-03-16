@@ -170,7 +170,7 @@ def add_reservation(request):
             elif reservation.status == "onlocalpay" or reservation.status == "confirmed":
                 send_completed_reserve_reserve(phone,start,end)
             messages.add_message(request, messages.SUCCESS,
-                                 message="روز شما با موفقیت پرداخت لطفاٌ در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شوذ ")
+                                 message="لطفا در سریع ترین زمان نسبت به پرداخت خود اقدام کنید در غیر این صورت بعد از سه ساعت رزرو شما لغو می شود.")
             return JsonResponse({"success": True, "reservation_id": reservation.reserve_id}, status=201)
         except Exception as e:
             print(e)
