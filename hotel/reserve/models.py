@@ -5,6 +5,10 @@ from django.utils import timezone
 from jalali_date import datetime2jalali, date2jalali
 from coupon.models import Coupon
 import jdatetime
+import os
+
+def get_images_upload_path_resourse(instance, filename): 
+    return os.path.join("image_slider", filename)
 
 class Reservation(models.Model):
     RESERVATION_STATUS_CHOICES = [
@@ -149,6 +153,26 @@ class Resource(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+    def get_img_url(self):
+        if self.img:
+            return self.img.url
+        return "static/img/backgrounds/17_17_491_uX5mm5g.jpg"
+    
+    def has_slider(self):
+        return True if ResourceImage.objects.filter(resource=self).exists() else False
+    
+
+
+class ResourceImage(models.Model):
+    resource_image_id = ShortUUIDField(unique=True , length=5 , max_length=9 , alphabet="abcdefgh12345") 
+    images = models.ImageField(upload_to=get_images_upload_path_resourse)
+    resource = models.ForeignKey(Resource, on_delete = models.CASCADE, null=True, related_name="resourse_images")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = "Resource Images"
     
     
 

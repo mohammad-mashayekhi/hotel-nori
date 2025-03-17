@@ -15,7 +15,7 @@ from datetime import timedelta
 from .models import Reservation, Resource,Peaktime
 from .forms import ReservationForm, ResourceForm, PeaktimeForm, AdminReservationChangeForm
 from .utils import send_online_payment_reserve, send_completed_reserve_reserve
-from .models import Resource, Reservation
+from .models import Resource, Reservation, ResourceImage
 from .decorators import is_admin, verified_required, admin_required, admin_a_required
 from coupon.models import Coupon
 from zarinpal.models import Payment
@@ -406,7 +406,8 @@ def bill_detail(request, reserve_id):
 @login_required
 def rooms(request):
     resources = Resource.objects.filter(status=True)
-    return render(request, "reserve/room-list.html", {"resources": resources})
+    img_resourse = ResourceImage.objects.all()
+    return render(request, "reserve/room-list.html", {"resources": resources,'img_r':img_resourse})
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
