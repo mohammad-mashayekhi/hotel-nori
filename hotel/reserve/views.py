@@ -337,7 +337,7 @@ def list_of_bills(request):
             "reservations": reservations,
         }
     else:
-        reservations = Reservation.objects.filter(user=request.user).order_by("-created_at")
+        reservations = Reservation.objects.filter(user=request.user).exclude( Q(status="cleaning") | Q (status='closetime')).order_by("-created_at")
         context = {"reservations": reservations}
     return render(request, "reserve/bill/app-invoice-list.html", context=context)
 

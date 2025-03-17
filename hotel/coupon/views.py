@@ -66,17 +66,28 @@ def apply(request):
     reservation_id = request.POST.get("reservation_id")
     reservation = Reservation.objects.get(reserve_id=reservation_id)
     try:
-        coupon = Coupon.objects.get(
+        coupon = Coupon.objects.filter(
             code=coupon,
-            users__id=reservation.user.id,
             valid_from__lte=datetime.datetime.now(),
             valid_to__gte=datetime.datetime.now(),
-            is_active=True,
-        )
-        reservation.coupon = coupon
-        reservation.save()
-    except Coupon.DoesNotExist:
-        messages.add_message(request, messages.ERROR, "این کد تخفیف معتبر نمی باشد")
+            is_active=True
+        ).exclude(users__id=reservation.user.id).first() 
+
+        if coupon:
+            if coupon.allowed_users.exists():
+                if reservation.user in coupon.allowed_users.all():
+                    reservation.coupon = coupon
+                    reservation.save()
+                else:
+                    messages.add_message(request, messages.ERROR, "شما اجازه استفاده از این کد تخفیف را ندارید.")
+            else:
+                reservation.coupon = coupon
+                reservation.save()
+        else:
+            messages.add_message(request, messages.ERROR, "این کد تخفیف معتبر نمی‌باشد.")
+            
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, "خطایی رخ داده است.")
     return redirect(reverse("reserve:billdetail", args=[reservation_id]))
 
 

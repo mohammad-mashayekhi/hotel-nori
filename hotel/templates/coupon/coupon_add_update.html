@@ -50,20 +50,20 @@
                                         {% endfor %}
                                     {% endif %}
                                 </div>
-                            </div>
+                            </div>  
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    {{form.users}}
-                                    <label for="id_users">کاربران شامل کد تخفیف</label>
+                                    {{form.allowed_users}}
+                                    <label for="id_allowed_users">کاربران شامل کد تخفیف</label>
                                 </div>
-                                <div class="errorlist error" id="id_users_error">
-                                    {% if form.users.errors %}
-                                        {% for error in form.users.errors %}
+                                <div class="errorlist error" id="id_allowed_users_error">
+                                    {% if form.allowed_users.errors %}
+                                        {% for error in form.allowed_users.errors %}
                                             <div class="text-danger">{{ error }}</div>
                                         {% endfor %}
                                     {% endif %}
                                 </div>  
-                            </div>                  
+                            </div>               
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
                                     {{form.discount}}
@@ -103,6 +103,19 @@
                                     {% endif %}
                                 </div>                      
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    {{form.users}}
+                                    <label for="id_users">کاربرانی که از کد تخفیف استفاده کرده‌اند</label>
+                                </div>
+                                <div class="errorlist error" id="id_users_error">
+                                    {% if form.users.errors %}
+                                        {% for error in form.users.errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>  
+                            </div>  
                             <div class="col-md-6">
                                 <div class="form-group">
                                 {{ form.is_active }}

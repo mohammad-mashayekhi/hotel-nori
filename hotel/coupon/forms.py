@@ -30,11 +30,12 @@ class CouponForm(forms.ModelForm):
 
     class Meta:
         model = Coupon
-        fields = ["name", "code", "users", "valid_from", "valid_to", "discount", "is_active"]
+        fields = ["name", "code", "users", "allowed_users", "valid_from", "valid_to", "discount", "is_active"]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'code': forms.TextInput(attrs={'class': 'form-control'}),
             'users': UserSelector(attrs={'class': 'form-control'}),
+            'allowed_users': UserSelector(attrs={'class': 'form-control'}),
             'discount': forms.NumberInput(attrs={'class': 'form-control'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }

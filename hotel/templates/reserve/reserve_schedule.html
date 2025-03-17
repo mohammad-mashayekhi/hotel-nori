@@ -20,177 +20,7 @@
 
 {% block page-css %}
 <link rel="stylesheet" href="{% static 'vendor/css/pages/app-calendar.css' %}" />
-
-<style>
-.room1{
- border-bottom: 4px solid #003C43 !important;
- min-height: 52px !important;
-}
-.room1.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room2{
- border-bottom: 4px solid #135D66 !important;
- min-height: 52px !important;
-}
-.room2.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room3{
- border-bottom: 4px solid #77B0AA !important;
- min-height: 52px !important;
-}
-.room3.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room4{
- border-bottom: 4px solid #58A399 !important;
- min-height: 52px !important;
-}
-.room4.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room5{
- border-bottom: 4px solid #ADBC9F !important;
- min-height: 52px !important;
-}
-.room5.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room6{
- border-bottom: 4px solid #A8CD9F !important;
- min-height: 52px !important;
-}
-.room6.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room7{
- border-bottom: 4px solid #C6EBC5 !important;
- min-height: 52px !important;
-}
-.room7.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room8{
- border-bottom: 4px solid #F9E897 !important;
- min-height: 52px !important;
-}
-.room8.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
-}
-.room9{
- border-bottom: 4px solid #F2C18D !important;
- min-height: 52px !important;
-}
-.room9.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
-}
-.room10{
- border-bottom: 4px solid #A3333D !important;
- min-height: 52px !important;
-}
-.room10.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room11{
- border-bottom: 4px solid #e3c3c6 !important;
- min-height: 52px !important;
-}
-.room11.mbsc-timeline-resource {
-  background:  rgba(246, 231, 203, 0.7);
-}
-.room12{
-  border-bottom: 4px solid #590531 !important;
-  min-height: 52px !important;
-}
-.room12.mbsc-timeline-resource {
-  background: rgba(246, 231, 203, 0.7);
-}
-
-.mbsc-timeline-header .mbsc-flex .mbsc-ios .mbsc-rtl{
-  background: rgba(246, 231, 203, 0.7) !important;
-  font-weight: bold;
-  
-}
-@media (min-width: 769px) {
-.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
- width: 85px;
- } 
-} 
-@media (max-width: 768px) {
-.mbsc-timeline-resource-col, .mbsc-timeline-sidebar-col{
- width: 45px;
-} 
-}
-
-.container-xxl .flex-grow-1 .container-p-y{
- padding-right: 0px;
-}
-.mbsc-timeline-column, .mbsc-timeline-header-column{
- width: 48px;
-}
-.mbsc-timeline-event-background{
-  height: 36px !important;
-}
-@media (min-width: 769px) {
-.mbsc-timeline-resource-title{
-  text-align: center;
-  font-size: 1em;
-}
-.mbsc-form-control-wrapper{
-    border-style:solid !important;
-    border-color:rgb(198, 198, 198) !important;
-    border-radius: 15px !important;
-  }
-.mbsc-bt-cotrol-today{
-    margin-left: 5px;
-    padding: 5px;
-    background-color:white;
-}
-}
-@media (max-width: 768px) {
-  .mbsc-timeline-resource-title {
-    text-align: center;
-    font-size: 0.7em;
-  }
-  .mbsc-form-control-wrapper{
-    border-style:solid !important;
-    border-color:rgb(198, 198, 198) !important;
-    border-radius: 15px !important;
-    font-size: 0.7rem;
-  }
-  .mbsc-bt-cotrol-today{
-    margin-left: 5px;
-    padding: 5px;
-    background-color:white;
-  }
-}
-.mbsc-calendar-controls{
-  justify-content: center !important;
-}
-/* .mbsc-timeline-day-border{
-  border-left: 3px solid rgb(198, 192, 192) !important; 
-}  */
-.md-lunch-break-class.mbsc-schedule-invalid {
-    text-align: center;
-    align-items: center;
-    font-weight: bold;
-    background: repeating-linear-gradient(-45deg, #f3f3f3, #f3f3f3 6px, #e5e5e5 11px, #e5e5e5 22px);
-    background-color: #a9a9a99c !important;
-}
-.mbsc-button-mycalendar{
-  background-color: #FFFFFF !important;
-  /* border-radius: 15px; */
-  margin: 20px;
-  font-weight: bold;
-}
-
-.custom-toast-container {
-        position: fixed !important;
-        left: 20px;
-        z-index: 1050;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'calendar/style.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -209,8 +39,8 @@
               <div class="col-md-6 col-6">
                 <label for="event-title">نام</label>
                 <input type="text" class="form-control input" id="event-title" name="event-title" required>
-                
-                {% if request.user.user_status != "verified" %}  
+
+                {% if request.user.user_status != "verified" %}
                 <label for="event-status">وضعیت</label>
                 <select class="form-control" id="event-status" name="event-status" required>
                   <option value="pending_payment">در انتظار پرداخت</option>
@@ -218,7 +48,7 @@
                   <option value="closetime">غیرقابل رزرو</option>
                   <option value="onlocalpay">پرداخت حضوری</option>
                 </select>
-                {% endif %}  
+                {% endif %}
                 <span id="event-capacity" name="event-capacity"></span><br>
                 <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity"><br>
                 <label for="event-cleaning">نظافت:</label>
@@ -230,10 +60,10 @@
               </div>
               <!-- Second Column -->
               <div class="col-md-6 col-6">
-              {% if request.user.user_status != "verified" %}
+                {% if request.user.user_status != "verified" %}
                 <label for="event-user">شماره تلفن</label>
-                <input type="text" class="form-control input" id="event-user"  name="event-user" required>
-              {% endif %}
+                <input type="text" class="form-control input" id="event-user" name="event-user" required>
+                {% endif %}
                 <label for="event-resource">اتاق</label>
                 <select class="form-control" id="event-resource" name="event-resource" required>
                   {% for resources in resources %}
@@ -254,8 +84,10 @@
               </div>
             </div>
             <div class="mbsc-button-group">
-              <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger" data-variant="outline">حذف رزرو</button>
-              <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger" data-variant="outline">پرداخت</button>
+              <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger"
+                data-variant="outline">حذف رزرو</button>
+              <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger"
+                data-variant="outline">پرداخت</button>
               <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
             </div>
           </div>
@@ -266,30 +98,32 @@
   </div>
 </div>
 {% if messages %}
-<div class="toast-container custom-toast-container" >
-    {% for message in messages %}
-        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
-            <div class="toast-header">
-                <strong class="me-auto">{{ message.tags }}</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                {{ message }}
-            </div>
-        </div>
-    {% endfor %}
-    <hr>
+<div class="toast-container custom-toast-container">
+  {% for message in messages %}
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+    <div class="toast-header">
+      <strong class="me-auto">{{ message.tags }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{ message }}
+    </div>
+  </div>
+  {% endfor %}
+  <hr>
 </div>
 {% endif %}
 {% if request.user.user_status == "normal" %}
-<!-- مدال -->
-<div id="myModal-normal-user" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+<!-- modal for normal user -->
+<div id="myModal-normal-user" class="modal"
+  style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
   <div class="modal-content" style="background:#fff; padding:20px; margin:15% auto; width:50%;">
     <!-- <span id="closeModal" style="cursor:pointer;">&times;</span> -->
     <h5 class="text-danger">هشدار</h5>
     <div class="alert alert-danger" role="alert">
-      لطفا صبور باشید تا ثبت‌نام شما تائید شود. بعد از تائید برای شما پیامک ارسال خواهد شد و می‌توانید رزرو خود را انجام دهید.
-    </div>    
+      لطفا صبور باشید تا ثبت‌نام شما تائید شود. بعد از تائید برای شما پیامک ارسال خواهد شد و می‌توانید رزرو خود را انجام
+      دهید.
+    </div>
     <div class="d-flex justify-content-end align-items-center">
       <button type="button" class="btn btn-danger" id="closeModal">بستن</button>
     </div>
@@ -297,43 +131,42 @@
 </div>
 {% endif %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
-        var toastList = toastElList.map(function (toastEl) {
-            return new bootstrap.Toast(toastEl, { delay: 1000000000 });
-        });
-        toastList.forEach(toast => toast.show());
+  document.addEventListener('DOMContentLoaded', function () {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl, { delay: 1000000000 });
     });
+    toastList.forEach(toast => toast.show());
+  });
 </script>
 {% if request.user.user_status == "normal" %}
 <script>
-document.getElementById("openModal").addEventListener("click", function() {
-  document.getElementById("myModal-normal-user").style.display = "block";
-});
-document.getElementById("closeModal").addEventListener("click", function() {
-  document.getElementById("myModal-normal-user").style.display = "none";
-});
+  document.getElementById("openModal").addEventListener("click", function () {
+    document.getElementById("myModal-normal-user").style.display = "block";
+  });
+  document.getElementById("closeModal").addEventListener("click", function () {
+    document.getElementById("myModal-normal-user").style.display = "none";
+  });
 </script>
 {% endif %}
-</div>   
 <script>
-mobiscroll.setOptions({
+  mobiscroll.setOptions({
     locale: mobiscroll.localeFa,
     theme: 'ios',
     themeVariant: 'light'
-});
+  });
 
-var reservationData = {{ reservation_data|safe }};
-var resourceData = {{ resource_data|safe }};
-var invalidreservation = {{ closed_time_data|safe }};
+  var reservationData = {{ reservation_data| safe }};
+  var resourceData = {{ resource_data| safe }};
+  var invalidreservation = {{ closed_time_data| safe }};
 
-var popup, oldEvent, tempEvent = {}, deleteEvent;
-var startcalendar = '2024-04-20';
-var endcalendar = '2025-04-20';
-var deleteButton = document.getElementById('event-delete');
+  var popup, oldEvent, tempEvent = {}, deleteEvent;
+  var startcalendar = '2024-04-20';
+  var endcalendar = '2025-04-20';
+  var deleteButton = document.getElementById('event-delete');
 
-// Initialize datepicker for reservation
-var datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
+  // Initialize datepicker for reservation
+  var datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
     controls: ['calendar'],
     display: 'inline',
     selectCounter: true,
@@ -341,33 +174,36 @@ var datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
     rangeSelectMode: 'wizard',
     select: 'range',
     showRangeLabels: true,
-    onChange: function (event, inst){
-        
-        // Get the new value of datepickerreserve
-        var reservtime = inst.getVal();
-        var startreserve = new Date(reservtime[0]);
-        var endreserve = new Date(reservtime[1]);
-        console.log("differenceInDays")
-        
-        // Calculate the difference in days
-        var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
-        var differenceInDays = Math.round((endreserve - startreserve) / oneDay)+ 1;
-        console.log(differenceInDays)
-    
-        // Get the resource price (replace this with your logic to get the actual price)
-        var resourcePrice = document.getElementById('event-price').textContent;
-        console.log(resourcePrice)
-    
-        // Calculate the total cost
-        var totalCost = differenceInDays * resourcePrice;
-        console.log("totalCost")
-        // Set the value of the event-pay button
-        $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان')
-            
-    }
-});
+    onChange: function (event, inst) {
 
-function createAddPopup(elm, resourceId, tempEvent) {
+      // Get the new value of datepickerreserve
+      var reservtime = inst.getVal();
+      var startreserve = new Date(reservtime[0]);
+      var endreserve = new Date(reservtime[1]);
+      console.log("differenceInDays")
+
+      // Calculate the difference in days
+      var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+      var differenceInDays = Math.round((endreserve - startreserve) / oneDay) + 1;
+      console.log(differenceInDays)
+
+      // Get the resource price (replace this with your logic to get the actual price)
+      var resourcePrice = document.getElementById('event-price').textContent;
+      console.log(resourcePrice)
+
+      // Calculate the total cost
+      var totalCost = differenceInDays * resourcePrice;
+      console.log("totalCost")
+      // Set the value of the event-pay button
+      $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان')
+
+    }
+  });
+
+  function createAddPopup(elm, resourceId, tempEvent) {
+    console.log('elm', elm)
+    console.log('resourseId', resourceId)
+    console.log('tempEvent', tempEvent)
     deleteButton.style.display = 'none';
 
     deleteEvent = true;
@@ -394,184 +230,184 @@ function createAddPopup(elm, resourceId, tempEvent) {
 
     firstday = tempEvent.start;
     lastday = tempEvent.end;
-    datepickerreserve.setVal([firstday, lastday]); 
+    datepickerreserve.setVal([firstday, lastday]);
 
-        
+
     // Calculate the difference in days
     var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
     var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
-    
+
     // Get the resource price (replace this with your logic to get the actual price)
     var resourcePrice = document.getElementById('event-price').textContent;
-    
+
     // Calculate the total cost
     var totalCost = differenceInDays * resourcePrice;
     // Set the value of the event-pay button
     // $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان')
-            
-    
-    
+
+
+
     popup.open();
     popup.setOptions({
-        headerText: 'افزودن رزرو',
-        buttons: [
-            'cancel',
-            {% if request.user.user_status != "verified" %}
+      headerText: 'افزودن رزرو',
+      buttons: [
+        'cancel',
+        {% if request.user.user_status != "verified" %}
             {
-                text: 'ذخیره',
-                keyCode: 'enter',
-                handler: function () {
-                    var reservtime = datepickerreserve.getVal();
-                    const startreserve = new Date(reservtime[0]);
-                    const endreserve = new Date(reservtime[1]);
-                    deleteEvent = false;
-                    addReservation({
-                        title: $('#event-title').val(),
-                        mobile_number: $('#event-user').val(),
-                        start: startreserve.toISOString(),
-                        end: endreserve.toISOString(),
-                        resource: $('#event-resource').val(),
-                        status: $('#event-status').val(),
-                        cleaning: $('#event-cleaning').prop('checked'),
-                        more_capacity: $('#event-more-capacity').val(),
-                        paid: $('#event-paid').prop('checked'),
-                    });
-                    popup.close();
-                },
-                
-                cssClass: 'mbsc-popup-button-primary'
-            },
-            {% endif %}
+        text: 'ذخیره',
+        keyCode: 'enter',
+        handler: function () {
+          var reservtime = datepickerreserve.getVal();
+          const startreserve = new Date(reservtime[0]);
+          const endreserve = new Date(reservtime[1]);
+          deleteEvent = false;
+          addReservation({
+            title: $('#event-title').val(),
+            mobile_number: $('#event-user').val(),
+            start: startreserve.toISOString(),
+            end: endreserve.toISOString(),
+            resource: $('#event-resource').val(),
+            status: $('#event-status').val(),
+            cleaning: $('#event-cleaning').prop('checked'),
+            more_capacity: $('#event-more-capacity').val(),
+            paid: $('#event-paid').prop('checked'),
+          });
+          popup.close();
+        },
+
+        cssClass: 'mbsc-popup-button-primary'
+      },
+      {% endif %}
         ],
-        anchor: elm,
-        position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
+  anchor: elm,
+    position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
 
 
-    var eventResourceSelect = document.getElementById('event-resource');
+  var eventResourceSelect = document.getElementById('event-resource');
 
-    eventResourceSelect.addEventListener('change', function () {
-        var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
-        var resourceId = parseInt(selectedOption.value);
+  eventResourceSelect.addEventListener('change', function () {
+    var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
+    var resourceId = parseInt(selectedOption.value);
 
-        var matchedResource = resourceData.find(resource => resource.id === resourceId);
-        $('#event-resource').val(resourceId);
-        $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
-        $('#event-price').text(matchedResource.price);
-        $('#event-cleaning').prop('checked', true);
-        $('#event-more-capacity').val(0);
-        $('#event-paid').prop('checked', false);
-        $('#event-price-per-person').text(matchedResource.price_per_person);
-      });
+    var matchedResource = resourceData.find(resource => resource.id === resourceId);
+    $('#event-resource').val(resourceId);
+    $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
+    $('#event-price').text(matchedResource.price);
+    $('#event-cleaning').prop('checked', true);
+    $('#event-more-capacity').val(0);
+    $('#event-paid').prop('checked', false);
+    $('#event-price-per-person').text(matchedResource.price_per_person);
+  });
 
-    
-    document.getElementById('event-pay').addEventListener('click', async function () {
-        var reservtime = datepickerreserve.getVal();
-        const startreserve = new Date(reservtime[0]);
-        const endreserve = new Date(reservtime[1]);
-        deleteEvent = false;
-        try {
-            const reservationId = await addReservation({
-                title: $('#event-title').val(),
+
+  document.getElementById('event-pay').addEventListener('click', async function () {
+    var reservtime = datepickerreserve.getVal();
+    const startreserve = new Date(reservtime[0]);
+    const endreserve = new Date(reservtime[1]);
+    deleteEvent = false;
+    try {
+      const reservationId = await addReservation({
+        title: $('#event-title').val(),
                 {% if request.user.user_status != "verified" %}
                     mobile_number: $('#event-user').val(),
-                {% endif %}                
+      {% endif %}                
                 start: startreserve.toISOString(),
-                end: endreserve.toISOString(),
-                resource: $('#event-resource').val(),
-                {% if request.user.user_status != 'verified' %}
-                    status: $('#event-status').val(),
-                {% endif %}
-                cleaning: $('#event-cleaning').prop('checked'),
-                more_capacity: $('#event-more-capacity').val(),
-                paid: $('#event-paid').prop('checked')
+    end: endreserve.toISOString(),
+    resource: $('#event-resource').val(),
+    {% if request.user.user_status != 'verified' %}
+  status: $('#event-status').val(),
+    {% endif %}
+  cleaning: $('#event-cleaning').prop('checked'),
+    more_capacity: $('#event-more-capacity').val(),
+      paid: $('#event-paid').prop('checked')
             });
-            console.log('Reservation added successfully with ID:', reservationId);
-            window.location.href ="/reserve/bill/" + reservationId + "/"; // Redirect to purchase settings
+  console.log('Reservation added successfully with ID:', reservationId);
+  window.location.href = "/reserve/bill/" + reservationId + "/"; // Redirect to purchase settings
         } catch (error) {
-            console.log('Failed to add reservation.');
-        }
+    console.log('Failed to add reservation.');
+  }
         
         
     });
 }
 
-function addReservation(data) {
+  function addReservation(data) {
     return new Promise((resolve, reject) => {
-        $.ajax({
-            url: 'reserve/add_reservation/',
-            method: 'POST',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-                ...data
-            },
-            success: function (response) {
-                if (response.success) {
-                    myCalendar.refresh();
-                    resolve(response.reservation_id);
-                    location.reload(true);
-                } else {
-                    // alert("خطا: " + response.error);
-                    reject(null);
-                }
-            },
-            error: function (xhr, status, error) {
-              reject(null);
-                // alert("خطا در ثبت رزور: " + error);
-                location.reload(true);
-            }
-        });
+      $.ajax({
+        url: 'reserve/add_reservation/',
+        method: 'POST',
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          ...data
+        },
+        success: function (response) {
+          if (response.success) {
+            myCalendar.refresh();
+            resolve(response.reservation_id);
+            location.reload(true);
+          } else {
+            // alert("خطا: " + response.error);
+            reject(null);
+          }
+        },
+        error: function (xhr, status, error) {
+          reject(null);
+          // alert("خطا در ثبت رزور: " + error);
+          location.reload(true);
+        }
+      });
     });
-}
+  }
 
 
-function createEditPopup(args, resourceId) {
+  function createEditPopup(args, resourceId) {
     var ev = args.event;
-    
+
     var matchingResource = resourceData.find(resource => resource.id === resourceId);
-    
+
     firstday = ev.start;
     lastday = ev.end;
     datepickerreserve.setVal([firstday, lastday]);
 
-    
+
     deleteButton.style.display = 'block';
     deleteEvent = false;
     restoreEvent = true;
 
     popup.setOptions({
-        headerText: 'مشخصات رزرو',
-        buttons: [
-            'cancel',
-        ],
-        anchor: args.domEvent.currentTarget,
-        position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
+      headerText: 'مشخصات رزرو',
+      buttons: [
+        'cancel',
+      ],
+      anchor: args.domEvent.currentTarget,
+      position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
     fetchReservationInfo(ev.reserve_id);
 
-    document.getElementById('event-pay').addEventListener('click',  function () {
-        window.location.href ="/reserve/bill/" + ev.reserve_id + "/"; // Redirect to purchase settings
+    document.getElementById('event-pay').addEventListener('click', function () {
+      window.location.href = "/reserve/bill/" + ev.reserve_id + "/"; // Redirect to purchase settings
     });
-    
-}
+
+  }
 
 
-function fetchReservationInfo(reservation_id) {
+  function fetchReservationInfo(reservation_id) {
     $.ajax({
-        url: 'reserve/get_reservation_info/',
-        method: 'GET',
-        data: { reservation_id: reservation_id },
-        success: function (data) {
-            fillPopupWithData(data);
-            popup.open();
-        },
-        error: function () {
-            alert('خطا در دریافت اطلاعات رزرو');
-        }
+      url: 'reserve/get_reservation_info/',
+      method: 'GET',
+      data: { reservation_id: reservation_id },
+      success: function (data) {
+        fillPopupWithData(data);
+        popup.open();
+      },
+      error: function () {
+        alert('خطا در دریافت اطلاعات رزرو');
+      }
     });
-}
+  }
 
-function fillPopupWithData(data) {
+  function fillPopupWithData(data) {
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
@@ -590,14 +426,14 @@ function fillPopupWithData(data) {
     firstday = data.start;
     lastday = data.end;
     datepickerreserve.setVal([firstday, lastday]);
-}
+  }
 
-var formatDate = mobiscroll.formatDate;
-var startDate;
-var endDate;
-var end;
+  var formatDate = mobiscroll.formatDate;
+  var startDate;
+  var endDate;
+  var end;
 
-var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
+  var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     locale: mobiscroll.localeFa,
     clickToCreate: 'double',
     dragToCreate: true,
@@ -605,10 +441,10 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     dragToResize: false,
     rtl: true,
     view: {
-        timeline: {
-            type: 'year',
-            size: 30
-        }
+      timeline: {
+        type: 'year',
+        size: 30
+      }
     },
     invalid: invalidreservation,
     data: reservationData,
@@ -616,98 +452,97 @@ var myCalendar = mobiscroll.eventcalendar('#demo-add-delete-event', {
     renderHeader: function () {
       return (
         '<div class="mbsc-form-control-wrapper mbsc-bt-cotrol-today">' +
-          '<div mbsc-calendar-today></div>' +
+        '<div mbsc-calendar-today></div>' +
         '</div>' +
         '<div id="custom-date-range"></div>' +
         '<label>' +
-          'ورود :' +
-          '<input id="start" mbsc-input placeholder="کلیک کنید" />' +
+        'ورود :' +
+        '<input id="start" mbsc-input placeholder="کلیک کنید" />' +
         '</label>' +
         '<label>' +
-          'خروج :' +
-          '<input id="end" mbsc-input placeholder="کلیک کنید" />' +
+        'خروج :' +
+        '<input id="end" mbsc-input placeholder="کلیک کنید" />' +
         '</label>' +
         '<button id="open-reservation-form" class="mbsc-button-block w-auto mx-3" mbsc-button data-color="primary">فرم رزرو</button>'
       );
     },
     onPageLoaded: function (args) {
-
-        startDate = args.firstDay;
-        end = args.lastDay;
-        endDate = new Date(args.lastDay.getFullYear(), args.lastDay.getMonth(), args.lastDay.getDate() - 1, 0);
+      startDate = args.firstDay;
+      end = args.lastDay;
+      endDate = new Date(args.lastDay.getFullYear(), args.lastDay.getMonth(), args.lastDay.getDate() - 1, 0);
     },
     onEventClick: function (args) {
-        tempEvent = args.event;
-        resourceId = args.event.resource;
-        if ((!popup.isVisible()) && args.event.reserve_id )  {
-            createEditPopup(args, resourceId);
-        }
+      tempEvent = args.event;
+      resourceId = args.event.resource;
+      if ((!popup.isVisible()) && args.event.reserve_id) {
+        createEditPopup(args, resourceId);
+      }
     },
     onEventCreated: function (args) {
-        resourceId = args.event.resource;
-        tempEvent = args.event;
-        createAddPopup(args.target, resourceId, tempEvent);
+      resourceId = args.event.resource;
+      tempEvent = args.event;
+      createAddPopup(args.target, resourceId, tempEvent);
     },
     onEventDeleted: function (args) {
-        mobiscroll.snackbar({
-            button: {
-                action: function () {
-                    myCalendar.addEvent(args.event);
-                },
-                text: 'Undo'
-            },
-            message: 'Event deleted'
-        });
+      mobiscroll.snackbar({
+        button: {
+          action: function () {
+            myCalendar.addEvent(args.event);
+          },
+          text: 'Undo'
+        },
+        message: 'Event deleted'
+      });
     }
-});
+  });
 
-popup = mobiscroll.popup('#demo-add-popup', {
+  popup = mobiscroll.popup('#demo-add-popup', {
     display: 'bottom',
     contentPadding: false,
     fullScreen: true,
     onClose: function () {
-        if (deleteEvent) {
-            myCalendar.removeEvent(tempEvent);
-        } else if (restoreEvent) {
-            myCalendar.updateEvent(oldEvent);
-        }
+      if (deleteEvent) {
+        myCalendar.removeEvent(tempEvent);
+      } else if (restoreEvent) {
+        myCalendar.updateEvent(oldEvent);
+      }
     },
     responsive: {
-        medium: {
-            display: 'anchored',
-            width: 400,
-            height: 1200,
-            fullScreen: false,
-            touchUi: false
-        }
+      medium: {
+        display: 'anchored',
+        width: 400,
+        height: 1200,
+        fullScreen: false,
+        touchUi: false
+      }
     }
-});
+  });
 
-deleteButton.addEventListener('click', function () {
+  deleteButton.addEventListener('click', function () {
     var deletedEvent = tempEvent;
     $.ajax({
-        url: 'reserve/remove_reservation/' + tempEvent.reserve_id,
-        method: 'GET',
-        success: function (response) {
-            console.log(response)
-            myCalendar.removeEvent(tempEvent);
-            location.reload(true);
-            popup.close();
-        },
-        error: function (response) {
-            console.log(response)
-            if (response.status === 403){
-                alert("شما نمی توانید روزر پرداخت شده را لغو کنید")
-            }
-            else{
-                alert('خطا در دریافت اطلاعات رزرو');
-            }
-               
+      url: 'reserve/remove_reservation/' + tempEvent.reserve_id,
+      method: 'GET',
+      success: function (response) {
+        console.log(response)
+        myCalendar.removeEvent(tempEvent);
+        location.reload(true);
+        popup.close();
+      },
+      error: function (response) {
+        console.log(response)
+        if (response.status === 403) {
+          alert("شما نمی توانید روزر پرداخت شده را لغو کنید")
         }
-    });
-});
+        else {
+          alert('خطا در دریافت اطلاعات رزرو');
+        }
 
-var myRange = mobiscroll.datepicker('#custom-date-range', {
+      }
+    });
+  });
+
+  var myRange = mobiscroll.datepicker('#custom-date-range', {
     select: 'range',
     startInput: '#start',
     endInput: '#end',
@@ -720,46 +555,135 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
     onClose: function (args, inst) {
       var date = inst.getVal();
       if (date[0] && date[1]) {
+        console.log('data_0', date[0]);
+        console.log('data_1', date[1]);
+
         if (date[0].getTime() !== startDate.getTime()) {
-          // navigate the calendar
           var newDate = date[0].getTime() - (5 * 24 * 60 * 60 * 1000);
           var newStartDate = new Date(newDate);
-          console.log(newStartDate)
+          console.log(newStartDate);
           myCalendar.navigate(newStartDate);
         }
+
         startDate = date[0];
         endDate = date[1];
-        // set calendar view
-        myCalendar.setOptions({
-          refDate: startDate,
-          view: {
-            timeline: {
-              type: 'year',
-              size: 31,
-              eventList: false,
-            },
-          },
-          invalid: [{
-              // Date objects
-              allDay: true,
-              start: '2024-03-10T00:00',
-              end: date[0],
-              title: 'عدم نمایش',
-              cssClass: 'md-lunch-break-class mbsc-flex',
-            },
-            {
-              allDay: true,
-              start: endDate,
-              end: '2025-03-10T00:00',
-              title: 'عدم نمایش',
-              cssClass: 'md-lunch-break-class mbsc-flex',
-            },  
-          ],
-        });
+
+        // اضافه کردن رویداد جدید برای اتاق اول
+        tempEvent = {
+          id: new Date().getTime(),  // شناسه‌ی یونیک
+          start: startDate,
+          end: endDate,
+          title: "رزرو جدید",
+          resource: 1,  // اتاق اول
+          cssClass: 'reservation-event'
+        };
+
+        myCalendar.addEvent(tempEvent);  // اضافه کردن رویداد به تقویم
+
+        // گرفتن المنت مربوط به رویداد ایجادشده
+        setTimeout(() => {
+          var eventElement = document.querySelector(`[data-id="${tempEvent.id}"]`);
+          createAddPopup(eventElement, 1, tempEvent);
+        }, 100);
+
+        // وقتی پاپ‌آپ بسته شد، بررسی کن که آیا فرم تأیید شده یا نه
+        popup.onClose = function () {
+          if (!tempEvent.confirmed) {
+            myCalendar.removeEvent(tempEvent.id);
+          }
+        };
       } else {
         myRange.setVal([startDate, endDate]);
       }
-    },
+    }
+    // onClose: function (args, inst) {
+    //     var date = inst.getVal();
+    //     if (date[0] && date[1]) {
+    //         console.log('data_0', date[0]);
+    //         console.log('data_1', date[1]);
+
+    //         if (date[0].getTime() !== startDate.getTime()) {
+    //             var newDate = date[0].getTime() - (5 * 24 * 60 * 60 * 1000);
+    //             var newStartDate = new Date(newDate);
+    //             console.log(newStartDate);
+    //             myCalendar.navigate(newStartDate);
+    //         }
+
+    //         startDate = date[0];
+    //         endDate = date[1];
+
+    //         // اضافه کردن رویداد جدید برای اتاق اول
+    //         var newEvent = {
+    //             id: new Date().getTime(),  // شناسه‌ی یونیک
+    //             start: startDate,
+    //             end: endDate,
+    //             title: "رزرو جدید",
+    //             resource: 1,  // اتاق اول
+    //             cssClass: 'reservation-event'
+    //         };
+
+    //         myCalendar.addEvent(newEvent);  // اضافه کردن رویداد به تقویم
+
+    //         // باز کردن پاپ‌آپ اضافه کردن رویداد
+    //         createAddPopup(null, 1, newEvent);
+    //     } else {
+    //         myRange.setVal([startDate, endDate]);
+    //     }
+    // }
+    // onClose: function (args, inst) {
+    //   var date = inst.getVal();
+    //   console.log('args',args)
+    //   if (date[0] && date[1]) {
+    //     if (date[0].getTime() !== startDate.getTime()) {
+    //       // navigate the calendar
+    //       var newDate = date[0].getTime() - (5 * 24 * 60 * 60 * 1000);
+    //       var newStartDate = new Date(newDate);
+    //       console.log(newStartDate)
+    //       myCalendar.navigate(newStartDate);
+    //     }
+    //     startDate = date[0];
+    //     endDate = date[1];
+    //     // set calendar view
+    //     myCalendar.setOptions({
+    //       refDate: startDate,
+    //       view: {
+    //         timeline: {
+    //           type: 'year',
+    //           size: 31,
+    //           eventList: false,
+    //         },
+    //       },
+    //       // invalid: [{
+    //       //     // Date objects
+    //       //     allDay: true,
+    //       //     start: '2024-03-10T00:00',
+    //       //     end: date[0],
+    //       //     title: 'عدم نمایش',
+    //       //     cssClass: 'md-lunch-break-class mbsc-flex',
+    //       //   },
+    //       //   {
+    //       //     allDay: true,
+    //       //     start: endDate,
+    //       //     end: '2025-03-10T00:00',
+    //       //     title: 'عدم نمایش',
+    //       //     cssClass: 'md-lunch-break-class mbsc-flex',
+    //       //   },  
+    //       // ],
+    //       invalid: [
+    //         {
+    //           allDay: true,
+    //           start: startDate,
+    //           end: endDate,
+    //           resource :1,
+    //           title: "New event",
+    //           cssClass: 'md-lunch-break-class mbsc-flex',
+    //         },  
+    //       ],
+    //     });
+    //   } else {
+    //     myRange.setVal([startDate, endDate]);
+    //   }
+    // },
   });
 
   var rangeButton = document.getElementById('custom-date-range-text');
@@ -782,9 +706,9 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
   //   $.ajax({
   //     url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
   //     method: 'POST',
-  //     data: { 
+  //     data: {
   //       csrfmiddlewaretoken: '{{ csrf_token }}',
-  //       reservation_id: tempEvent.reserve_id 
+  //       reservation_id: tempEvent.reserve_id
   //     }, // ارسال شناسه رزرو به سمت سرور
   //     success: function (data) {
   //       popup.close();
@@ -802,16 +726,16 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
 
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.mbsc-range-control-value').addEventListener('contentChanged', function() {
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector('.mbsc-range-control-value').addEventListener('contentChanged', function () {
       var selectedResourceId = parseInt($(this).val(), 10); // Convert to integer
-      var matchingResource = resourceData.find(function(resource) {
+      var matchingResource = resourceData.find(function (resource) {
         return resource.id === selectedResourceId;
       });
       if (matchingResource) {
         $('#event-capacity').text(matchingResource.capacity + 'نفر مجاز + ' + matchingResource.max_capacity + ' نفر ');
       } else {
-          // Handle the case when no matching resource is found
+        // Handle the case when no matching resource is found
         $('#event-capacity').text('نفری یافت نشد');
       }
       console.log("Matching Resource:", matchingResource);
@@ -820,40 +744,40 @@ var myRange = mobiscroll.datepicker('#custom-date-range', {
 </script>
 <script>
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Get the horizontal scrollbar element
-  var horizontalScrollbar = document.querySelector('.mbsc-timeline-grid-scroll');
-  // Listen for the scroll event on the horizontal scrollbar
-  horizontalScrollbar.addEventListener('scroll', function() {
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the horizontal scrollbar element
+    var horizontalScrollbar = document.querySelector('.mbsc-timeline-grid-scroll');
+    // Listen for the scroll event on the horizontal scrollbar
+    horizontalScrollbar.addEventListener('scroll', function () {
       // Check if scrolling has stopped
       if (!this._scrolling) {
-          // Set a flag to indicate scrolling has started
-          this._scrolling = true;
-          var self = this;
-          setTimeout(function() {
-              // Get the scroll position
-              var scrollLeft = horizontalScrollbar.scrollLeft;
-              // Get the width of the first column
-              var firstColumnWidth = document.querySelector('.mbsc-timeline-column').offsetWidth;
+        // Set a flag to indicate scrolling has started
+        this._scrolling = true;
+        var self = this;
+        setTimeout(function () {
+          // Get the scroll position
+          var scrollLeft = horizontalScrollbar.scrollLeft;
+          // Get the width of the first column
+          var firstColumnWidth = document.querySelector('.mbsc-timeline-column').offsetWidth;
 
-              // Calculate the index of the nearest visible column
-              var columnIndex = Math.round(scrollLeft / firstColumnWidth);
+          // Calculate the index of the nearest visible column
+          var columnIndex = Math.round(scrollLeft / firstColumnWidth);
 
-              // Calculate the new scroll position to fully display the nearest visible column
-              var newScrollLeft = columnIndex * firstColumnWidth;
+          // Calculate the new scroll position to fully display the nearest visible column
+          var newScrollLeft = columnIndex * firstColumnWidth;
 
-              // Scroll to the new position
-              horizontalScrollbar.scrollTo({
-                  left: newScrollLeft,
-                  behavior: 'smooth' // Optional: smooth scrolling effect
-              });
+          // Scroll to the new position
+          horizontalScrollbar.scrollTo({
+            left: newScrollLeft,
+            behavior: 'smooth' // Optional: smooth scrolling effect
+          });
 
-              // Reset the scrolling flag
-              self._scrolling = false;
-          }, 400); // Adjust the delay as needed
+          // Reset the scrolling flag
+          self._scrolling = false;
+        }, 400); // Adjust the delay as needed
       }
+    });
   });
-});
 
 </script>
 
@@ -867,7 +791,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var btn = document.getElementById('openModalBtn');
 
   // Event listener for opening the modal when the button is clicked
-  btn.addEventListener('click', function() {
+  btn.addEventListener('click', function () {
     modal.show();
   });
 
@@ -875,13 +799,13 @@ document.addEventListener("DOMContentLoaded", function() {
   var closeBtn = document.querySelector('.modal .btn-close');
 
   // Event listener for closing the modal when the close button is clicked
-  closeBtn.addEventListener('click', function() {
+  closeBtn.addEventListener('click', function () {
     modal.hide();
   });
 </script>
 <!-- Include Bootstrap JS for Toast -->
 
-    
+
 {% endblock %}
 
 
@@ -898,7 +822,7 @@ document.addEventListener("DOMContentLoaded", function() {
 {% endblock %}
 
 {% block page-js %}
-        
+
 <script src="{% static 'js/app-calendar-events.js' %}"></script>
 <script src="{% static 'js/app-calendar.js' %}"></script>
 <!-- / Content -->

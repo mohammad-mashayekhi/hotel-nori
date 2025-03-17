@@ -106,7 +106,7 @@ def verify(request):
             if reservation.coupon:
                 discount = coupon.get_discount(reservation.total_pay)
                 payment.discount = discount
-                coupon.users.remove(reservation.user)
+                coupon.users.add(reservation.user)
                 coupon.save()
             reservation.save()
             payment.save()
