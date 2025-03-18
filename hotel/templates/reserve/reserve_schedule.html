@@ -50,9 +50,9 @@
                 </select>
                 {% endif %}
                 <span id="event-capacity" name="event-capacity"></span><br>
-                <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity"><br>
-                <label for="event-cleaning">نظافت:</label>
-                <input type="checkbox" id="event-cleaning" name="event-cleaning">
+                <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity" min="1"><br>
+                <label for="event-cleaning" {% if request.user.user_status == "verified" %} class="d-none" {% endif %}>نظافت:</label>
+                <input type="checkbox" id="event-cleaning" name="event-cleaning" {% if request.user.user_status == "verified" %} class="d-none" {% endif %}>
                 {% if request.user.user_status != "verified" %}
                 <label for="event-paid">وضعیت پرداخت:</label>
                 <input type="checkbox" id="event-paid" name="event-paid">
@@ -70,10 +70,9 @@
                   <option value="{{resources.id}}">{{resources.name}}</option>
                   {% endfor %}
                 </select>
-                <label for="event-price-per-person">قیمت هر نفر مازاد</label>
-                <span class="form-control" id="event-price-per-person" name="event-price-per-person"></span>
                 <label for="event-price">قیمت هر شب</label>
                 <span class="form-control" id="event-price" name="event-price"></span>
+                <span class="text-secondary" style="font-size: 11px;">در زمان‌های پیک قیمت‌ها بیشتر از حالت عادی است.</span>
               </div>
             </div>
           </div>
@@ -88,7 +87,6 @@
                 data-variant="outline">حذف رزرو</button>
               <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger"
                 data-variant="outline">پرداخت</button>
-              <!-- <button class="mbsc-button-block" id="event-reminder" mbsc-button data-color="submit" data-variant="outline">ارسال پیامک یادآوری</button> -->
             </div>
           </div>
           {% endif %}
@@ -201,9 +199,6 @@
   });
 
   function createAddPopup(elm, resourceId, tempEvent) {
-    console.log('elm', elm)
-    console.log('resourseId', resourceId)
-    console.log('tempEvent', tempEvent)
     deleteButton.style.display = 'none';
 
     deleteEvent = true;
@@ -220,10 +215,11 @@
     $('#start-input').val('');
     $('#end-input').val('');
     $('#event-resource').val(resourceId);
-    $('#event-capacity').text(`${matchingResource.capacity} نفر مجاز + ${matchingResource.max_capacity} نفر`);
+    $('#event-capacity').text(`ظرفیت ${matchingResource.capacity} نفر`);
     $('#event-price').text(matchingResource.price);
     $('#event-cleaning').prop('checked', true);
-    $('#event-more-capacity').val(0);
+    $('#event-more-capacity').val(1); // I chnage this val to one
+    $('#event-more-capacity').attr('max', matchingResource.capacity + 3);
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchingResource.price_per_person);
 
@@ -285,6 +281,7 @@
 
 
   var eventResourceSelect = document.getElementById('event-resource');
+  var eventExtraPersonSelect = document.getElementById('event-more-capacity')
 
   eventResourceSelect.addEventListener('change', function () {
     var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
@@ -292,13 +289,30 @@
 
     var matchedResource = resourceData.find(resource => resource.id === resourceId);
     $('#event-resource').val(resourceId);
-    $('#event-capacity').text(`${matchedResource.capacity} نفر مجاز + ${matchedResource.max_capacity} نفر`);
+    $('#event-capacity').text(`ظرفیت ${matchedResource.capacity} نفر`);
     $('#event-price').text(matchedResource.price);
     $('#event-cleaning').prop('checked', true);
-    $('#event-more-capacity').val(0);
+    $('#event-more-capacity').val(1);
+    $('#event-more-capacity').attr('max', matchedResource.capacity + 3)
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchedResource.price_per_person);
   });
+
+  eventExtraPersonSelect.addEventListener('change', function () {
+    var inputValue = parseInt(document.getElementById('event-more-capacity').value, 10);
+    
+    var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
+    var resourceId = parseInt(selectedOption.value);
+
+    var matchedResource = resourceData.find(resource => resource.id === resourceId);
+
+    if( inputValue > matchedResource.capacity){
+      var new_price = (inputValue - matchedResource.capacity) * matchedResource.price_per_person + matchedResource.price
+      $('#event-price').text(new_price);
+    }else{
+      $('#event-price').text(matchedResource.price);
+    }
+  })
 
 
   document.getElementById('event-pay').addEventListener('click', async function () {
@@ -381,7 +395,18 @@
       anchor: args.domEvent.currentTarget,
       position: { top: 'auto', left: 'auto', right: 'auto', bottom: 'auto' }
     });
-    fetchReservationInfo(ev.reserve_id);
+
+    var eventExtraPersonSelect = document.getElementById('event-more-capacity')
+    eventExtraPersonSelect.addEventListener('change', function () {
+      var inputValue = parseInt(document.getElementById('event-more-capacity').value, 10);
+      if( inputValue > matchingResource.capacity){
+        var new_price = (inputValue - matchingResource.capacity) * matchingResource.price_per_person + matchingResource.price
+        $('#event-price').text(new_price);
+      }else{
+        $('#event-price').text(matchingResource.price);
+      }
+    })
+    fetchReservationInfo(ev.reserve_id, matchingResource.capacity);
 
     document.getElementById('event-pay').addEventListener('click', function () {
       window.location.href = "/reserve/bill/" + ev.reserve_id + "/"; // Redirect to purchase settings
@@ -390,13 +415,13 @@
   }
 
 
-  function fetchReservationInfo(reservation_id) {
+  function fetchReservationInfo(reservation_id, capacity) {
     $.ajax({
       url: 'reserve/get_reservation_info/',
       method: 'GET',
       data: { reservation_id: reservation_id },
       success: function (data) {
-        fillPopupWithData(data);
+        fillPopupWithData(data, capacity);
         popup.open();
       },
       error: function () {
@@ -405,7 +430,7 @@
     });
   }
 
-  function fillPopupWithData(data) {
+  function fillPopupWithData(data, capacity) {
     $('#event-title').val(data.title);
     $('#event-status').val(data.status);
     $('#event-buffer').val(data.bufferAfter);
@@ -415,11 +440,19 @@
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
     $('#event-cleaning').prop('checked', data.cleaning);
-    $('#event-capacity').text(`${data.capacity} نفر مجاز + ${resourceData.find(resource => resource.id === data.resources).max_capacity} نفر`);
+    $('#event-capacity').text(`ظرفیت ${data.capacity} نفر`);
     $('#event-more-capacity').val(data.morecapacity);
+    $('#event-more-capacity').attr('max', capacity +3);
     $('#event-paid').prop('checked', data.paid);
-    $('#event-price').text(data.price);
     $('#event-price-per-person').text(data.price_per_person);
+
+
+    if( data.morecapacity > capacity){
+      var new_price = (data.morecapacity - capacity) * data.price_per_person + data.price
+      $('#event-price').text(new_price);
+    }else{
+      $('#event-price').text(data.price);
+    }
 
     firstday = data.start;
     lastday = data.end;
@@ -643,7 +676,7 @@
         return resource.id === selectedResourceId;
       });
       if (matchingResource) {
-        $('#event-capacity').text(matchingResource.capacity + 'نفر مجاز + ' + matchingResource.max_capacity + ' نفر ');
+        $('#event-capacity').text( 'ظرفیت' + matchingResource.capacity + ' نفر ');
       } else {
         // Handle the case when no matching resource is found
         $('#event-capacity').text('نفری یافت نشد');
