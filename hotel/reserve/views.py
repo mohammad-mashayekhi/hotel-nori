@@ -29,7 +29,13 @@ def date_formatter(date):
 @login_required
 def reserve_schedule(request):
     reservations = Reservation.objects.filter(
-        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning")
+        Q(status="confirmed") | Q(status="pending_payment") | Q(status="cleaning") | Q(status="onlocalpay")
+    )
+
+    closed_time_data = list(
+        Reservation.objects.filter(status="closetime").values(
+            "reserve_id", "status", "start", "end", "title", "resource"
+        )
     )
 
     if not is_admin(request.user):
@@ -57,6 +63,7 @@ def reserve_schedule(request):
                 })
                 reservation_dict["title"] = "رزور شده"
                 reservation_data.append(reservation_dict)
+                closed_time_data.append({"start":reservation.start,"end":reservation.end,"resource":reservation.resource.id})
     else:
         reservation_data = list(
             reservations.values(
@@ -70,11 +77,7 @@ def reserve_schedule(request):
                 "user",
             )
         )
-    closed_time_data = list(
-        Reservation.objects.filter(status="closetime").values(
-            "reserve_id", "status", "start", "end", "title", "resource"
-        )
-    )
+
     if not is_admin(request.user):
         resources = Resource.objects.filter(status=True) 
     else:  

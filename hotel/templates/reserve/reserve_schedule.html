@@ -172,30 +172,6 @@
     rangeSelectMode: 'wizard',
     select: 'range',
     showRangeLabels: true,
-    onChange: function (event, inst) {
-
-      // Get the new value of datepickerreserve
-      var reservtime = inst.getVal();
-      var startreserve = new Date(reservtime[0]);
-      var endreserve = new Date(reservtime[1]);
-      console.log("differenceInDays")
-
-      // Calculate the difference in days
-      var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
-      var differenceInDays = Math.round((endreserve - startreserve) / oneDay) + 1;
-      console.log(differenceInDays)
-
-      // Get the resource price (replace this with your logic to get the actual price)
-      var resourcePrice = document.getElementById('event-price').textContent;
-      console.log(resourcePrice)
-
-      // Calculate the total cost
-      var totalCost = differenceInDays * resourcePrice;
-      console.log("totalCost")
-      // Set the value of the event-pay button
-      $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان')
-
-    }
   });
 
   function createAddPopup(elm, resourceId, tempEvent) {

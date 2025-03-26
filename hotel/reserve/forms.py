@@ -21,7 +21,7 @@ def overlap_checker(data, instance=None):
     if instance:
         overlapping_reservations = Reservation.objects.filter(
             resource_id=data["resource"],
-            status__in=["pending_payment", "confirmed"],
+            status__in=["pending_payment", "confirmed", "cleaning", "onlocalpay"],
         ).exclude(
             Q(end__lte=data["start"])
             | Q(start__gte=data["end"])
@@ -30,7 +30,7 @@ def overlap_checker(data, instance=None):
     else:
         overlapping_reservations = Reservation.objects.filter(
             resource_id=data["resource"],
-            status__in=["pending_payment", "confirmed"],
+            status__in=["pending_payment", "confirmed", "cleaning", "onlocalpay"],
         ).exclude(Q(end__lte=data["start"]) | Q(start__gte=data["end"]))
 
     if overlapping_reservations.exists():
@@ -138,7 +138,7 @@ class ReservationForm(forms.ModelForm):
                     "end": cleaning_end,
                 }
             ):
-                return forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
+                raise forms.ValidationError("در این زمان از قبل رزور صورت گرفته است.")
 
         return self.cleaned_data["cleaning"]
 
