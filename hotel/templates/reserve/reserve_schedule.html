@@ -38,34 +38,37 @@
               <!-- First Column -->
               <div class="col-md-6 col-6">
                 <label for="event-title">نام</label>
-                <input type="text" class="form-control input" id="event-title" name="event-title" required>
+                <input type="text" class="form-control input edite-style" id="event-title" name="event-title" required>
 
                 {% if request.user.user_status != "verified" %}
                 <label for="event-status">وضعیت</label>
-                <select class="form-control" id="event-status" name="event-status" required>
+                <select class="form-control edite-style" id="event-status" name="event-status" required>
                   <option value="pending_payment">در انتظار پرداخت</option>
                   <option value="confirmed">تایید شده</option>
                   <option value="closetime">غیرقابل رزرو</option>
                   <option value="onlocalpay">پرداخت حضوری</option>
                 </select>
+                {% else %}
+                <label for="event-status" class="d-none" id="lable-edite-popup-status">وضعیت</label>
+                <input type="text" class="form-control input d-none edite-style" id="edite-popup-status">
                 {% endif %}
                 <span id="event-capacity" name="event-capacity"></span><br>
-                <input type="number" class="form-control" id="event-more-capacity" name="event-more-capacity" min="1"><br>
+                <input type="number" class="form-control edite-style" id="event-more-capacity" name="event-more-capacity" min="1"><br>
                 <label for="event-cleaning" {% if request.user.user_status == "verified" %} class="d-none" {% endif %}>نظافت:</label>
-                <input type="checkbox" id="event-cleaning" name="event-cleaning" {% if request.user.user_status == "verified" %} class="d-none" {% endif %}>
+                <input type="checkbox" id="event-cleaning" name="event-cleaning" class="edite-style {% if request.user.user_status == 'verified' %} d-none {% endif %}">
                 {% if request.user.user_status != "verified" %}
                 <label for="event-paid">وضعیت پرداخت:</label>
-                <input type="checkbox" id="event-paid" name="event-paid">
+                <input type="checkbox" id="event-paid" name="event-paid" class="edite-style">
                 {% endif %}
               </div>
               <!-- Second Column -->
               <div class="col-md-6 col-6">
                 {% if request.user.user_status != "verified" %}
                 <label for="event-user">شماره تلفن</label>
-                <input type="text" class="form-control input" id="event-user" name="event-user" required>
+                <input type="text" class="form-control input edite-style" id="event-user" name="event-user" required>
                 {% endif %}
                 <label for="event-resource">اتاق</label>
-                <select class="form-control" id="event-resource" name="event-resource" required>
+                <select class="form-control edite-style" id="event-resource" name="event-resource" required>
                   {% for resources in resources %}
                   <option value="{{resources.id}}">{{resources.name}}</option>
                   {% endfor %}
@@ -83,7 +86,7 @@
               </div>
             </div>
             <div class="mbsc-button-group">
-              <button class="mbsc-button-block" id="event-delete" mbsc-button data-color="danger"
+              <button class="mbsc-button-block {% if request.user.user_status == 'verified' %} d-none {% endif %}" id="event-delete" mbsc-button data-color="danger"
                 data-variant="outline">حذف رزرو</button>
               <button class="mbsc-button-block" id="event-pay" mbsc-button data-color="danger"
                 data-variant="outline">پرداخت</button>
@@ -162,6 +165,7 @@
   var startcalendar = '2024-04-20';
   var endcalendar = '2025-04-20';
   var deleteButton = document.getElementById('event-delete');
+  var paymentButton = document.getElementById('event-pay');
 
   // Initialize datepicker for reservation
   var datepickerreserve = mobiscroll.datepicker('#demo-range-selection', {
@@ -175,7 +179,21 @@
   });
 
   function createAddPopup(elm, resourceId, tempEvent) {
-    deleteButton.style.display = 'none';
+    // انتخاب تمام عناصر با کلاس 'edite-style'
+    var elements = document.querySelectorAll('.edite-style');
+
+
+    // پیمایش و غیرفعال کردن هر عنصر
+    elements.forEach(function(element) {
+      element.disabled = false;
+    });
+    if(deleteButton){
+      deleteButton.style.display = 'none';
+    }
+    $('#edite-popup-status').addClass('d-none')
+    $('#lable-edite-popup-status').addClass('d-none')
+    paymentButton.textContent = 'پرداخت'
+
 
     deleteEvent = true;
     restoreEvent = false;
@@ -359,7 +377,18 @@
     datepickerreserve.setVal([firstday, lastday]);
 
 
-    deleteButton.style.display = 'block';
+    {% if request.user.user_status != "verified" %}
+      deleteButton.style.display = 'block';
+    {% endif %}
+    paymentButton.textContent = 'پرداخت'
+    // انتخاب تمام عناصر با کلاس 'edite-style'
+    var elements = document.querySelectorAll('.edite-style');
+
+    // پیمایش و غیرفعال کردن هر عنصر
+    elements.forEach(function(element) {
+      element.disabled = true;
+    });
+
     deleteEvent = false;
     restoreEvent = true;
 
@@ -422,6 +451,26 @@
     $('#event-paid').prop('checked', data.paid);
     $('#event-price-per-person').text(data.price_per_person);
 
+    if(data.paid == true || data.status == 'cleaning'){
+      paymentButton.textContent = 'صورت حساب'
+    }
+
+    const statusMap = {
+      'pending_payment': 'در انتظار پرداخت',
+      'confirmed': 'تایید شده',
+      'onlocalpay': 'پرداخت حضوری',
+      'canceled': 'کنسل شده',
+      'closetime': 'زمان تعطیلی',
+      'cleaning': 'زمان نظافت'
+    };
+
+    const status = data.status;
+    if (statusMap[status]) {
+      $('#edite-popup-status').val(statusMap[status]);
+    }
+
+    $('#edite-popup-status').removeClass('d-none')
+    $('#lable-edite-popup-status').removeClass('d-none')
 
     if( data.morecapacity > capacity){
       var new_price = (data.morecapacity - capacity) * data.price_per_person + data.price
@@ -620,28 +669,6 @@
     return Math.round(Math.abs((end.setHours(0) - start.setHours(0)) / (24 * 60 * 60 * 1000))) + 1;
   }
 
-  // addremindersmsButton.addEventListener('click', function () {
-  //   console.log(tempEvent);
-  //   $.ajax({
-  //     url: 'account/addـreminderـsms/', // آدرس مورد نظر برای دریافت اطلاعات رزرو
-  //     method: 'POST',
-  //     data: {
-  //       csrfmiddlewaretoken: '{{ csrf_token }}',
-  //       reservation_id: tempEvent.reserve_id
-  //     }, // ارسال شناسه رزرو به سمت سرور
-  //     success: function (data) {
-  //       popup.close();
-  //     },
-  //     error: function () {
-  //       alert('خطا در دریافت اطلاعات رزرو');
-  //     }
-  //   });
-  // });
-
-
-  // $(document).ready(function () {
-  //   $('#id_price_currency').select2();
-  // });
 
 </script>
 <script>
@@ -698,29 +725,6 @@
     });
   });
 
-</script>
-
-
-<!-- bt and modal script for close time add -->
-<script>
-  // Get a reference to the modal element
-  var modal = new bootstrap.Modal(document.getElementById('myModal'));
-
-  // Get the button that opens the modal
-  var btn = document.getElementById('openModalBtn');
-
-  // Event listener for opening the modal when the button is clicked
-  btn.addEventListener('click', function () {
-    modal.show();
-  });
-
-  // Get a reference to the close button inside the modal
-  var closeBtn = document.querySelector('.modal .btn-close');
-
-  // Event listener for closing the modal when the close button is clicked
-  closeBtn.addEventListener('click', function () {
-    modal.hide();
-  });
 </script>
 {% endblock %}
 

@@ -41,7 +41,7 @@ def reserve_schedule(request):
     if not is_admin(request.user):
         reservation_data = list()
         for reservation in reservations:
-            if reservation.user == request.user:
+            if reservation.user == request.user and reservation.status != "cleaning" :
                 reservation_data.append(
                     model_to_dict(reservation, fields=[
                         "reserve_id",
