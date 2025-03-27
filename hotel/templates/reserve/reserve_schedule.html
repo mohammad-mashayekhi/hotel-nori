@@ -254,8 +254,8 @@
           addReservation({
             title: $('#event-title').val(),
             mobile_number: $('#event-user').val(),
-            start: startreserve.toISOString(),
-            end: endreserve.toISOString(),
+            start: toUTCISOString(startreserve, 14, 0),
+            end: toUTCISOString(endreserve, 12, 0),
             resource: $('#event-resource').val(),
             status: $('#event-status').val(),
             cleaning: $('#event-cleaning').prop('checked'),
@@ -320,8 +320,8 @@
         {% if request.user.user_status != "verified" %}
           mobile_number: $('#event-user').val(),
         {% endif %}                
-        start: startreserve.toISOString(),
-        end: endreserve.toISOString(),
+        start: toUTCISOString(startreserve, 14, 0),
+        end: toUTCISOString(endreserve, 12, 0),
         resource: $('#event-resource').val(),
         {% if request.user.user_status != 'verified' %}
           status: $('#event-status').val(),
@@ -667,6 +667,21 @@
   // returns the number of days between two dates
   function getNrDays(start, end) {
     return Math.round(Math.abs((end.setHours(0) - start.setHours(0)) / (24 * 60 * 60 * 1000))) + 1;
+  }
+
+  // Converts a Date object to an ISO 8601 formatted string in UTC.
+  // This function ensures that the date remains in UTC format with zero-padded values.
+  function toUTCISOString(date, hours = 0, minutes = 0) {
+    // Ensure the date stays the same while setting time
+    const utcDate = new Date(Date.UTC(
+        date.getFullYear(), 
+        date.getMonth(), 
+        date.getDate(), 
+        hours, 
+        minutes, 
+        0 // seconds
+    ));
+    return utcDate.toISOString(); // Correctly formatted UTC string
   }
 
 
