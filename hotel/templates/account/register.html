@@ -23,7 +23,7 @@
             <form class="mb-3" method="POST">
               {% csrf_token %}
                 <div class="form-floating form-floating-outline mb-3">
-                  <input type="text" {% if form.mobile_number.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_mobile_number" name="mobile_number" placeholder="شماره تلفن همراه خود را وارد کنید" autofocus>
+                  <input type="text" {% if form.mobile_number.errors %} class="form-control invalid" {% else %} class="form-control" {% endif %}id="id_mobile_number" name="mobile_number" autocomplete="username" onfocus="this.setAttribute('autocomplete', 'username')" placeholder="شماره تلفن همراه خود را وارد کنید" autofocus>
                   <label for="username">شماره  تلفن همراه</label>
                   {% if form.mobile_number.errors %}
                     {% for error in form.mobile_number.errors %}
