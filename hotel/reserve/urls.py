@@ -18,5 +18,6 @@ urlpatterns = [
     path("rooms/", views.rooms, name="rooms"),
     path("roomsprice/", views.roomsprice, name="roomsprice"),
     path("financial-report/<int:current_year_shamsi>/", views.financial_report, name="financial-report"),
+    path("today_checkins_checkouts/", views.today_checkins_checkouts , name="today_checkins_checkouts")
 
 ]

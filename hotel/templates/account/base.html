@@ -163,6 +163,14 @@
             </a>
           </li>
           {% endif %}
+          {% if request.user.user_status == "admin_level_a" or request.user.user_status == "admin_level_b" %}
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:today_checkins_checkouts' %} active {% endif %}">
+            <a href="{% url 'reserve:today_checkins_checkouts' %}" class="menu-link">
+              <i class="mdi mdi-login"></i>
+              <div>لیست امروز</div>
+            </a>
+          </li>
+          {% endif %}
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:peaktime' %} active {% endif %}">
             <a href="{% url 'reserve:peaktime' %}" class="menu-link ">
               <i class="menu-icon tf-icons mdi mdi-trending-up"></i>

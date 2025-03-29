@@ -1,0 +1,152 @@
+{% extends 'account/base.html' %}
+{% load static %}
+{% load reserve_tags %}
+{% load jformat %}
+{% load humanizelib %}
+
+{% block content %}
+
+<!-- Bordered Table -->
+<div class="container-xxl flex-grow-1 container-p-y">
+  <div class="card mx-xl-3">
+      <h5 class="card-header">لیست ورود امروز ({{ today | jformat:' %Y/%m/%d' }})</h5>
+      <div class="card-body">
+      <!-- checkins table start -->
+      {% if checkins %}
+      <div class="table-responsive text-nowrap">
+          <table class="table table-bordered">
+          <thead>
+              <tr>
+                <th>#</th>
+                <th>شناسه رزرو</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+                <th>عنوان</th>
+                <th>ایجاد‌کننده</th>
+                <th>کاربر</th>
+                <th>وضعیت</th>
+                <th>پرداخت</th>
+                <th>اتاق</th>
+                <th>نظافت</th>
+                <th>تعداد</th>
+                <th>مبلغ</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for checkin in checkins %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ checkin.reserve_id }}</td>
+                <td>{{ checkin.start | jformat:' %Y/%m/%d' }}</td>
+                <td>{{ checkin.end | jformat:' %Y/%m/%d' }}</td>
+                <td><a href="{% url 'reserve:billdetail' checkin.reserve_id %}">{{ checkin.title }}</a></td>
+                <td>{{ checkin.author.get_name }}</td>
+                <td>{{ checkin.user.get_name }}</td>
+                <td>{{ checkin.get_status_display }}</td>
+                <td>{% render_boolean_icon checkin.paid %}</td>
+                <td>{{ checkin.resource.name }}</td>
+                <td>{% render_boolean_icon checkin.cleaning %}</td>
+                <td>
+                    {% if checkin.more_capacity and checkin.more_capacity > 0 %}
+                    {{ checkin.more_capacity }}
+                    {% elif checkin.more_capacity == 0 %}
+                    {{ checkin.more_capacity }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if checkin.total_pay and checkin.total_pay > 0 %}
+                    {{ checkin.total_pay| intcomma }}
+                    {% elif checkin.total_pay == 0 %}
+                    {{ checkin.total_pay }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+          </table>
+      </div>
+      {% else %}
+      <div class="alert alert-info" role="alert">
+        امروز ورودی وجود ندارد.
+      </div>      
+      {% endif %}
+      <!-- checkins table end -->
+      </div>
+  </div>
+  <div class="card mx-xl-3 mt-5">
+    <h5 class="card-header">لیست خروج امروز ({{ today | jformat:' %Y/%m/%d' }})</h5>
+    <div class="card-body">
+    <!-- checkouts table start -->
+    {% if checkouts %}
+    <div class="table-responsive text-nowrap">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>شناسه رزرو</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+                <th>عنوان</th>
+                <th>ایجاد‌کننده</th>
+                <th>کاربر</th>
+                <th>وضعیت</th>
+                <th>پرداخت</th>
+                <th>اتاق</th>
+                <th>نظافت</th>
+                <th>تعداد</th>
+                <th>مبلغ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for checkout in checkouts %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ checkout.reserve_id }}</td>
+                <td>{{ checkout.start | jformat:' %Y/%m/%d' }}</td>
+                <td>{{ checkout.end | jformat:' %Y/%m/%d' }}</td>
+                <td><a href="{% url 'reserve:billdetail' checkout.reserve_id %}">{{ checkout.title }}</a></td>
+                <td>{{ checkout.author.get_name }}</td>
+                <td>{{ checkout.user.get_name }}</td>
+                <td>{{ checkout.get_status_display }}</td>
+                <td>{% render_boolean_icon checkout.paid %}</td>
+                <td>{{ checkout.resource.name }}</td>
+                <td>{% render_boolean_icon checkout.cleaning %}</td>
+                <td>
+                    {% if checkout.more_capacity and checkout.more_capacity > 0 %}
+                    {{ checkout.more_capacity }}
+                    {% elif checkout.more_capacity == 0 %}
+                    {{ checkout.more_capacity }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if checkout.total_pay and checkout.total_pay > 0 %}
+                    {{ checkout.total_pay| intcomma }}
+                    {% elif checkout.total_pay == 0 %}
+                    {{ checkout.total_pay }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        امروز خروجی وجود ندارد.
+    </div>      
+    {% endif %}
+    <!-- checkouts table end -->
+    </div>
+</div>
+</div>
+<!--/ Bordered Table -->
+
+{% endblock %}

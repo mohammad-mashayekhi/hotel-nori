@@ -16,8 +16,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from kavenegar import *
 from account.models import Userprofile
-from .decorators import (is_admin, is_admin_level_one, is_admin_level_two,
-                         is_verified_user)
+from .decorators import (is_admin)
 from .forms import (CustomUserCreationForm, OTPValidationForm, PhoneNumberForm,
                     Userprofile, UserProfileEditForm, UserProfileEditFormUser)
 from .utils import ( otp_generator, send_signup_sms, send_otp_sms, send_verified_user_sms)

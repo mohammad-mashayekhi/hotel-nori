@@ -847,3 +847,10 @@ def total_pay_list(year):
         'online_pay_list': [int(month_data['total_pay_online_pay']) for month_data in monthly_totals],
         'onlocal_pay_list': [int(month_data['total_pay_onlocal_pay']) for month_data in monthly_totals],
     }
+
+@admin_a_required
+def today_checkins_checkouts(request):
+    today = datetime.today().date() 
+    checkouts = Reservation.objects.filter(Q(status='confirmed') | Q(status='onlocalpay') ,end__date = today)
+    checkins = Reservation.objects.filter(Q(status='confirmed') | Q(status='onlocalpay') ,start__date = today)
+    return render(request, "reserve/today_checkins_checkouts.html",{'checkouts':checkouts,'checkins':checkins, 'today':today})
