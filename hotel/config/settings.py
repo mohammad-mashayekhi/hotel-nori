@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'config',
     'zarinpal',
     'coupon',
-    'django_humanize',
+    # 'django_humanize',
     'django_select2',
     'django_q',
 ]
