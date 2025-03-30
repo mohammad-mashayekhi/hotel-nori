@@ -38,7 +38,7 @@ for reservation in expired_reservations:
         
         if cleanings.count() == 1:  # اگر فقط یک مورد پیدا شد، حذف کن
             cleanings.first().delete()
-            print(f"Cleaning reservation {cleanings.first().reserve_id} deleted.")
+            print(f"Cleaning reservation {reservation.reserve_id} deleted.")
         elif cleanings.count() > 1:
             print(f"⚠ Warning: Multiple cleaning reservations found for reservation {reservation.reserve_id}, none deleted.")
     print(f"Reservation {reservation.reserve_id} canceled.")
