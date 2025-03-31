@@ -162,14 +162,6 @@ def add_reservation(request):
             # # Send message
             if reservation.status == "pending_payment":
                 send_online_payment_reserve(phone, reservation.reserve_id)
-                schedule(
-                    'reserve.tasks.payment_reminder',
-                    reservation.reserve_id,
-                    name=f'payment_reminder_{reservation.reserve_id}',  # مقدار یکتا
-                    schedule_type='O',  # اجرا فقط یک‌بار انجام شود
-                    next_run=now() + timedelta(hours=1, minutes=50)  # اجرا بعد از ۱ ساعت و ۵۰ دقیقه
-                    # next_run=now() + timedelta(minutes=5)  # اجرا بعد از ۱ ساعت و ۵۰ دقیقه
-                )
             elif reservation.status == "onlocalpay" or reservation.status == "confirmed":
                 send_completed_reserve_reserve(phone,start,end)
             messages.add_message(request, messages.SUCCESS,
@@ -294,7 +286,7 @@ def cancel_reservation(request, reservation_id):
             if reservation.cleaning:
                 cleaning = Reservation.objects.get(user=reservation.user, author=reservation.author,
                                                    start=reservation.end + timedelta(hours=2),
-                                                   end=reservation.end + timedelta(days=1), status="cleaning")
+                                                   end=reservation.end + timedelta(days=1), status="cleaning", resource=reservation.resource)
                 cleaning.delete()
         else:
             return JsonResponse({"success": False, "error": "Reservation is paid"}, status=403)

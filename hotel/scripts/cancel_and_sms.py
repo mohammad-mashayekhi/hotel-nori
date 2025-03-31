@@ -33,7 +33,8 @@ for reservation in expired_reservations:
             author=reservation.author,
             start=reservation.end + timedelta(hours=2),
             end=reservation.end + timedelta(days=1),
-            status="cleaning"
+            status="cleaning",
+            resource=reservation.resource
         )
         
         if cleanings.count() == 1:  # اگر فقط یک مورد پیدا شد، حذف کن
