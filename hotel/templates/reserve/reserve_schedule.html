@@ -217,7 +217,7 @@
     $('#start-input').val('');
     $('#end-input').val('');
     $('#event-resource').val(resourceId);
-    $('#event-capacity').text(`ظرفیت ${matchingResource.capacity} نفر`);
+    $('#event-capacity').text(`تعداد نفرات ${matchingResource.capacity} نفر`);
     $('#event-price').text(matchingResource.price);
     $('#event-cleaning').prop('checked', true);
     $('#event-more-capacity').val(1); // I chnage this val to one
@@ -291,7 +291,7 @@
 
     var matchedResource = resourceData.find(resource => resource.id === resourceId);
     $('#event-resource').val(resourceId);
-    $('#event-capacity').text(`ظرفیت ${matchedResource.capacity} نفر`);
+    $('#event-capacity').text(`تعداد نفرات ${matchedResource.capacity} نفر`);
     $('#event-price').text(matchedResource.price);
     $('#event-cleaning').prop('checked', true);
     $('#event-more-capacity').val(1);
@@ -453,7 +453,7 @@
     $('#end-input').val(data.end);
     $('#event-resource').val(data.resources);
     $('#event-cleaning').prop('checked', data.cleaning);
-    $('#event-capacity').text(`ظرفیت ${data.capacity} نفر`);
+    $('#event-capacity').text(`تعداد نفرات ${data.capacity} نفر`);
     $('#event-more-capacity').val(data.morecapacity);
     $('#event-more-capacity').attr('max', capacity +3);
     $('#event-paid').prop('checked', data.paid);
@@ -702,7 +702,7 @@
         return resource.id === selectedResourceId;
       });
       if (matchingResource) {
-        $('#event-capacity').text( 'ظرفیت' + matchingResource.capacity + ' نفر ');
+        $('#event-capacity').text( 'تعداد نفرات' + matchingResource.capacity + ' نفر ');
       } else {
         // Handle the case when no matching resource is found
         $('#event-capacity').text('نفری یافت نشد');

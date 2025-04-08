@@ -45,31 +45,23 @@
             {% endif %}
           </div>
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <i class="fas fa-users"></i> 
               <span>ظرفیت</span> 
             </div>
-            <div class="col-4">
+            <div class="col-6">
               <i class="fas fa-cog"></i> 
               <span>متراژ</span> 
             </div>
-            <div class="col-4">
-              <i class="fas fa-cog "></i>
-              <span>{% if r.number_bed %}{{r.number_bed}}{% else %}-{% endif %} تخت</span> 
-            </div>
           </div>
           <div class="row">
-            <div class="col-4">
+            <div class="col-6">
               <i class="fas fa-users"></i> 
               <span>{% if r.capacity %}{{r.capacity}}{% else %}-{% endif %} نفر</span> 
             </div>
-            <div class="col-4">
+            <div class="col-6">
               <i class="fas fa-users"></i> 
               <span>{% if r.number_area %}{{r.number_area}}{% else %}-{% endif %} متر</span> 
-            </div>
-            <div class="col-4">
-              <i class="fas fa-users"></i> 
-              <span>{% if r.number_pad %}{{r.number_pad}}{% else %}-{% endif %} تشک</span> 
             </div>
           </div>
         </div>

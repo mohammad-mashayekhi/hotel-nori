@@ -25,7 +25,18 @@
               <div class="d-flex svg-illustration align-items-center gap-2 mb-4">
                 <h5 lang="fa" style="">فاکتور : {{ reservation.reserve_id }}</h5>
               </div>
-              <h4 class="mb-1" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</h4>
+              <div class="d-flex flex-wrap align-items-center justify-content-start">
+                <h4 class="mb-3 me-3" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</h4>
+                {% if reservation.status == "pending_payment" %}  
+                <form action="{% url 'zarinpal:request' %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
+                  <div class="mb-3 d-flex flex-wrap">
+                    <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa"> پرداخت </button>
+                  </div> 
+                </form>
+                {% endif %}
+              </div>
             </div>
             <div>
               <div class="mb-1">
