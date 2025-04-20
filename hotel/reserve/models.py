@@ -158,7 +158,7 @@ class Resource(models.Model):
     def get_img_url(self):
         if self.img:
             return self.img.url
-        return "static/img/backgrounds/17_17_491_uX5mm5g.jpg"
+        return "static/img/backgrounds/room_loading.jpg"
     
     def has_slider(self):
         return True if ResourceImage.objects.filter(resource=self).exists() else False
