@@ -28,7 +28,7 @@
               <div class="d-flex flex-wrap align-items-center justify-content-start">
                 <h4 class="mb-3 me-3" lang="fa" style="">حسینیه مرحوم مهدیان - {{reservation.resource}}</h4>
                 {% if reservation.status == "pending_payment" %}  
-                <form action="{% url 'zarinpal:request' %}" method="post">
+                <form class="d-md-none" action="{% url 'zarinpal:request' %}" method="post">
                   {% csrf_token %}
                   <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
                   <div class="mb-3 d-flex flex-wrap">
@@ -154,7 +154,7 @@
             </div>
             {% endif %}
             {% endif %}
-            <div class="px-5  my-3">
+            <div class="px-md-5  my-3">
               {% if coupon and reservation.coupon %}
                 <div>
                   <h5 class="pb-2" lang="fa" style="">تخفیف:</h5>
@@ -227,6 +227,20 @@
             </div>
           </div>
         </div>
+
+        {% if reservation.status == "pending_payment" %}
+        <div class="card-body pt-0 d-none d-md-block">
+          <div>  
+            <form action="{% url 'zarinpal:request' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" id="order_id" name="order_id" value="{{ reservation.reserve_id }}"> 
+              <div class="mb-3 d-flex flex-wrap justify-content-end">
+                <button type="submit" class="btn btn-primary me-3 waves-effect waves-light" lang="fa"> پرداخت </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
     <!-- /Invoice -->
