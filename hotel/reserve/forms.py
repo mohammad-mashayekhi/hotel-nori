@@ -48,7 +48,7 @@ class ReservationForm(forms.ModelForm):
     mobile_number = forms.CharField(
         label="شماره تلفن",
         validators=[
-            RegexValidator(r"^09\d{9}$", message="شماره وارد شده معتبر نمی باشد")
+            RegexValidator(r"^[۰0][۹9][۰-۹0-9]{9}$", message="شماره وارد شده معتبر نمی باشد")
         ],
         required=False,
     )
@@ -94,10 +94,12 @@ class ReservationForm(forms.ModelForm):
         if self.user.user_status == "verified":
             return self.user.mobile_number
         else:
-            print(self.cleaned_data["status"])
-            if self.cleaned_data["mobile_number"]:
-                return self.cleaned_data["mobile_number"]
-            elif self.cleaned_data["status"] == "closetime":
+            number = self.cleaned_data.get("mobile_number", "")
+            status = self.cleaned_data.get("status")
+            if number:
+                number = number.translate(str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789"))
+                return number
+            elif status == "closetime":
                 return self.user.mobile_number
             else:
                 raise forms.ValidationError("این فیلد لازم است")
