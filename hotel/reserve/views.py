@@ -411,7 +411,7 @@ from .forms import ResourceFormSet
 
 @login_required
 @verified_required
-@admin_a_required
+@admin_required
 def roomsprice(request):
     if request.method == 'POST':
         formset = ResourceFormSet(request.POST)
@@ -840,7 +840,9 @@ def total_pay_list(year):
         'onlocal_pay_list': [int(month_data['total_pay_onlocal_pay']) for month_data in monthly_totals],
     }
 
-@admin_a_required
+@login_required
+@verified_required
+@admin_required
 def today_checkins_checkouts(request):
     today = datetime.today().date() 
     checkouts = Reservation.objects.filter(Q(status='confirmed') | Q(status='onlocalpay') ,end__date = today)

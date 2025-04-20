@@ -155,12 +155,6 @@
             </a>
           </li>
           {% if request.user.user_status == "admin_level_a" %}
-          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:roomsprice' %} active {% endif %}">
-            <a href="{% url 'reserve:roomsprice' %}" class="menu-link ">
-              <i class="menu-icon tf-icons mdi mdi-cash"></i>
-              <div>قیمت اتاق‌ها</div>
-            </a>
-          </li>
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:financial-report' %} active {% endif %}">
             <a href="{% url 'reserve:financial-report' current_year_shamsi %}" class="menu-link">
               <i class="menu-icon tf-icons mdi mdi-file-chart"></i>
@@ -169,6 +163,12 @@
           </li>
           {% endif %}
           {% if request.user.user_status == "admin_level_a" or request.user.user_status == "admin_level_b" %}
+          <li class="menu-item {% if request.resolver_match.view_name == 'reserve:roomsprice' %} active {% endif %}">
+            <a href="{% url 'reserve:roomsprice' %}" class="menu-link ">
+              <i class="menu-icon tf-icons mdi mdi-cash"></i>
+              <div>قیمت اتاق‌ها</div>
+            </a>
+          </li>
           <li class="menu-item {% if request.resolver_match.view_name == 'reserve:today_checkins_checkouts' %} active {% endif %}">
             <a href="{% url 'reserve:today_checkins_checkouts' %}" class="menu-link">
               <i class="mdi mdi-login"></i>
