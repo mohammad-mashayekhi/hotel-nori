@@ -62,6 +62,7 @@
                 {% endif %}
                 <span id="event-capacity" name="event-capacity"></span><br>
                 <input type="number" class="form-control edite-style" id="event-more-capacity" name="event-more-capacity" min="1"><br>
+                <div class="alert alert-danger d-none" id="event-more-capacity-alert" role="alert"></div>                
                 <label for="event-cleaning" {% if request.user.user_status == "verified" %} class="d-none" {% endif %}>نظافت:</label>
                 <input type="checkbox" id="event-cleaning" name="event-cleaning" class="edite-style {% if request.user.user_status == 'verified' %} d-none {% endif %}">
                 {% if request.user.user_status != "verified" %}
@@ -189,7 +190,8 @@
   function createAddPopup(elm, resourceId, tempEvent) {
     // انتخاب تمام عناصر با کلاس 'edite-style'
     var elements = document.querySelectorAll('.edite-style');
-
+    const warningEl = document.getElementById('event-more-capacity-alert');
+    warningEl.classList.add('d-none')
 
     // پیمایش و غیرفعال کردن هر عنصر
     elements.forEach(function(element) {
@@ -230,18 +232,11 @@
     lastday = tempEvent.end;
     datepickerreserve.setVal([firstday, lastday]);
 
+    $('#event-more-capacity').off('input').on('input', function () {
+      const value = parseInt(this.value, 10);
+      checkMaxValue(value, matchingResource.capacity + 3);
+    });
 
-    // Calculate the difference in days
-    var oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
-    var differenceInDays = Math.round((lastday - firstday) / oneDay) + 1;
-
-    // Get the resource price (replace this with your logic to get the actual price)
-    var resourcePrice = document.getElementById('event-price').textContent;
-
-    // Calculate the total cost
-    var totalCost = differenceInDays * resourcePrice;
-    // Set the value of the event-pay button
-    // $('#event-pay').text('مبلغ نهایی: ' + totalCost + ' تومان')
 
 
 
@@ -297,9 +292,28 @@
     $('#event-more-capacity').attr('max', matchedResource.capacity + 3)
     $('#event-paid').prop('checked', false);
     $('#event-price-per-person').text(matchedResource.price_per_person);
+
+    $('#event-more-capacity').off('input').on('input', function () {
+      const value = parseInt(this.value, 10);
+      checkMaxValue(value, matchedResource.capacity + 3);
+    });
+    // تغییر قیمت بر اساس تعداد نفرات اضافه
+    $('#event-more-capacity').off('input.price').on('input.price', function () {
+      const inputValue = parseInt(this.value, 10);
+      const max = parseInt($(this).attr('max'), 10);
+
+      if (inputValue > max || isNaN(inputValue)) return; 
+
+      if (inputValue > matchedResource.capacity) {
+        var new_price = (inputValue - matchedResource.capacity) * matchedResource.price_per_person + matchedResource.price;
+        $('#event-price').text(new_price);
+      } else {
+        $('#event-price').text(matchedResource.price);
+      }
+    });
   });
 
-  eventExtraPersonSelect.addEventListener('change', function () {
+  $('#event-more-capacity').on('input.price', function () {
     var inputValue = parseInt(document.getElementById('event-more-capacity').value, 10);
     
     var selectedOption = eventResourceSelect.options[eventResourceSelect.selectedIndex];
@@ -691,6 +705,18 @@
     return utcDate.toISOString(); // Correctly formatted UTC string
   }
 
+  // تابع بررسی و نمایش هشدار
+  function checkMaxValue(value, max) {
+    const warningEl = document.getElementById('event-more-capacity-alert');
+    warningEl.classList.add('d-none')
+    if (!isNaN(value) && value > max) {
+      const input = document.getElementById('event-more-capacity');
+      input.value = max;
+      warningEl.classList.remove('d-none')
+      warningEl.innerHTML = `حداکثر مقدار مجاز ${max} هست.`
+    }
+  }
+
 
 </script>
 <script>
@@ -748,23 +774,6 @@
   });
 
 </script>
-{% comment %}
-<script>
-  function setCapacityLimit(inputId, maxValue) {
-    const input = document.getElementById(inputId);
-    input.max = maxValue; // فقط برای امنیت مرورگر
-
-    input.addEventListener('input', function () {
-      const value = parseInt(this.value);
-
-      if (!isNaN(value) && value > maxValue) {
-        this.value = maxValue;
-        alert("حداکثر ظرفیت مجاز " + maxValue + " است.");
-      }
-    });
-  }
-</script>
-{% endcomment %}
 {% endblock %}
 
 
