@@ -362,6 +362,9 @@ def bill_detail(request, reserve_id):
 
     if reservation.status == "pending_payment" and datetime.now() - reservation.created_at >= timedelta(hours=3):
         reservation.status = "cancelled"
+        if reservation.cleaning:
+            cleaning = Reservation.objects.get(user=reservation.user, author=reservation.author,start=reservation.end + timedelta(hours=2),end=reservation.end + timedelta(days=1), status="cleaning", resource=reservation.resource)
+            cleaning.delete()
         reservation.save()
 
     if reservation.status == "confirmed" and Payment.objects.filter(reservation=reservation).count() == 1:
@@ -390,6 +393,10 @@ def bill_detail(request, reserve_id):
                 start = f"{formatted_start}-14:00"
                 end = f"{formatted_end}-12:00"
                 send_completed_reserve_reserve(reservation.user.mobile_number,start,end)
+            elif reservation.status == "canceled":
+                if reservation.cleaning:
+                    cleaning = Reservation.objects.get(user=reservation.user, author=reservation.author,start=reservation.end + timedelta(hours=2),end=reservation.end + timedelta(days=1), status="cleaning", resource=reservation.resource)
+                    cleaning.delete()
             messages.success(request, 'رزرو با موفقیت تغییر یافت.')
             return redirect(reverse('reserve:billdetail', args=[reserve_id]))
         else:
