@@ -22,6 +22,21 @@
       left: 10% !important;
     }
   }
+  /* تغییر ارتفاع نوار اسکرول افقی */
+  .mbsc-timeline-grid-scroll::-webkit-scrollbar {
+    height: 20px;  /* افزایش ارتفاع نوار اسکرول */
+  }
+
+  /* استایل کشویی نوار اسکرول */
+  .mbsc-timeline-grid-scroll::-webkit-scrollbar-thumb {
+    background-color: #888;
+  }
+
+  /* تغییر رنگ کشویی نوار اسکرول هنگام هاور */
+  .mbsc-timeline-grid-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
 </style>
 
 {% endblock %}
