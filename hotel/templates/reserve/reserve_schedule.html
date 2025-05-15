@@ -659,13 +659,19 @@
         startDate = date[0];
         endDate = date[1];
 
+        {% if request.user.user_status == "verified" %}
+        let roon_id = 2
+        {% else %}
+        let roon_id = 1
+        {% endif %}
+
         // اضافه کردن رویداد جدید برای اتاق اول
         tempEvent = {
           id: new Date().getTime(),  // شناسه‌ی یونیک
           start: startDate,
           end: endDate,
           title: "New event",
-          resource: 1,  // اتاق اول
+          resource: roon_id,  // اتاق اول
           cssClass: 'reservation-event'
         };
 
@@ -674,7 +680,7 @@
         // گرفتن المنت مربوط به رویداد ایجادشده
         setTimeout(() => {
           var eventElement = document.querySelector(`[data-id="${tempEvent.id}"]`);
-          createAddPopup(eventElement, 1, tempEvent);
+          createAddPopup(eventElement, roon_id, tempEvent);
         }, 100);
 
         // وقتی پاپ‌آپ بسته شد، بررسی کن که آیا فرم تأیید شده یا نه

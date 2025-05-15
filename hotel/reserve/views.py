@@ -79,9 +79,12 @@ def reserve_schedule(request):
         )
 
     if not is_admin(request.user):
-        resources = Resource.objects.filter(status=True) 
+        resources = Resource.objects.filter(status=True).exclude(id__in=[1,5]) 
     else:  
-        resources = Resource.objects.all()
+        if request.user.user_status == "admin_level_b":
+            resources = Resource.objects.all().exclude(id=5)
+        else:
+            resources = Resource.objects.all()
     resource_data = list(
         resources.values(
             "id", "name", "cssClass", "capacity", "price", "price_per_person", "max_capacity"
