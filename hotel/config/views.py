@@ -12,3 +12,7 @@ def contact_us(request):
 def success_page_register(request):
     return render(request, 'pages/success_page_register.html')
 
+
+def custom_404_view(request, exception):
+    return render(request, 'main/404.html', status=404)
+

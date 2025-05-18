@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block content %}
+<!-- 404: Start -->
+<section id="landingContact" class="section-py bg-body landing-contact my-5 mx-auto">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center align-items-center h-100 w-100">
+            <div class="col-12">
+                <div class="text-center">
+                    <img src="{% static 'img/pages/404.png' %}" class="img-fluid" alt="خطای ۴۰۴(صفحه مورد نظر یافت نشد)">
+                    <p>صفحه‌ای یافت نشد.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- 404: End -->
+
+{% endblock %}
