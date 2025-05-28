@@ -111,7 +111,7 @@ def login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                return redirect("account:dashboard")
+                return redirect("home")
             else:
                 # Add a non-specific error message for security reasons (avoid revealing which credential is incorrect)
                 form.add_error(None, "Invalid login credentials.")
@@ -119,7 +119,7 @@ def login(request):
     else:  # GET request
         if request.user.is_authenticated:
             # User is already logged in, redirect to dashboard
-            return redirect("account:dashboard")
+            return redirect("home")
 
         form = AuthenticationForm(request=request)
 
